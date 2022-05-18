@@ -13,6 +13,7 @@ const csvWriter = createCsvWriter({
 });
 
 refNums = [
+  "wefouwbefowebfowef",
   "311.30.42.30.01.005",
   "116500LN-0001",
   "116610LN",
@@ -98,9 +99,68 @@ async function start() {
   //await crownAndCaliber(lowPage, highPage, testPage);
   //await bobs(lowPage, highPage, testPage);
   //await davidsw(lowPage, highPage, testPage);
-  await bazaar(lowPage, highPage, testPage);
+  //await bazaar(lowPage, highPage, testPage);
+  await EWC(lowPage, highPage, testPage);
   await browser.close();
 }
+
+async function EWC(lowP, highP, tPage) {
+  for (var i = 0; i < refNums.length; i++) {
+    console.log("");
+    lowest = -1;
+    highest = -1;
+    var newURL =
+      "https://www2.europeanwatch.com/cgi-bin/search.pl?search=" + refNums[i];
+    console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
+    await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
+    console.log("before");
+    await tPage.waitForTimeout(10000);
+    console.log("after");
+    console.log("went to page");
+    if (await noResults(tPage, "body > section > h3")) {
+      lowest = 0;
+      highest = 0;
+      continue;
+    } else {
+      lowest = await findPriceEWC(lowP, newURL, "asc");
+      highest = await findPriceEWC(lowP, newURL, "desc");
+      console.log("Lowest: " + lowest);
+      console.log("Highest: " + highest + "\n");
+    }
+  }
+}
+
+async function findPriceEWC(page, url, type) {
+  await page.goto(url, { waituntil: "networkidle0", timeout: 60000 });
+  await page.waitForTimeout(5000);
+  const prices = await page.$$eval(
+    "body > section > section.flex.flex-wrap.watch-list.mx-auto > section > div > div.flex.flex-col.h-full.justify-start.mt-2 > div > p",
+    (price) => price.map((price) => price.textContent)
+  );
+
+  lowest = prices[0];
+  highest = prices[0];
+  for (var i = 0; i < prices.length; i++) {
+    switch (type) {
+      case "asc":
+        if (prices[i] < lowest) {
+          lowest = prices[i];
+        }
+        break;
+      case "desc":
+        if (prices[i] > highest) {
+          highest = prices[i];
+        }
+        break;
+    }
+  }
+  if (type === "asc") {
+    return lowest;
+  } else {
+    return highest;
+  }
+}
+
 async function bazaar(lowP, highP, tPage) {
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
@@ -171,6 +231,19 @@ async function noResultsBazaar(page) {
   }
 }
 
+async function noResults(page, selector) {
+  var noResults = false;
+  if ((await page.$(selector)) != null) {
+    noResults = true;
+  }
+  if (noResults) {
+    console.log("There were no results. moving to next ref number" + "\n");
+    return true;
+  } else if (noResults === null) {
+    return false;
+  }
+}
+
 async function davidsw(lowP, highP, tPage) {
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
@@ -184,7 +257,7 @@ async function davidsw(lowP, highP, tPage) {
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
     console.log("went to page");
-    if (await noResutlsDavid(tPage)) {
+    if (await noResults(tPage, "#main > div > div.col.large-9 > div > p")) {
       lowest = 0;
       highest = 0;
       continue;
@@ -217,19 +290,6 @@ async function findHighestPriceDavidsw(page, refNum) {
   return await page.$eval('span[class="price"]', (price) => price.textContent);
 }
 
-async function noResutlsDavid(page) {
-  var noResults = false;
-  if ((await page.$("#main > div > div.col.large-9 > div > p")) != null) {
-    noResults = true;
-  }
-  if (noResults) {
-    console.log("There were no results. moving to next ref number" + "\n");
-    return true;
-  } else if (noResults === null) {
-    return false;
-  }
-}
-
 async function bobs(lowP, highP, tPage) {
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
@@ -240,7 +300,12 @@ async function bobs(lowP, highP, tPage) {
       refNums[i];
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 0 });
-    if (await noResultsBobs(tPage)) {
+    if (
+      await noResults(
+        tPage,
+        "#searchspring-content > div > div > div > div > div > div.no-results"
+      )
+    ) {
       lowest = 0;
       highest = 0;
     } else {
@@ -249,23 +314,6 @@ async function bobs(lowP, highP, tPage) {
       console.log("Lowest: " + lowest);
       console.log("Highest: " + highest + "\n");
     }
-  }
-}
-
-async function noResultsBobs(page) {
-  var noResults = false;
-  if (
-    (await page.$(
-      "#searchspring-content > div > div > div > div > div > div.no-results"
-    )) != null
-  ) {
-    noResults = true;
-  }
-  if (noResults) {
-    console.log("There were no results. moving to next ref number" + "\n");
-    return true;
-  } else if (noResults === null) {
-    return false;
   }
 }
 
@@ -308,7 +356,7 @@ async function crownAndCaliber(lowP, highP, tPage) {
         { waituntil: "networkidle0" }
       );
 
-      if (await noResultsCandC(tPage)) {
+      if (await noResults(tPage, "#searchspring-content > h3")) {
         lowest = 0;
         highest = 0;
       } else {
@@ -333,7 +381,7 @@ async function crownAndCaliber(lowP, highP, tPage) {
         "https://www.crownandcaliber.com/search?view=shop&q=116500LN#/filter:mfield_global_dial_color:Black",
         { waituntil: "networkidle0" }
       );
-      if (noResultsCandC(tPage)) {
+      if (await noResults(tPage, "#searchspring-content > h3")) {
         lowest = 0;
         highest = 0;
       } else {
@@ -353,7 +401,7 @@ async function crownAndCaliber(lowP, highP, tPage) {
         console.log("Highest: " + refNums[i] + "\t" + highest);
       }
     } else {
-      if (await noResultsCandC(tPage)) {
+      if (await noResults(tPage, "#searchspring-content > h3")) {
         lowest = 0;
         highest = 0;
       } else {
@@ -367,19 +415,6 @@ async function crownAndCaliber(lowP, highP, tPage) {
         console.log("Highest: " + refNums[i] + "\t" + highest);
       }
     }
-  }
-}
-
-async function noResultsCandC(page) {
-  var noResults = false;
-  if ((await page.$("#searchspring-content > h3")) != null) {
-    noResults = true;
-  }
-  if (noResults) {
-    console.log("There were no results. moving to next ref number");
-    return true;
-  } else if (noResults === null) {
-    return false;
   }
 }
 
