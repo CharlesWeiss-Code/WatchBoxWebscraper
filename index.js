@@ -102,22 +102,22 @@ async function start() {
 
 async function bobs(lowP, highP, tPage) {
   for (var i = 0; i < refNums.length; i++) {
+    console.log("")
     lowest = -1;
     highest = -1;
     var newURL =
       "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=" +
       refNums[i];
-    console.log("URL: " + newURL);
+    console.log("REF: "+refNums[i]+"\n"+"URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 0 });
     if (await noResultsBobs(tPage)) {
       lowest = 0;
       highest = 0;
     } else {
-      console.log("lkjhashfahlskdf:" + newURL);
       lowest = await findLowestPriceBobs(lowP, newURL);
       highest = await findHighestPriceBobs(highP, newURL);
-      console.log("Lowest: " + refNums[i] + "\t" + lowest);
-      console.log("Highest: " + refNums[i] + "\t" + highest);
+      console.log("Lowest: "+lowest);
+      console.log("Highest: "+highest+"\n");
     }
   }
 }
@@ -132,7 +132,7 @@ async function noResultsBobs(page) {
     noResults = true;
   }
   if (noResults) {
-    console.log("There were no results. moving to next ref number");
+    console.log("There were no results. moving to next ref number"+"\n");
     return true;
   } else if (noResults === null) {
     return false;
