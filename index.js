@@ -66,7 +66,6 @@ async function start() {
     "--use-mock-keychain",
   ];
 
-
   const browser = await puppeteer.launch({
     headless: true,
     args: minimal_args,
@@ -98,8 +97,78 @@ async function start() {
 
   //await crownAndCaliber(lowPage, highPage, testPage);
   //await bobs(lowPage, highPage, testPage);
-  await davidsw(lowPage, highPage, testPage);
+  //await davidsw(lowPage, highPage, testPage);
+  await bazaar(lowPage, highPage, testPage);
   await browser.close();
+}
+async function bazaar(lowP, highP, tPage) {
+  for (var i = 0; i < refNums.length; i++) {
+    console.log("");
+    lowest = -1;
+    highest = -1;
+    //https://www.luxurybazaar.com/search-results?q=116500LN-0001
+    var newURL = "https://www.luxurybazaar.com/search-results?q=" + refNums[i];
+    console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
+    await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
+    console.log("before");
+    await tPage.waitForTimeout(10000);
+    console.log("after");
+    console.log("went to page");
+    if (await noResultsBazaar(tPage)) {
+      lowest = 0;
+      highest = 0;
+      continue;
+    } else {
+      lowest = await findLowestPriceBazaar(lowP, newURL);
+      highest = await findHighestPriceBazaar(highP, newURL);
+      console.log("Lowest: " + lowest);
+      console.log("Highest: " + highest + "\n");
+    }
+  }
+}
+
+async function findLowestPriceBazaar(page, url) {
+  link = url + "#/sort:ss_sort_price_asc:asc";
+  console.log("lowest price lnik: " + link);
+  await page.goto(link, { waituntil: "networkidle0", timeout: 60000 });
+  await page.waitForTimeout(5000);
+  console.log("lowest price at page");
+  return await page.$eval(
+    'span[class="price ng-binding"]',
+    (price) => price.textContent
+  );
+}
+
+async function findHighestPriceBazaar(page, url) {
+  link = url + "#/sort:ss_sort_price_desc:desc";
+  await page.goto(link, { waituntil: "networkidle0", timeout: 60000 });
+  await page.waitForTimeout(5000);
+
+  console.log("lowest price at page");
+  return await page.$eval(
+    'span[class="price ng-binding"]',
+    (price) => price.textContent
+  );
+}
+
+async function noResultsBazaar(page) {
+  var noResults = false;
+  if (
+    (await page.$(
+      "#searchspring-content > div.category-products.ng-scope > div > div:nth-child(1) > h3"
+    )) != null ||
+    (await page.$(
+      "#searchspring-content > div.category-products.ng-scope > div > ul > li > div.actions.actions-availability > p > a"
+    )) != null
+  ) {
+    noResults = true;
+  }
+  if (noResults) {
+    console.log("There were no results. moving to next ref number" + "\n");
+    return true;
+  } else if (noResults === null) {
+    return false;
+  }
 }
 
 async function davidsw(lowP, highP, tPage) {
@@ -114,7 +183,7 @@ async function davidsw(lowP, highP, tPage) {
       "&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
-    console.log("went to page")
+    console.log("went to page");
     if (await noResutlsDavid(tPage)) {
       lowest = 0;
       highest = 0;
@@ -134,12 +203,9 @@ async function findLowestPriceDavidsw(page, refNum) {
     refNum +
     "&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
   await page.goto(link, { waituntil: "networkidle0", timeout: 60000 });
-  console.log("lowest price at page")
-  return await page.$eval(
-    'span[class="price"]',
-    (price) => price.textContent
-  );
-  }
+  console.log("lowest price at page");
+  return await page.$eval('span[class="price"]', (price) => price.textContent);
+}
 
 async function findHighestPriceDavidsw(page, refNum) {
   //https://davidsw.com/?orderby=price-desc&paged=1&s=124060&post_type=product&type_aws=true&aws_id=1&aws_filter=1
@@ -148,10 +214,7 @@ async function findHighestPriceDavidsw(page, refNum) {
     refNum +
     "&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
   await page.goto(link, { waituntil: "networkidle0", timeout: 60000 });
-  return await page.$eval(
-    'span[class="price"]',
-    (price) => price.textContent
-  );
+  return await page.$eval('span[class="price"]', (price) => price.textContent);
 }
 
 async function noResutlsDavid(page) {
