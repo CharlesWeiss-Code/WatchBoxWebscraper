@@ -66,6 +66,7 @@ async function start() {
     "--use-mock-keychain",
   ];
 
+
   const browser = await puppeteer.launch({
     headless: true,
     args: minimal_args,
@@ -96,19 +97,85 @@ async function start() {
   });
 
   //await crownAndCaliber(lowPage, highPage, testPage);
-  await bobs(lowPage, highPage, testPage);
+  //await bobs(lowPage, highPage, testPage);
+  await davidsw(lowPage, highPage, testPage);
   await browser.close();
+}
+
+async function davidsw(lowP, highP, tPage) {
+  for (var i = 0; i < refNums.length; i++) {
+    console.log("");
+    lowest = -1;
+    highest = -1;
+    //https://davidsw.com/?s=124060&post_type=product&type_aws=true&aws_id=1&aws_filter=1
+    var newURL =
+      "https://davidsw.com/?s=" +
+      refNums[i] +
+      "&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+    console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
+    await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
+    console.log("went to page")
+    if (await noResutlsDavid(tPage)) {
+      lowest = 0;
+      highest = 0;
+      continue;
+    } else {
+      lowest = await findLowestPriceDavidsw(lowP, refNums[i]);
+      highest = await findHighestPriceDavidsw(highP, refNums[i]);
+      console.log("Lowest: " + lowest);
+      console.log("Highest: " + highest + "\n");
+    }
+  }
+}
+
+async function findLowestPriceDavidsw(page, refNum) {
+  link =
+    "https://davidsw.com/?orderby=price&paged=1&s=" +
+    refNum +
+    "&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+  await page.goto(link, { waituntil: "networkidle0", timeout: 60000 });
+  console.log("lowest price at page")
+  return await page.$eval(
+    'span[class="price"]',
+    (price) => price.textContent
+  );
+  }
+
+async function findHighestPriceDavidsw(page, refNum) {
+  //https://davidsw.com/?orderby=price-desc&paged=1&s=124060&post_type=product&type_aws=true&aws_id=1&aws_filter=1
+  link =
+    "https://davidsw.com/?orderby=price-desc&paged=1&s=" +
+    refNum +
+    "&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+  await page.goto(link, { waituntil: "networkidle0", timeout: 60000 });
+  return await page.$eval(
+    'span[class="price"]',
+    (price) => price.textContent
+  );
+}
+
+async function noResutlsDavid(page) {
+  var noResults = false;
+  if ((await page.$("#main > div > div.col.large-9 > div > p")) != null) {
+    noResults = true;
+  }
+  if (noResults) {
+    console.log("There were no results. moving to next ref number" + "\n");
+    return true;
+  } else if (noResults === null) {
+    return false;
+  }
 }
 
 async function bobs(lowP, highP, tPage) {
   for (var i = 0; i < refNums.length; i++) {
-    console.log("")
+    console.log("");
     lowest = -1;
     highest = -1;
     var newURL =
       "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=" +
       refNums[i];
-    console.log("REF: "+refNums[i]+"\n"+"URL: " + newURL);
+    console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 0 });
     if (await noResultsBobs(tPage)) {
       lowest = 0;
@@ -116,8 +183,8 @@ async function bobs(lowP, highP, tPage) {
     } else {
       lowest = await findLowestPriceBobs(lowP, newURL);
       highest = await findHighestPriceBobs(highP, newURL);
-      console.log("Lowest: "+lowest);
-      console.log("Highest: "+highest+"\n");
+      console.log("Lowest: " + lowest);
+      console.log("Highest: " + highest + "\n");
     }
   }
 }
@@ -132,7 +199,7 @@ async function noResultsBobs(page) {
     noResults = true;
   }
   if (noResults) {
-    console.log("There were no results. moving to next ref number"+"\n");
+    console.log("There were no results. moving to next ref number" + "\n");
     return true;
   } else if (noResults === null) {
     return false;
