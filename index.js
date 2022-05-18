@@ -68,7 +68,7 @@ async function start() {
   ];
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     args: minimal_args,
   });
   const lowPage = await browser.newPage();
@@ -96,11 +96,11 @@ async function start() {
     }
   });
 
-  //await crownAndCaliber(lowPage, highPage, testPage);
+  await crownAndCaliber(lowPage, highPage, testPage);
   //await bobs(lowPage, highPage, testPage);
   //await davidsw(lowPage, highPage, testPage);
   //await bazaar(lowPage, highPage, testPage);
-  await EWC(lowPage, highPage, testPage);
+  //await EWC(lowPage, highPage, testPage);
   await browser.close();
 }
 
@@ -337,7 +337,7 @@ async function findHighestPriceBobs(page, link) {
 
 async function crownAndCaliber(lowP, highP, tPage) {
   specification = [];
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 4; i < refNums.length; i++) {
     var lowest = -1;
     var highest = -1;
     url =
@@ -369,7 +369,6 @@ async function crownAndCaliber(lowP, highP, tPage) {
           { waitUntil: "networkidle0" }
         );
         lowest = await findLowestPrice2CandC(lowP);
-
         highest = await findHighestPrice2CandC(highP);
 
         console.log("Lowest: " + refNums[i] + "\t" + lowest);
@@ -389,6 +388,8 @@ async function crownAndCaliber(lowP, highP, tPage) {
           "https://www.crownandcaliber.com/search?view=shop&q=116500LN#/filter:mfield_global_dial_color:Black/sort:ss_price:asc",
           { waitUntil: "networkidle0" }
         );
+        await page.waitForTimeout(5000);
+
         await highP.goto(
           "https://www.crownandcaliber.com/search?view=shop&q=116500LN#/filter:mfield_global_dial_color:Black/sort:ss_price:desc",
           { waitUntil: "networkidle0" }
@@ -406,16 +407,64 @@ async function crownAndCaliber(lowP, highP, tPage) {
         highest = 0;
       } else {
         console.log("\n");
-
         console.log(url);
         lowest = await findLowestPriceCandC(lowP, url);
         highest = await findHighestPriceCandC(highP, url);
 
-        console.log("Lowest: " + refNums[i] + "\t" + lowest);
-        console.log("Highest: " + refNums[i] + "\t" + highest);
+        await lowP.click(
+          "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
+          { delay: 20 }
+        );
+        await lowP.waitForTimeout(5000);
+
+        yearLow = await getItem(
+          lowP,
+          "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(6) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(13) > span.list-value"
+        );
+        boxLow = await getItem(
+          lowP,
+          "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(6) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(2) > span.list-value"
+        );
+        papersLow = await getItem(
+          lowP,
+          "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(6) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(3) > span.list-value"
+        );
+
+        await highP.click(
+          "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
+          { delay: 20 }
+        );
+        await highP.waitForTimeout(5000);
+
+        // yearHigh = await getItem(
+        //   highP,
+        // // #shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(5) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(13) > span.list-value
+        //   "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(5) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(13) > span.list-value"
+        // );
+        // boxHigh = await getItem(
+        //   highP,
+        //   "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(6) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(2) > span.list-value"
+        // );
+        // papersHigh = await getItem(
+        //   highP,
+        //   "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(6) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(3) > span.list-value"
+        // );
+
+        console.log("Lowest:" + "\t" + lowest);
+        console.log("LowestYear:" + "\t" + yearLow);
+        console.log("LowestPaper" + "\t" + papersLow);
+        console.log("LowestBox" + "\t" + boxLow);
+
+        // console.log("Highest:" + "\t" + highest);
+        // console.log("HighestYear:" + "\t" + yearHigh);
+        // console.log("HighestPaper:" + "\t" + paperHigh);
+        // console.log("HighestBox:" + "\t" + boxHigh);
       }
     }
   }
+}
+async function getItem(page, selector) {
+  return await page.$eval(String(selector), (el) => el.textContent);
 }
 
 async function findLowestPriceCandC(page, link) {
