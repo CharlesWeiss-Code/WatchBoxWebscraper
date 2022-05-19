@@ -1,6 +1,8 @@
 const puppeteer = require("puppeteer");
 const fs = require("fs/promises");
 const createCsvWriter = require("csv-writer").createObjectCsvWriter;
+const { get } = require("express/lib/response");
+const { table } = require("console");
 
 const csvWriter = createCsvWriter({
   path: "out.csv",
@@ -68,7 +70,7 @@ async function start() {
   ];
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     args: minimal_args,
   });
   const lowPage = await browser.newPage();
@@ -96,12 +98,134 @@ async function start() {
     }
   });
 
-  await crownAndCaliber(lowPage, highPage, testPage);
+  //await crownAndCaliber(lowPage, highPage, testPage);
   //await bobs(lowPage, highPage, testPage);
   //await davidsw(lowPage, highPage, testPage);
   //await bazaar(lowPage, highPage, testPage);
   //await EWC(lowPage, highPage, testPage);
+  await chrono(lowPage, highPage, testPage);
   await browser.close();
+}
+
+async function chrono(lowP, highP, tPage) {
+  flag = true;
+  for (var i = 1; i < refNums.length; i++) {
+    console.log("");
+    lowest = -1;
+    highest = -1;
+    var newURL =
+      "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=" +
+      refNums[i];
+    console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
+    await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
+    console.log("before");
+    await tPage.waitForTimeout(5000);
+    console.log("after");
+    console.log("went to page");
+    if (
+      await noResults2(
+        tPage,
+        "#main-content > div > div.result-page-intro.relative.overlapping > div > div.result-page-headline > div > div.h1.m-b-0.text-center",
+        "We've found no results for"
+      )
+    ) {
+      lowest = 0;
+      highest = 0;
+      continue;
+    } else {
+      // deal with "TOP" choice from chrono.
+      // https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=311.30.42.30.01.005&resultview=list&sortorder=1
+      // when gettin prices, the price of "TOP" comes up first
+      await lowP.goto(newURL + "&searchorder=11&sortorder=1");
+      await lowP.waitForTimeout(500);
+      if (flag) {
+        await lowP.click("#modal-content > div > a", { delay: 20 });
+        flag = false;
+      }
+      await lowP.waitForTimeout(1000);
+      lowest = await getItem(
+        lowP,
+        "#wt-watches > div:nth-child(1) > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
+      );
+      lowDealerStatus = await getItem(
+        lowP,
+        "#wt-watches > div:nth-child(1) > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
+      );
+      await lowP.click("#wt-watches > div:nth-child(1) > a", { delay: 20 });
+      await lowP.waitForTimeout(500);
+      lowTable = String(
+        await getItem(
+          lowP,
+          "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1)"
+        )
+      );
+
+      index1YearLow = lowTable.indexOf("Year of production") + 18;
+      index2YearLow = lowTable.indexOf("Condition");
+      index1BPLow = lowTable.indexOf("Scope of delivery") + 17;
+      index2BPLow = lowTable.indexOf("Gender");
+
+      //console.log("TABLE: "+ lowTable)
+      await highP.goto(newURL + "&searchorder=11&sortorder=11");
+      await highP.waitForTimeout(500);
+      //await highP.click("#modal-content > div > a", {delay: 20})
+
+      highest = await getItem(
+        highP,
+        "#wt-watches > div:nth-child(1) > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
+      );
+      HighDealerStatus = await getItem(
+        highP,
+        "#wt-watches > div:nth-child(1) > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
+      );
+
+      await highP.click("#wt-watches > div:nth-child(1) > a", { delay: 20 });
+
+      await highP.waitForTimeout(500);
+
+      highTable = String(
+        await getItem(
+          highP,
+          "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1)"
+        )
+      );
+
+      index1YearHigh = lowTable.indexOf("Year of production") + 18;
+      index2YearHigh = lowTable.indexOf("Condition");
+      index1BPHigh = lowTable.indexOf("Scope of delivery") + 17;
+      index2BPHigh = lowTable.indexOf("Gender");
+
+      console.log("Lowest: " + "\t" + lowest.replace(/\s+/g, ""));
+      console.log(
+        "lowDealerStatus" + "\t" + lowDealerStatus.replace(/\s+/g, "")
+      );
+      console.log(
+        "LowYear: " +
+          "\t" +
+          lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, "")
+      );
+      console.log(
+        "lowBoxAndPapers" +
+          "\t" +
+          lowTable.substring(index1BPLow, index2BPLow).replace(/\s+/g, "")
+      );
+
+      console.log("Highest: " + "\t" + highest.replace(/\s+/g, ""));
+      console.log(
+        "HighDealerStatus" + "\t" + HighDealerStatus.replace(/\s+/g, "")
+      );
+      console.log(
+        "HighYear: " +
+          "\t" +
+          lowTable.substring(index1YearHigh, index2YearHigh).replace(/\s+/g, "")
+      );
+      console.log(
+        "HighBoxAndPapers" +
+          "\t" +
+          lowTable.substring(index1BPHigh, index2BPHigh).replace(/\s+/g, "")
+      );
+    }
+  }
 }
 
 async function EWC(lowP, highP, tPage) {
@@ -109,6 +233,7 @@ async function EWC(lowP, highP, tPage) {
     console.log("");
     lowest = -1;
     highest = -1;
+    x;
     var newURL =
       "https://www2.europeanwatch.com/cgi-bin/search.pl?search=" + refNums[i];
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
@@ -237,11 +362,21 @@ async function noResults(page, selector) {
     noResults = true;
   }
   if (noResults) {
-    console.log("There were no results. moving to next ref number" + "\n");
     return true;
   } else if (noResults === null) {
     return false;
   }
+}
+
+async function noResults2(page, selector, s) {
+  var noResults = false;
+  if (
+    String(await page.$eval(selector, (el) => el.textContent)).indexOf(s) != -1
+  ) {
+    noResults = true;
+    console.log("no results");
+  }
+  return noResults;
 }
 
 async function davidsw(lowP, highP, tPage) {
@@ -291,7 +426,7 @@ async function findHighestPriceDavidsw(page, refNum) {
 }
 
 async function bobs(lowP, highP, tPage) {
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 3; i < refNums.length; i++) {
     console.log("");
     lowest = -1;
     highest = -1;
@@ -311,8 +446,41 @@ async function bobs(lowP, highP, tPage) {
     } else {
       lowest = await findLowestPriceBobs(lowP, newURL);
       highest = await findHighestPriceBobs(highP, newURL);
-      console.log("Lowest: " + lowest);
-      console.log("Highest: " + highest + "\n");
+      lowP.click(
+        "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a",
+        { delay: 20 }
+      );
+      await lowP.waitForTimeout(5000);
+
+      yearLow = await getItem(
+        lowP,
+        'span[itemprop="description"] > div > table > tbody:nth-child(2)'
+      );
+
+      /* CUSTOM SELECTOR NEEDED. NEED TO AVOID 'seocart_Product_#'.
+      that number changes every time. Custom selsector avoids that problem
+      */
+
+      highP.click(
+        "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a",
+        { delay: 20 }
+      );
+      await highP.waitForTimeout(5000);
+
+      ("#seocart_Product_395979 > div.watchdetail.newwatchdetail > div > div.watchdesc > div.descriptioncontainer > span > div:nth-child(1) > table > tbody:nth-child(2)");
+
+      yearHigh = await getItem(
+        highP,
+        'span[itemprop="description"] > div > table > tbody:nth-child(2)'
+      );
+
+      console.log("Lowest:" + "\t" + lowest);
+      //console.log("LowestYear:" + "\t" + yearLow);
+      // console.log("LowestBoxAndPapers" + "\t" + boxAndPapersLow);
+
+      console.log("Highest:" + "\t" + highest);
+      //console.log("HighestYear:" + "\t" + yearHigh);
+      // console.log("HighestBoxAndPaper:" + "\t" + boxAndPapersHigh);
     }
   }
 }
@@ -337,7 +505,7 @@ async function findHighestPriceBobs(page, link) {
 
 async function crownAndCaliber(lowP, highP, tPage) {
   specification = [];
-  for (var i = 4; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     var lowest = -1;
     var highest = -1;
     url =
@@ -436,35 +604,35 @@ async function crownAndCaliber(lowP, highP, tPage) {
         );
         await highP.waitForTimeout(5000);
 
-        // yearHigh = await getItem(
-        //   highP,
-        // // #shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(5) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(13) > span.list-value
-        //   "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(5) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(13) > span.list-value"
-        // );
-        // boxHigh = await getItem(
-        //   highP,
-        //   "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(6) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(2) > span.list-value"
-        // );
-        // papersHigh = await getItem(
-        //   highP,
-        //   "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(6) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(3) > span.list-value"
-        // );
+        yearHigh = await getItem(
+          highP,
+          // #shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(5) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(13) > span.list-value
+          "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(6) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(13) > span.list-value"
+        );
+        boxHigh = await getItem(
+          highP,
+          "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(6) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(2) > span.list-value"
+        );
+        papersHigh = await getItem(
+          highP,
+          "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(6) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(3) > span.list-value"
+        );
 
         console.log("Lowest:" + "\t" + lowest);
         console.log("LowestYear:" + "\t" + yearLow);
         console.log("LowestPaper" + "\t" + papersLow);
         console.log("LowestBox" + "\t" + boxLow);
 
-        // console.log("Highest:" + "\t" + highest);
-        // console.log("HighestYear:" + "\t" + yearHigh);
-        // console.log("HighestPaper:" + "\t" + paperHigh);
-        // console.log("HighestBox:" + "\t" + boxHigh);
+        console.log("Highest:" + "\t" + highest);
+        console.log("HighestYear:" + "\t" + yearHigh);
+        console.log("HighestPaper:" + "\t" + papersHigh);
+        console.log("HighestBox:" + "\t" + boxHigh);
       }
     }
   }
 }
 async function getItem(page, selector) {
-  return await page.$eval(String(selector), (el) => el.textContent);
+  return String(await page.$eval(String(selector), (el) => el.textContent));
 }
 
 async function findLowestPriceCandC(page, link) {
