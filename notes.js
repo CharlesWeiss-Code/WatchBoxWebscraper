@@ -9,4 +9,5 @@ NEED TO DO:
       - when gettin prices, the price of "TOP" comes up first
     - put start() inside start for recursive calling
     - filter data from Bobs table
+    - give links for each watch.
 */

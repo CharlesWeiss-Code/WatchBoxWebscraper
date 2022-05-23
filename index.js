@@ -103,9 +103,9 @@ async function start() {
   //await crownAndCaliber(lowPage, highPage, testPage); // mostly done (daytona stuff)
   //await bobs(lowPage, highPage, testPage); // mostly done (filter table data)
   //await davidsw(lowPage, highPage, testPage); // mostly done (filter table data)
-  await bazaar(lowPage, highPage, testPage); //
-  //await EWC(lowPage, highPage, testPage);
-  //await chrono(lowPage, highPage, testPage);
+  //await bazaar(lowPage, highPage, testPage); // Done
+  //await EWC(lowPage, highPage, testPage); //pretty much done
+  await chrono(lowPage, highPage, testPage);
   await browser.close();
 }
 
@@ -118,12 +118,9 @@ async function chrono(lowP, highP, tPage) {
     var newURL =
       "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=" +
       refNums[i];
-    console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
+    console.log("REF: " + refNums[i] + "\n" + "GENERAL URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
-    console.log("before");
-    await tPage.waitForTimeout(5000);
-    console.log("after");
-    console.log("went to page");
+    await tPage.waitForTimeout(1000);
     if (
       await noResults2(
         tPage,
@@ -211,6 +208,7 @@ async function chrono(lowP, highP, tPage) {
           "\t" +
           lowTable.substring(index1BPLow, index2BPLow).replace(/\s+/g, "")
       );
+      console.log("LOW URL: " + lowP.url());
 
       console.log("Highest: " + "\t" + highest.replace(/\s+/g, ""));
       console.log(
@@ -226,61 +224,71 @@ async function chrono(lowP, highP, tPage) {
           "\t" +
           lowTable.substring(index1BPHigh, index2BPHigh).replace(/\s+/g, "")
       );
+      console.log("HIGH URL: " + highP.url());
     }
   }
 }
 
 async function EWC(lowP, highP, tPage) {
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 2; i < refNums.length; i++) {
     console.log("");
     lowest = -1;
     highest = -1;
-    x;
+
     var newURL =
       "https://www2.europeanwatch.com/cgi-bin/search.pl?search=" + refNums[i];
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
-    console.log("before");
-    await tPage.waitForTimeout(10000);
-    console.log("after");
-    console.log("went to page");
-    if (await noResults(tPage, "body > section > h3")) {
-      lowest = 0;
-      highest = 0;
-      continue;
+    await tPage.waitForTimeout(1000);
+    if (refNums[i] === "116500LN-0001" || refNums[i] === "116500LN-0002") {
+      var url =
+        "https://www2.europeanwatch.com/cgi-bin/search.pl?search=" + "116500LN";
+      await tPage.goto(url, { waituntil: "networkidle0" });
+      await lowP.goto(url, { waituntil: "networkidle0" });
+      await highP.goto(url, { waituntil: "networkidle0" });
+
+      if (await noResults(tPage, "body > section > h3")) {
+        lowest = 0;
+        highest = 0;
+        continue;
+      } else {
+        //EWC Is weird and needs its own function.
+        lowest = await findPriceEWC(lowP, url, "asc");
+        highest = await findPriceEWC(highP, url, "desc");
+        await lowP.waitForTimeout(4000);
+
+        console.log("Lowest: " + lowest);
+        console.log("Highest: " + highest);
+        console.log("URL: " + tPage.url());
+      }
     } else {
-      lowest = await findPriceEWC(lowP, newURL, "asc");
-      highest = await findPriceEWC(lowP, newURL, "desc");
-      console.log("Lowest: " + lowest);
-      console.log("Highest: " + highest + "\n");
+      if (await noResults(tPage, "body > section > h3")) {
+        lowest = 0;
+        highest = 0;
+        continue;
+      } else {
+        //EWC Is weird and needs its own function.
+        lowest = await findPriceEWC(lowP, newURL, "asc");
+        highest = await findPriceEWC(highP, newURL, "desc");
+        console.log("Lowest: " + lowest);
+        console.log("Highest: " + highest);
+        console.log("URL: " + tPage.url());
+      }
     }
   }
 }
 
 async function findPriceEWC(page, url, type) {
   await page.goto(url, { waituntil: "networkidle0", timeout: 60000 });
-  await page.waitForTimeout(5000);
-  const prices = await page.$$eval(
+  prices = await page.$$eval(
     "body > section > section.flex.flex-wrap.watch-list.mx-auto > section > div > div.flex.flex-col.h-full.justify-start.mt-2 > div > p",
-    (price) => price.map((price) => price.textContent)
+    (price) =>
+      price.map((value) =>
+        parseInt(String(value.textContent).replace("$", "").replace(",", ""))
+      )
   );
-
-  lowest = prices[0];
-  highest = prices[0];
-  for (var i = 0; i < prices.length; i++) {
-    switch (type) {
-      case "asc":
-        if (prices[i] < lowest) {
-          lowest = prices[i];
-        }
-        break;
-      case "desc":
-        if (prices[i] > highest) {
-          highest = prices[i];
-        }
-        break;
-    }
-  }
+  lowest = Math.min.apply(null, prices);
+  highest = Math.max.apply(null, prices);
   if (type === "asc") {
     return lowest;
   } else {
@@ -320,29 +328,52 @@ async function bazaar(lowP, highP, tPage) {
           "#/sort:ss_sort_price_desc:desc",
         { waitUntil: "networkidle0" }
       );
-      lowest = await getItem(lowP, 'span[class="price ng-binding"]');
-      highest = await getItem(highP, 'span[class="price ng-binding"]');
-
+      if (await exists(lowP, 'span[class="price ng-binding"]')) {
+        lowest = await getItem(lowP, 'span[class="price ng-binding"]');
+      }
+      if (await exists(highP, 'span[class="price ng-binding"]')) {
+        highest = await getItem(lowP, 'span[class="price ng-binding"]');
+      }
       await lowP.click(
         "#searchspring-content > div.category-products.ng-scope > div > ul > li:nth-child(1) > a"
       );
       await highP.click(
         "#searchspring-content > div.category-products.ng-scope > div > ul > li:nth-child(1) > a"
       );
+      console.log("LOWPAGE URL: " + lowP.url());
+      await lowP.waitForTimeout(1000);
+      await highP.waitForTimeout(1000);
 
-      lowBoxAndPaper = await getItem(
-        lowP,
-        "#collateral-tabs > dd.tab-container.current > div > div > div:nth-child(16) > div.data"
-      );
+      lowTable = await getItem(lowP, 'div[class="attributes-table-container"]');
+      lowYearIndex1 = lowTable.indexOf("Year of Manufacture") + 19;
+      lowYearIndex2 = lowYearIndex1 + 5;
 
-      lowYear = await getItem(
-        lowP,
-        "#collateral-tabs > dd.tab-container.current > div > div > div:nth-child(2) > div.data"
+      lowBPIndex1 = lowTable.indexOf("Included") + 8;
+      lowBPIndex2 = lowTable.indexOf("Lug Material");
+
+      highTable = await getItem(
+        highP,
+        'div[class="attributes-table-container"]'
       );
+      highYearIndex1 = highTable.indexOf("Year of Manufacture") + 19;
+      highYearIndex2 = highYearIndex1 + 5;
+
+      highBPIndex1 = highTable.indexOf("Included") + 8;
+      highBPIndex2 = highTable.indexOf("Lug Material");
       console.log("Lowest: " + lowest);
-      console.log("Low Year: " + lowYear);
-      console.log("Highest: " + highest + "\n");
-      console.log("High Year: " + highYear);
+      console.log(
+        "Low year: " + lowTable.substring(lowYearIndex1, lowYearIndex2)
+      );
+      console.log(
+        "Low BP: " + lowTable.substring(lowBPIndex1, lowBPIndex2) + "\n"
+      );
+      console.log("Highest: " + highest);
+      console.log(
+        "High year: " + highTable.substring(highYearIndex1, highYearIndex2)
+      );
+      console.log(
+        "High BP: " + highTable.substring(highBPIndex1, highBPIndex2) + "\n"
+      );
     }
   }
 }
