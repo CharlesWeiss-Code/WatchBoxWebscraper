@@ -1,19 +1,7 @@
+const { download } = require("express/lib/response");
 const puppeteer = require("puppeteer");
-const fs = require("fs/promises");
-const createCsvWriter = require("csv-writer").createObjectCsvWriter;
-const { get } = require("express/lib/response");
-const { table } = require("console");
-const { text } = require("express");
-
-const csvWriter = createCsvWriter({
-  path: "out.csv",
-  header: [
-    { id: "referenceNum", title: "Reference Number" },
-    { id: "website", title: "Website" },
-    { id: "age", title: "Age" },
-    { id: "gender", title: "Gender" },
-  ],
-});
+const fs = require("fs");
+const request = require("request");
 
 refNums = [
   "wefouwbefowebfowef",
@@ -100,12 +88,13 @@ async function start() {
     }
   });
 
-  //await crownAndCaliber(lowPage, highPage, testPage); // mostly done (daytona stuff)
+  await crownAndCaliber(lowPage, highPage, testPage); // mostly done (daytona stuff)
   //await bobs(lowPage, highPage, testPage); // mostly done (filter table data)
   //await davidsw(lowPage, highPage, testPage); // mostly done (filter table data)
   //await bazaar(lowPage, highPage, testPage); // Done
   //await EWC(lowPage, highPage, testPage); //pretty much done
-  await chrono(lowPage, highPage, testPage);
+  //await chrono(lowPage, highPage, testPage); // done;
+  //start();
   await browser.close();
 }
 
@@ -367,6 +356,7 @@ async function bazaar(lowP, highP, tPage) {
       console.log(
         "Low BP: " + lowTable.substring(lowBPIndex1, lowBPIndex2) + "\n"
       );
+      console.log("LOWEST URL: " + lowP.url());
       console.log("Highest: " + highest);
       console.log(
         "High year: " + highTable.substring(highYearIndex1, highYearIndex2)
@@ -374,6 +364,7 @@ async function bazaar(lowP, highP, tPage) {
       console.log(
         "High BP: " + highTable.substring(highBPIndex1, highBPIndex2) + "\n"
       );
+      console.log("HIGHEST URL: " + highP.url());
     }
   }
 }
@@ -591,9 +582,11 @@ async function davidsw(lowP, highP, tPage) {
     console.log("Lowest: " + lowest);
     console.log("Low Year: " + yearLow);
     console.log("Low Box and Paper: " + lowTableBoxAndPaper);
+    console.log("lOWEST URL: " + lowP.url());
     console.log("Highest: " + highest + "\n");
     console.log("High Year: " + yearHigh);
     console.log("High Box and Paper: " + highTableBoxAndPaper);
+    console.log("HIGHEST URL: " + highP.url());
   }
 }
 
@@ -671,7 +664,7 @@ async function bobs(lowP, highP, tPage) {
       index1BPHigh = highTable.indexOf("Box & Papers:") + 13;
       index2BPHigh = highTable.indexOf("Warranty:");
 
-      console.log("🔵🔵🔵🔵🔵🔵🔵" + lowTable);
+      //console.log("🔵🔵🔵🔵🔵🔵🔵" + lowTable);
       console.log("Lowest: " + "\t" + lowest.replace(/\s+/g, ""));
       console.log(
         "LowYear: " +
@@ -683,6 +676,7 @@ async function bobs(lowP, highP, tPage) {
           "\t" +
           lowTable.substring(index1BPLow, index2BPLow).replace(/\s+/g, "")
       );
+      console.log("LOWEST URL: " + lowP.url());
 
       console.log("Highest: " + "\t" + highest.replace(/\s+/g, ""));
       console.log(
@@ -695,6 +689,7 @@ async function bobs(lowP, highP, tPage) {
           "\t" +
           lowTable.substring(index1BPHigh, index2BPHigh).replace(/\s+/g, "")
       );
+      console.log("HIGHEST URL: " + highP.url());
     }
   }
 }
@@ -717,11 +712,23 @@ async function findHighestPriceBobs(page, link) {
   );
 }
 
+var downloadCustom = function (uri, filename) {
+  request.head(uri, function (err, res, body) {
+    // console.log("content-type:", res.headers["content-type"]);
+    // console.log("content-length:", res.headers["content-length"]);
+    request(uri)
+      .pipe(fs.createWriteStream(filename))
+      .on("close", () => {
+        console.log("downloaded image");
+      });
+  });
+};
+
 async function crownAndCaliber(lowP, highP, tPage) {
   specification = [];
-  for (var i = 0; i < refNums.length; i++) {
-    var lowest = -1;
-    var highest = -1;
+  for (var i = 2; i < refNums.length; i++) {
+    lowTable = null;
+    highTable = null;
     url =
       "https://www.crownandcaliber.com/search?view=shop&q=" +
       refNums[i] +
@@ -729,7 +736,6 @@ async function crownAndCaliber(lowP, highP, tPage) {
       refNums[i] +
       "&queryAssumption=correction";
     console.log("CandC URL: ***  " + url);
-    await tPage.goto(url, { waitUntil: "networkidle0" });
 
     if (refNums[i] == "116500LN-0001") {
       // special white daytona. https://www.crownandcaliber.com/search?view=shop&q=116500LN#/filter:mfield_global_dial_color:White/sort:ss_price:asc
@@ -753,8 +759,21 @@ async function crownAndCaliber(lowP, highP, tPage) {
         lowest = await findLowestPrice2CandC(lowP);
         highest = await findHighestPrice2CandC(highP);
 
-        console.log("Lowest: " + refNums[i] + "\t" + lowest);
-        console.log("Highest: " + refNums[i] + "\t" + highest);
+        await lowP.click(
+          "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
+          { delay: 20 }
+        );
+
+        await lowP.waitForTimeout(500);
+
+        await highP.click(
+          "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
+          { delay: 20 }
+        );
+
+        await highP.waitForTimeout(500);
+        lowTable = await getItem(lowP, 'div[class="prod-specs"]');
+        highTable = await getItem(lowP, 'div[class="prod-specs"]');
       }
     } else if (refNums[i] == "116500LN-0002") {
       //SPECIAL BLACK DAYTONA
@@ -770,20 +789,34 @@ async function crownAndCaliber(lowP, highP, tPage) {
           "https://www.crownandcaliber.com/search?view=shop&q=116500LN#/filter:mfield_global_dial_color:Black/sort:ss_price:asc",
           { waitUntil: "networkidle0" }
         );
-        await page.waitForTimeout(5000);
+        await lowP.waitForTimeout(500);
+
+        lowest = await findLowestPrice2CandC(lowP);
+
+        await lowP.click(
+          "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
+          { delay: 20 }
+        );
 
         await highP.goto(
           "https://www.crownandcaliber.com/search?view=shop&q=116500LN#/filter:mfield_global_dial_color:Black/sort:ss_price:desc",
           { waitUntil: "networkidle0" }
         );
-        lowest = await findLowestPrice2CandC(lowP);
+        await highP.waitForTimeout(500);
 
         highest = await findHighestPrice2CandC(highP);
 
-        console.log("Lowest: " + refNums[i] + "\t" + lowest);
-        console.log("Highest: " + refNums[i] + "\t" + highest);
+        await highP.click(
+          "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
+          { delay: 20 }
+        );
+
+        lowTable = await getItem(lowP, 'div[class="prod-specs"]');
+        highTable = await getItem(lowP, 'div[class="prod-specs"]');
       }
     } else {
+      await tPage.goto(url, { waitUntil: "networkidle0" });
+
       if (await noResults(tPage, "#searchspring-content > h3")) {
         lowest = 0;
         highest = 0;
@@ -797,54 +830,89 @@ async function crownAndCaliber(lowP, highP, tPage) {
           "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
           { delay: 20 }
         );
-        await lowP.waitForTimeout(5000);
-
-        yearLow = await getItem(
-          lowP,
-          "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(6) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(13) > span.list-value"
-        );
-        boxLow = await getItem(
-          lowP,
-          "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(6) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(2) > span.list-value"
-        );
-        papersLow = await getItem(
-          lowP,
-          "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(6) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(3) > span.list-value"
-        );
+        await lowP.waitForTimeout(500);
 
         await highP.click(
           "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
           { delay: 20 }
         );
-        await highP.waitForTimeout(5000);
+        await highP.waitForTimeout(500);
 
-        yearHigh = await getItem(
-          highP,
-          // #shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(5) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(13) > span.list-value
-          "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(6) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(13) > span.list-value"
-        );
-        boxHigh = await getItem(
-          highP,
-          "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(6) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(2) > span.list-value"
-        );
-        papersHigh = await getItem(
-          highP,
-          "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > div:nth-child(6) > div.specification-cell-left.cell.medium-12.small-12 > div > div:nth-child(3) > span.list-value"
-        );
-
-        console.log("Lowest:" + "\t" + lowest);
-        console.log("LowestYear:" + "\t" + yearLow);
-        console.log("LowestPaper" + "\t" + papersLow);
-        console.log("LowestBox" + "\t" + boxLow);
-
-        console.log("Highest:" + "\t" + highest);
-        console.log("HighestYear:" + "\t" + yearHigh);
-        console.log("HighestPaper:" + "\t" + papersHigh);
-        console.log("HighestBox:" + "\t" + boxHigh);
+        lowTable = await getItem(lowP, 'div[class="prod-specs"]');
+        highTable = await getItem(lowP, 'div[class="prod-specs"]');
       }
     }
+    lowYearIndex1 = -1;
+    lowYearIndex2 = -1;
+    if (lowTable.indexOf("Paper Date - ") != -1) {
+      lowYearIndex1 = lowTable.indexOf("Paper Date - ") + 13;
+      lowYearIndex2 = lowTable.indexOf("Case Size");
+    } else {
+      lowYearIndex1 = lowTable.indexOf("Approximate Age -") + 17;
+      lowYearIndex2 = lowTable.indexOf("Case Material");
+    }
+
+    lowBoxIndex1 = lowTable.indexOf("Box - ") + 6;
+    lowBoxIndex2 = lowTable.indexOf("Papers - ");
+    lowPaperIndex1 = lowBoxIndex2 + 9;
+    lowPaperIndex2 = lowTable.indexOf("Manual -");
+    //console.log(lowTable);
+    highYearIndex1 = -1;
+    highYearIndex2 = -1;
+    if (highTable.indexOf("Paper Date -") != -1) {
+      highYearIndex1 = highTable.indexOf("Paper Date - ") + 13;
+      highYearIndex2 = highTable.indexOf("Case Size");
+    } else {
+      highYearIndex1 = highTable.indexOf("Approximate Age -") + 17;
+      highYearIndex2 = highTable.indexOf("Case Material");
+    }
+
+    highBoxIndex1 = highTable.indexOf("Box - ") + 6;
+    highBoxIndex2 = highTable.indexOf("Papers - ");
+    highPaperIndex1 = highBoxIndex2 + 8;
+    highPaperIndex2 = highTable.indexOf("Manual -");
+
+    console.log("Lowest:" + "\t" + lowest);
+    console.log(
+      "LowestYear:" +
+        "\t" +
+        lowTable.substring(lowYearIndex1, lowYearIndex2).replace(/\s+/g, "")
+    );
+    console.log(
+      "LowestPaper" +
+        "\t" +
+        lowTable.substring(lowBoxIndex1, lowBoxIndex2).replace(/\s+/g, "")
+    );
+    console.log(
+      "LowestBox" +
+        "\t" +
+        lowTable.substring(lowPaperIndex1, lowPaperIndex2).replace(/\s+/g, "")
+    );
+    console.log("LOWEST URL: " + lowP.url() + "\n");
+
+    console.log("Highest:" + "\t" + highest);
+
+    console.log(
+      "highestYear:" +
+        "\t" +
+        highTable.substring(highYearIndex1, highYearIndex2).replace(/\s+/g, "")
+    );
+    console.log(
+      "highestPaper" +
+        "\t" +
+        highTable.substring(highBoxIndex1, highBoxIndex2).replace(/\s+/g, "")
+    );
+    console.log(
+      "highestBox" +
+        "\t" +
+        highTable
+          .substring(highPaperIndex1, highPaperIndex2)
+          .replace(/\s+/g, "")
+    );
+    console.log("HIGHEST URL: " + highP.url() + "\n\n");
   }
 }
+
 async function getItem(page, selector) {
   return String(await page.$eval(String(selector), (el) => el.textContent));
 }

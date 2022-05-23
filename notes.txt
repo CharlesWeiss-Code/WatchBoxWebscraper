@@ -1,6 +1,5 @@
-/*
+
 NEED TO DO:
-    - update bobs with custom selectors
     - screenshot pictures of watches for 
     second authentication?
     - deal with "TOP" choice from chrono.
@@ -10,4 +9,5 @@ NEED TO DO:
     - put start() inside start for recursive calling
     - filter data from Bobs table
     - give links for each watch.
-*/
+    - make sure daytonas are good in each function
+
