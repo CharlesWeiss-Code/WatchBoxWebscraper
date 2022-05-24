@@ -1,7 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
 
 async function davidsw(lowP, highP, tPage) {
-  for (var i = 5; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowTables = null;
     highTables = null;
@@ -44,19 +44,16 @@ async function davidsw(lowP, highP, tPage) {
         );
 
         //checkign to see if lowP is the list of watches or if it went straight to one watch.
-        if (tPage.url().indexOf("&post_type") != -1) {
-          await lowP.waitForSelector('span[class="price"]');
-          await highP.waitForSelector('span[class="price"]');
-
-          lowest = await utilFunc.getItem(lowP, 'span[class="price"]');
-          highest = await utilFunc.getItem(highP, 'span[class="price"]');
+        if (
+          await utilFunc.exists(
+            tPage,
+            "#wrapper > div > div.page-title-inner.flex-row.container.medium-flex-wrap.flex-has-center > div.flex-col.flex-center.text-center > h1"
+          )
+        ) {
+          await assignDataResults(lowP, highP);
         } else {
-          // only one watch therefore lowest = highest
-          await lowP.waitForSelector('span[class="price"]');
-
-          lowest = await utilFunc.getItem(lowP, 'span[class="price"]');
-
-          highest = lowest;
+          console.log("here");
+          await assignDataOneResult(lowP);
         }
       }
     } else if (refNums[i] == "116500LN-0002") {
@@ -82,20 +79,10 @@ async function davidsw(lowP, highP, tPage) {
           "https://davidsw.com/?orderby=price-desc&paged=1&filter_dial-color=black&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1"
         );
 
-        if (tPage.url().indexOf("&post_type") != -1) {
-          // checking to see if it shows multiple watches or went straight to one watch
-          await lowP.waitForSelector('span[class="price"]');
-          await highP.waitForSelector('span[class="price"]');
-
-          lowest = await utilFunc.getItem(lowP, 'span[class="price"]');
-          highest = await utilFunc.getItem(highP, 'span[class="price"]');
+        if (await utilFunc.exists(tPage, 'div[class="shop-container"]')) {
+          await assignDataResults(lowP, highP);
         } else {
-          // only one watch therefore lowest = highest
-          await lowP.waitForSelector('span[class="price"]');
-
-          lowest = await utilFunc.getItem(lowP, 'span[class="price"]');
-
-          highest = lowest;
+          await assignDataOneResult(lowP);
         }
       }
     } else {
@@ -121,104 +108,47 @@ async function davidsw(lowP, highP, tPage) {
         if (
           await utilFunc.exists(
             tPage,
-            "#main > div > div.col.large-9 > div > div.products.row.row-small.large-columns-3.medium-columns-3.small-columns-2.has-equal-box-heights.equalize-box"
+            "#wrapper > div > div.page-title-inner.flex-row.container.medium-flex-wrap.flex-has-center > div.flex-col.flex-center.text-center > h1"
           )
         ) {
-          // checking to see if it shows multiple watches or went straight to one watch
-          await lowP.waitForSelector('span[class="price"]');
-
-          lowest = await utilFunc.getItem(lowP, 'span[class="price"]');
-
-          await highP.waitForSelector('span[class="price"]');
-          highest = await utilFunc.getItem(highP, 'span[class="price"]');
-
-          await lowP.waitForSelector('div[class="title-wrapper"]');
-          await highP.waitForSelector('div[class="title-wrapper"]');
-
-          await lowP.click('div[class="title-wrapper"]', { delay: 20 });
-          await highP.click('div[class="title-wrapper"]', { delay: 20 });
-
-          await lowP.waitForSelector("tbody");
-          await highP.waitForSelector("tbody");
-
-          lowTables = await lowP.$$eval("tbody", (options) =>
-            options.map((option) => option.textContent)
-          );
-          highTables = await highP.$$eval("tbody", (options) =>
-            options.map((option) => option.textContent)
-          );
-
-          lowTableBoxAndPaper = lowTables[6];
-          lowTableGeneral = lowTables[0];
-
-          highTableBoxAndPaper = highTables[6];
-          highTableGeneral = highTables[0];
-
-          lowBoxIndex1 = lowTableBoxAndPaper.indexOf("Box") + 3;
-          lowBoxIndex2 = lowTableBoxAndPaper.indexOf("Hangtag");
-
-          highBoxIndex1 = highTableBoxAndPaper.indexOf("Box") + 3;
-          highBoxIndex2 = highTableBoxAndPaper.indexOf("Hangtag");
-
-          lowBox = lowTableBoxAndPaper.substring(lowBoxIndex1, lowBoxIndex2);
-          highBox = highTableBoxAndPaper.substring(
-            highBoxIndex1,
-            highBoxIndex2
-          );
-
-          lowPaperIndex1 =
-            lowTableBoxAndPaper.indexOf("Warranty Papers / Card") + 22;
-
-          highPaperIndex1 =
-            highTableBoxAndPaper.indexOf("Warranty Papers / Card") + 22;
-
-          lowPaper = lowTableBoxAndPaper.substring(lowPaperIndex1);
-          highPaper = highTableBoxAndPaper.substring(highPaperIndex1);
-
-          indexLow = lowTableGeneral.indexOf("Year");
-          if (indexLow != -1) {
-            lowYear = lowTableGeneral.substring(indexLow + 4);
-          }
-          indexHigh = highTableGeneral.indexOf("Year");
-          if (indexHigh != -1) {
-            highYear = highTableGeneral.substring(indexHigh + 4);
-          }
+          await assignDataResults(lowP, highP);
         } else {
-          await lowP.waitForSelector("tbody");
-          lowTables = await lowP.$$eval("tbody", (options) =>
-            options.map((option) => option.textContent)
-          );
-          console.log(tPage.url());
-          // only one watch therefore highData = lowData
-          // already on the specific watch page. no need to click anything
-          lowest = await utilFunc.getItem(
-            lowP,
-            'span[class="woocommerce-Price-amount amount"]'
-          );
-          lowTableBoxAndPaper = lowTables.at(6);
-          lowBoxIndex1 = lowTableBoxAndPaper.indexOf("Box") + 3;
-          lowBoxIndex2 = lowTableBoxAndPaper.indexOf("Hangtag");
-
-          lowBox = lowTableBoxAndPaper.substring(lowBoxIndex1, lowBoxIndex2);
-
-          lowPaperIndex1 =
-            lowTableBoxAndPaper.indexOf("Warranty Papers / Card") + 22;
-
-          lowPaper = lowTableBoxAndPaper.substring(lowPaperIndex1);
-          lowTableGeneral = lowTables.at(0);
-          indexLow = lowTableGeneral.indexOf("Year");
-          if (indexLow != -1) {
-            lowYear = lowTableGeneral.substring(indexLow + 4);
-          }
-
-          highest = lowest;
-          highYear = lowYear;
-          highBox = lowBox;
-          highPaper = lowPaper;
+          await assignDataOneResult(lowP);
         }
       }
     }
     //console.log("LOW TABLES: " + lowTables + "\n");
+    lowTableBoxAndPaper = lowTables[6];
+    lowTableGeneral = lowTables[0];
+
+    highTableBoxAndPaper = highTables[6];
+    highTableGeneral = highTables[0];
+
+    lowBoxIndex1 = lowTableBoxAndPaper.indexOf("Box") + 3;
+    lowBoxIndex2 = lowTableBoxAndPaper.indexOf("Hangtag");
+
+    highBoxIndex1 = highTableBoxAndPaper.indexOf("Box") + 3;
+    highBoxIndex2 = highTableBoxAndPaper.indexOf("Hangtag");
+
+    lowBox = lowTableBoxAndPaper.substring(lowBoxIndex1, lowBoxIndex2);
+    highBox = highTableBoxAndPaper.substring(highBoxIndex1, highBoxIndex2);
+
+    lowPaperIndex1 = lowTableBoxAndPaper.indexOf("Warranty Papers / Card") + 22;
+
+    highPaperIndex1 =
+      highTableBoxAndPaper.indexOf("Warranty Papers / Card") + 22;
+
+    lowPaper = lowTableBoxAndPaper.substring(lowPaperIndex1);
+    highPaper = highTableBoxAndPaper.substring(highPaperIndex1);
+
+    indexLow = lowTableGeneral.indexOf("Year");
+    if (indexLow != -1) {
+      lowYear = lowTableGeneral.substring(indexLow + 4);
+    }
+    indexHigh = highTableGeneral.indexOf("Year");
+    if (indexHigh != -1) {
+      highYear = highTableGeneral.substring(indexHigh + 4);
+    }
     console.log("Lowest: " + lowest);
     console.log("Low Year: " + lowYear.replace(/\s+/g, ""));
     console.log("Low Box: " + lowBox.replace(/\s+/g, ""));
@@ -233,3 +163,46 @@ async function davidsw(lowP, highP, tPage) {
 }
 
 module.exports = { davidsw };
+
+async function assignDataOneResult(lowP) {
+  await lowP.waitForSelector("tbody");
+  lowTables = await lowP.$$eval("tbody", (options) =>
+    options.map((option) => option.textContent)
+  );
+
+  // only one watch therefore highData = lowData
+  // already on the specific watch page. no need to click anything
+  lowest = await utilFunc.getItem(
+    lowP,
+    'span[class="woocommerce-Price-amount amount"]'
+  );
+
+  highest = lowest;
+  highTables = lowTables;
+}
+
+async function assignDataResults(lowP, highP) {
+  // checking to see if it shows multiple watches or went straight to one watch
+  await lowP.waitForSelector('span[class="price"]');
+
+  lowest = await utilFunc.getItem(lowP, 'span[class="price"]');
+
+  await highP.waitForSelector('span[class="price"]');
+  highest = await utilFunc.getItem(highP, 'span[class="price"]');
+
+  await lowP.waitForSelector('div[class="title-wrapper"]');
+  await highP.waitForSelector('div[class="title-wrapper"]');
+
+  await lowP.click('div[class="title-wrapper"]', { delay: 20 });
+  await highP.click('div[class="title-wrapper"]', { delay: 20 });
+
+  await lowP.waitForSelector("tbody");
+  await highP.waitForSelector("tbody");
+
+  lowTables = await lowP.$$eval("tbody", (options) =>
+    options.map((option) => option.textContent)
+  );
+  highTables = await highP.$$eval("tbody", (options) =>
+    options.map((option) => option.textContent)
+  );
+}
