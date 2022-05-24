@@ -48,8 +48,7 @@ async function bazaar(lowP, highP, tPage) {
         "#searchspring-content > div.category-products.ng-scope > div > ul > li:nth-child(1) > a"
       );
       console.log("LOWPAGE URL: " + lowP.url());
-      await lowP.waitForTimeout(1000);
-      await highP.waitForTimeout(1000);
+      await lowP.waitForSelector('div[class="attributes-table-container"]');
 
       lowTable = await getItem(lowP, 'div[class="attributes-table-container"]');
       lowYearIndex1 = lowTable.indexOf("Year of Manufacture") + 19;
@@ -58,6 +57,7 @@ async function bazaar(lowP, highP, tPage) {
       lowBPIndex1 = lowTable.indexOf("Included") + 8;
       lowBPIndex2 = lowTable.indexOf("Lug Material");
 
+      await highP.waitForSelector('div[class="attributes-table-container"]');
       highTable = await utilFunc.getItem(
         highP,
         'div[class="attributes-table-container"]'

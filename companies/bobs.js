@@ -19,15 +19,50 @@ async function bobs(lowP, highP, tPage) {
       lowest = 0;
       highest = 0;
     } else {
-      lowest = await findLowestPriceBobs(lowP, newURL);
-      highest = await findHighestPriceBobs(highP, newURL);
+      await lowP.goto(newURL + "#/sort:price:asc", {
+        waitUntil: "networkidle0",
+      });
+      await highP.goto(newURL + "#/sort:price:desc", {
+        waitUntil: "networkidle0",
+      });
+
+      await lowP.waitForSelector(
+        "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding"
+      );
+      await highP.waitForSelector(
+        "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding"
+      );
+
+      lowest = await utilFunc.getItem(
+        lowP,
+        "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding"
+      );
+      highest = await utilFunc.getItem(
+        highP,
+        "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding"
+      );
+
+      // if the selector is there then the <a> must me there
+
       await lowP.click(
         "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a",
         { delay: 20 }
       );
-      await lowP.waitForTimeout(2000);
+
+      await highP.click(
+        "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a",
+        { delay: 20 }
+      );
+
+      await lowP.waitForSelector("tbody");
+      await highP.waitForSelector("tbody");
 
       lowTable = await lowP.$$eval(
+        "tbody",
+        (options) => options[1].textContent
+      );
+
+      highTable = await highP.$$eval(
         "tbody",
         (options) => options[1].textContent
       );
@@ -41,17 +76,6 @@ async function bobs(lowP, highP, tPage) {
       index2YearLow = lowTable.indexOf("Gender:");
       index1BPLow = lowTable.indexOf("Box & Papers") + 13;
       index2BPLow = lowTable.indexOf("Warranty");
-
-      await highP.click(
-        "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a",
-        { delay: 20 }
-      );
-      await highP.waitForTimeout(2000);
-
-      highTable = await highP.$$eval(
-        "tbody",
-        (options) => options[1].textContent
-      );
 
       index1YearHigh = -1;
       if (highTable.indexOf("Serial/Year:") != -1) {
@@ -88,34 +112,6 @@ async function bobs(lowP, highP, tPage) {
       console.log("HIGHEST URL: " + highP.url());
     }
   }
-}
-
-async function findLowestPriceBobs(page, link) {
-  newLink = link + "#/sort:price:asc";
-  await page.goto(newLink, { waitUntil: "networkidle0", timeout: 0 });
-  return await page
-    .$eval(
-      "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding",
-      (price) => price.textContent
-    )
-    .catch(async () => {
-      await page.reload({ waitUntil: "networkidle0" });
-      findHighestPriceBobs(page, link);
-    });
-}
-
-async function findHighestPriceBobs(page, link) {
-  newLink = link + "#/sort:price:desc";
-  await page.goto(newLink, { waitUntil: "networkidle0", timeout: 0 });
-  return await page
-    .$eval(
-      "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding",
-      (price) => price.textContent
-    )
-    .catch(async () => {
-      await page.reload({ waitUntil: "networkidle0" });
-      findHighestPriceBobs(page, link);
-    });
 }
 
 module.exports = { bobs };

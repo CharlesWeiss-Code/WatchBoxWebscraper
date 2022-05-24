@@ -1,8 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
 
 async function crownAndCaliber(lowP, highP, tPage) {
-  specification = [];
-  for (var i = 2; i < refNums.length; i++) {
+  for (var i = 4; i < refNums.length; i++) {
     lowTable = null;
     highTable = null;
     url =
@@ -32,8 +31,14 @@ async function crownAndCaliber(lowP, highP, tPage) {
           "https://www.crownandcaliber.com/search?view=shop&q=116500LN#/filter:mfield_global_dial_color:White/sort:ss_price:desc",
           { waitUntil: "networkidle0" }
         );
-        lowest = await findLowestPrice2CandC(lowP);
-        highest = await findHighestPrice2CandC(highP);
+        lowest = await utilFunc.getItem(
+          lowP,
+          'span[class="current-price product-price__price"]'
+        );
+        highest = await utilFunc.getItem(
+          highP,
+          'span[class="current-price product-price__price"]'
+        );
 
         await lowP.click(
           "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
@@ -65,9 +70,12 @@ async function crownAndCaliber(lowP, highP, tPage) {
           "https://www.crownandcaliber.com/search?view=shop&q=116500LN#/filter:mfield_global_dial_color:Black/sort:ss_price:asc",
           { waitUntil: "networkidle0" }
         );
-        await lowP.waitForTimeout(500);
+        await lowP.waitForTimeout(1000);
 
-        lowest = await findLowestPrice2CandC(lowP);
+        lowest = await utilFunc.getItem(
+          lowP,
+          'span[class="current-price product-price__price"]'
+        );
 
         await lowP.click(
           "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
@@ -78,9 +86,12 @@ async function crownAndCaliber(lowP, highP, tPage) {
           "https://www.crownandcaliber.com/search?view=shop&q=116500LN#/filter:mfield_global_dial_color:Black/sort:ss_price:desc",
           { waitUntil: "networkidle0" }
         );
-        await highP.waitForTimeout(500);
+        await highP.waitForTimeout(1000);
 
-        highest = await findHighestPrice2CandC(highP);
+        highest = await utilFunc.getItem(
+          highP,
+          'span[class="current-price product-price__price"]'
+        );
 
         await highP.click(
           "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
@@ -98,23 +109,39 @@ async function crownAndCaliber(lowP, highP, tPage) {
         highest = 0;
       } else {
         console.log("\n");
-        console.log(url);
-        lowest = await findLowestPriceCandC(lowP, url);
-        highest = await findHighestPriceCandC(highP, url);
+        lowP.goto(url + "#/sort:ss_price:asc", { waituntil: "networkidle0" });
+        highP.goto(url + "#/sort:ss_price:desc", { waituntil: "networkidle0" });
+
+        await lowP.waitForSelector(
+          'span[class="current-price product-price__price"]'
+        );
+
+        lowest = await utilFunc.getItem(
+          lowP,
+          'span[class="current-price product-price__price"]'
+        );
+
+        await highP.waitForSelector(
+          'span[class="current-price product-price__price"]'
+        );
+        highest = await utilFunc.getItem(
+          highP,
+          'span[class="current-price product-price__price"]'
+        );
 
         await lowP.click(
           "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
           { delay: 20 }
         );
-        await lowP.waitForTimeout(500);
+        await lowP.waitForSelector('div[class="prod-specs"]');
+        lowTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
 
         await highP.click(
           "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
           { delay: 20 }
         );
-        await highP.waitForTimeout(500);
 
-        lowTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
+        await highP.waitForSelector('div[class="prod-specs"]');
         highTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
       }
     }
@@ -187,40 +214,6 @@ async function crownAndCaliber(lowP, highP, tPage) {
     );
     console.log("HIGHEST URL: " + highP.url() + "\n\n");
   }
-}
-
-async function findLowestPriceCandC(page, link) {
-  newUrl = link + "#/sort:ss_price:asc";
-  await page.goto(newUrl, { waitUntil: "networkidle0" });
-
-  return await page.$eval(
-    "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > span.current-price.product-price__price > span",
-    (price) => price.textContent
-  );
-}
-
-async function findLowestPrice2CandC(page) {
-  return await page.$eval(
-    "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > span.current-price.product-price__price > span",
-    (price) => price.textContent
-  );
-}
-
-async function findHighestPrice2CandC(page) {
-  return await page.$eval(
-    "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > span.current-price.product-price__price > span",
-    (price) => price.textContent
-  );
-}
-async function findHighestPriceCandC(page, link) {
-  newUrl = link + "#/sort:ss_price:desc";
-  console.log(newUrl);
-  await page.goto(newUrl, { waitUntil: "networkidle0" });
-
-  return await page.$eval(
-    "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > span.current-price.product-price__price > span",
-    (price) => price.textContent
-  );
 }
 
 module.exports = { crownAndCaliber };
