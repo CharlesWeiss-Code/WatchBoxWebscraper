@@ -2,15 +2,17 @@ const { download } = require("express/lib/response");
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const request = require("request");
-const utilFunc = require("./utilityFunctions.js");
+
 const CandC = require("./companies/CandC.js");
 const chrono = require("./companies/crono.js");
 const ewc = require("./companies/ewc.js");
 const Bazaar = require("./companies/bazaar.js");
 const david = require("./companies/davidsw.js");
 const Bobs = require("./companies/bobs.js");
+
 const REF = require("./refNums.js");
 const minArgs = require("./minimalArgs");
+const utilFunc = require("./utilityFunctions.js");
 
 /*
 I HAVE MADE TIMEOUT: 0 ON SOME OF THE PAGE.GOTO(). just for testing. eventually should make timeout:60000 (1min)
@@ -59,5 +61,4 @@ async function start() {
 
   await browser.close();
 }
-
 start();
