@@ -9,4 +9,5 @@ NEED TO DO:
     - make sure daytonas are good in each function
     - add promise catches to all functions that use them. This cannot crash. 
     - refactor
+    - in CandC, there doesnt need to be 4 fucntions for finding price
 
