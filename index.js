@@ -2,6 +2,7 @@ const { download } = require("express/lib/response");
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const request = require("request");
+const testFunctions = require("./test.js");
 
 refNums = [
   "wefouwbefowebfowef",
@@ -88,6 +89,7 @@ async function start() {
     }
   });
 
+  console.log(testFunctions.test(2));
   await crownAndCaliber(lowPage, highPage, testPage); // mostly done (daytona stuff)
   //await bobs(lowPage, highPage, testPage); // mostly done (filter table data)
   //await davidsw(lowPage, highPage, testPage); // mostly done (filter table data)
@@ -95,6 +97,7 @@ async function start() {
   //await EWC(lowPage, highPage, testPage); //pretty much done
   //await chrono(lowPage, highPage, testPage); // done;
   //start();
+
   await browser.close();
 }
 
@@ -284,7 +287,6 @@ async function findPriceEWC(page, url, type) {
     return highest;
   }
 }
-
 async function bazaar(lowP, highP, tPage) {
   for (var i = 2; i < refNums.length; i++) {
     console.log("");
@@ -611,7 +613,7 @@ async function findHighestPriceDavidsw(page, refNum) {
 }
 
 async function bobs(lowP, highP, tPage) {
-  for (var i = 1; i < refNums.length; i++) {
+  for (var i = 8; i < refNums.length; i++) {
     console.log("");
     lowest = -1;
     highest = -1;
@@ -641,12 +643,16 @@ async function bobs(lowP, highP, tPage) {
         "tbody",
         (options) => options[1].textContent
       );
-      //console.log("LowTable " + lowTable);
 
-      index1YearLow = lowTable.indexOf("Serial") + 6;
+      index1YearLow = -1;
+      if (lowTable.indexOf("Serial/Year:") != -1) {
+        index1YearLow = lowTable.indexOf("Serial/Year:") + 12;
+      } else {
+        index1YearLow = lowTable.indexOf("Serial") + 6;
+      }
       index2YearLow = lowTable.indexOf("Gender:");
-      index1BPLow = lowTable.indexOf("Box & Papers:") + 13;
-      index2BPLow = lowTable.indexOf("Warranty:");
+      index1BPLow = lowTable.indexOf("Box & Papers") + 13;
+      index2BPLow = lowTable.indexOf("Warranty");
 
       await highP.click(
         "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a",
@@ -659,35 +665,37 @@ async function bobs(lowP, highP, tPage) {
         (options) => options[1].textContent
       );
 
-      index1YearHigh = highTable.indexOf("Serial") + 6;
+      index1YearHigh = -1;
+      if (highTable.indexOf("Serial/Year:") != -1) {
+        index1YearHigh = highTable.indexOf("Serial/Year:") + 12;
+      } else {
+        index1YearHigh = highTable.indexOf("Serial") + 6;
+      }
       index2YearHigh = highTable.indexOf("Gender:");
-      index1BPHigh = highTable.indexOf("Box & Papers:") + 13;
-      index2BPHigh = highTable.indexOf("Warranty:");
+      index1BPHigh = highTable.indexOf("Box & Papers") + 13;
 
-      //console.log("🔵🔵🔵🔵🔵🔵🔵" + lowTable);
+      index2BPHigh = highTable.indexOf("Warranty");
+      [lowYear] = lowTable
+        .substring(index1YearLow, index2YearLow)
+        .match(/(\d+)/);
+
+      [highYear] = highTable
+        .substring(index1YearLow, index2YearLow)
+        .match(/(\d+)/);
+
       console.log("Lowest: " + "\t" + lowest.replace(/\s+/g, ""));
+      console.log("LowYear: " + "\t" + lowYear);
       console.log(
-        "LowYear: " +
-          "\t" +
-          lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, "")
-      );
-      console.log(
-        "lowBoxAndPapers" +
-          "\t" +
-          lowTable.substring(index1BPLow, index2BPLow).replace(/\s+/g, "")
+        "lowBoxAndPapers" + "\t" + lowTable.substring(index1BPLow, index2BPLow)
       );
       console.log("LOWEST URL: " + lowP.url());
 
       console.log("Highest: " + "\t" + highest.replace(/\s+/g, ""));
+      console.log("HighYear: " + "\t" + highYear);
       console.log(
-        "HighYear: " +
+        "HighBoxAndPapers: " +
           "\t" +
-          lowTable.substring(index1YearHigh, index2YearHigh).replace(/\s+/g, "")
-      );
-      console.log(
-        "HighBoxAndPapers" +
-          "\t" +
-          lowTable.substring(index1BPHigh, index2BPHigh).replace(/\s+/g, "")
+          highTable.substring(index1BPHigh, index2BPHigh)
       );
       console.log("HIGHEST URL: " + highP.url());
     }
@@ -697,19 +705,29 @@ async function bobs(lowP, highP, tPage) {
 async function findLowestPriceBobs(page, link) {
   newLink = link + "#/sort:price:asc";
   await page.goto(newLink, { waitUntil: "networkidle0", timeout: 0 });
-  return await page.$eval(
-    "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding",
-    (price) => price.textContent
-  );
+  return await page
+    .$eval(
+      "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding",
+      (price) => price.textContent
+    )
+    .catch(async () => {
+      await page.reload({ waitUntil: "networkidle0" });
+      findHighestPriceBobs(page, link);
+    });
 }
 
 async function findHighestPriceBobs(page, link) {
   newLink = link + "#/sort:price:desc";
   await page.goto(newLink, { waitUntil: "networkidle0", timeout: 0 });
-  return await page.$eval(
-    "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding",
-    (price) => price.textContent
-  );
+  return await page
+    .$eval(
+      "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding",
+      (price) => price.textContent
+    )
+    .catch(async () => {
+      await page.reload({ waitUntil: "networkidle0" });
+      findHighestPriceBobs(page, link);
+    });
 }
 
 var downloadCustom = function (uri, filename) {
