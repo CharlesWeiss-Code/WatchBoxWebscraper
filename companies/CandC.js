@@ -9,7 +9,7 @@ lowTable = "";
 highTable = "";
 
 async function crownAndCaliber(lowP, highP, tPage) {
-  for (var i = 5; i < refNums.length; i++) {
+  for (var i = 3; i < refNums.length; i++) {
     lowYear = "";
     lowPaper = "";
     lowBox = "";
@@ -41,6 +41,21 @@ async function crownAndCaliber(lowP, highP, tPage) {
         await highP.waitForTimeout(500);
         lowTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
         highTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
+
+        let lowURL = await lowP.evaluate(() => {
+          const image = document.querySelector(
+            "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-5.medium-12.small-12 > div > div > div > div.slider.slick-initialized.slick-slider > div.slick-list.draggable > div > div.slick-slide.slick-current.slick-active > div > div > img:nth-child(1)"
+          );
+          return image.src;
+        });
+        let highURL = await highP.evaluate(() => {
+          const image = document.querySelector(
+            "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-5.medium-12.small-12 > div > div > div > div.slider.slick-initialized.slick-slider > div.slick-list.draggable > div > div.slick-slide.slick-current.slick-active > div > div > img:nth-child(1)"
+          );
+          return image.src;
+        });
+        await utilFunc.downloadImage(lowURL, refNums[i] + "-CandC-LOW");
+        await utilFunc.downloadImage(highURL, refNums[i] + "-CandC-HIGH");
       }
     } else if (refNums[i] == "116500LN-0002") {
       //SPECIAL BLACK DAYTONA
@@ -60,6 +75,20 @@ async function crownAndCaliber(lowP, highP, tPage) {
 
         lowTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
         highTable = await utilFunc.getItem(highP, 'div[class="prod-specs"]');
+        let lowURL = await lowP.evaluate(() => {
+          const image = document.querySelector(
+            "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-5.medium-12.small-12 > div > div > div > div.slider.slick-initialized.slick-slider > div.slick-list.draggable > div > div.slick-slide.slick-current.slick-active > div > div > img:nth-child(1)"
+          );
+          return image.src;
+        });
+        let highURL = await highP.evaluate(() => {
+          const image = document.querySelector(
+            "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-5.medium-12.small-12 > div > div > div > div.slider.slick-initialized.slick-slider > div.slick-list.draggable > div > div.slick-slide.slick-current.slick-active > div > div > img:nth-child(1)"
+          );
+          return image.src;
+        });
+        await utilFunc.downloadImage(lowURL, refNums[i] + "-CandC-LOW");
+        await utilFunc.downloadImage(highURL, refNums[i] + "-CandC-HIGH");
       }
     } else {
       await tPage.goto(url, { waitUntil: "networkidle0" });
@@ -141,10 +170,17 @@ assignData = () => {
 };
 
 prepare = async (lowP, highP, link) => {
-  await lowP.goto(link + "#/sort:ss_price:asc", { waitUntil: "networkidle0" });
-  await highP.goto(link + "#/sort:ss_price:desc", {
+  endAsc = "#/sort:ss_price:asc";
+  endDesc = "#/sort:ss_price:desc";
+  if (link.indexOf("116500LN") != -1) {
+    endAsc = "/sort:ss_price:asc";
+    endDesc = "/sort:ss_price:desc";
+  }
+  await lowP.goto(link + endAsc, { waitUntil: "networkidle0" });
+  await highP.goto(link + endDesc, {
     waitUntil: "networkidle0",
   });
+  console.log("lowurl: " + lowP.url());
   lowest = await utilFunc.getItem(
     lowP,
     'span[class="current-price product-price__price"]'
