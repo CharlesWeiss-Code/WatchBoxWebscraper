@@ -10,4 +10,5 @@ NEED TO DO:
     - add promise catches to all functions that use them. This cannot crash. 
     - add waitForSelector to getItem
     - change waitForTimeout to waitForSelector
+    - bobs papers not rolex brand
 
