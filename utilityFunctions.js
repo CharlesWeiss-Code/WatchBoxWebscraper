@@ -20,10 +20,12 @@ async function noResults2(page, selector, s) {
   return noResults;
 }
 
-function downloadImage(uri, filename) {
+function downloadImage(uri, fileName) {
   return new Promise((resolve, reject) => {
     request.head(uri, function (err, res, body) {
-      request(uri).pipe(fs.createWriteStream(filename)).on("close", resolve);
+      request(uri)
+        .pipe(fs.createWriteStream("./watchImages/" + fileName + ".png"))
+        .on("close", resolve);
     });
   });
 }
