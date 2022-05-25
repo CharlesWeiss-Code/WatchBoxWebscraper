@@ -56,7 +56,7 @@ async function start() {
   //await david.davidsw(lowPage, highPage, testPage); // mostly done (filter table data)
   //await Bazaar.bazaar(lowPage, highPage, testPage); // Done
   //await ewc.EWC(lowPage, highPage, testPage); //pretty much done
-  //await chrono.chrono24(lowPage, highPage, testPage); // done;
+  await chrono.chrono24(lowPage, highPage, testPage); // done;
   //start();
 
   await browser.close();
