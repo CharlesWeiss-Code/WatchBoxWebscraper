@@ -34,6 +34,7 @@ async function davidsw(lowP, highP, tPage) {
         // no results
         continue;
       } else {
+        await tPage.waitForTimeout(1000);
         await lowP.goto(
           "https://davidsw.com/?orderby=price&paged=1&filter_dial-color=white&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1",
           { waitUntil: "networkidle0" }
