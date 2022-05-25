@@ -1,7 +1,9 @@
 const utilFunc = require("../utilityFunctions.js");
 
 async function bobs(lowP, highP, tPage) {
-  for (var i = 6; i < refNums.length; i++) {
+  //DO DAYTONA. MAKE SCREENSHOT
+
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = -1;
     highest = -1;
@@ -22,10 +24,32 @@ async function bobs(lowP, highP, tPage) {
       await lowP.goto(newURL + "#/sort:price:asc", {
         waitUntil: "networkidle0",
       });
+
+      await select(
+        lowP,
+        "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
+        "Price - Low to High"
+      );
+
       await highP.goto(newURL + "#/sort:price:desc", {
         waitUntil: "networkidle0",
       });
 
+      await select(
+        highP,
+        "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
+        "Price - High to Low"
+      );
+
+      await lowP.click(
+        "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
+        "3"
+      );
+
+      await highP.click(
+        "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
+        "2"
+      );
       await lowP.waitForSelector(
         "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding"
       );
@@ -74,8 +98,12 @@ async function bobs(lowP, highP, tPage) {
         index1YearLow = lowTable.indexOf("Serial") + 6;
       }
       index2YearLow = lowTable.indexOf("Gender:");
-      index1BPLow = lowTable.indexOf("Box & Papers") + 13;
-      index2BPLow = lowTable.indexOf("Warranty");
+      PLow = "null";
+      if (lowTable.indexOf("Rolex warranty card") != -1) {
+        index1BPLow = lowTable.indexOf("Rolex warranty card");
+        index2BPLow = lowTable.indexOf("Warranty");
+        PLow = lowTable.substring(index1BPLow, index2BPLow);
+      }
 
       index1YearHigh = -1;
       if (highTable.indexOf("Serial/Year:") != -1) {
@@ -84,33 +112,59 @@ async function bobs(lowP, highP, tPage) {
         index1YearHigh = highTable.indexOf("Serial") + 6;
       }
       index2YearHigh = highTable.indexOf("Gender:");
-      index1BPHigh = highTable.indexOf("Box & Papers") + 13;
+      PHigh = "null";
+      if (highTable.indexOf("Rolex warranty card") != -1) {
+        index1BPHigh = highTable.indexOf("Rolex warranty card");
+        index2BPHigh = highTable.indexOf("Warranty");
+        PHigh = highTable.substring(index1BPHigh, index2BPHigh);
+      }
 
-      index2BPHigh = highTable.indexOf("Warranty");
-      [lowYear] = lowTable
-        .substring(index1YearLow, index2YearLow)
-        .match(/(\d+)/);
+      lowYear = "-1";
+      if (
+        lowTable.substring(index1YearLow, index2YearLow).indexOf("X,X") === -1
+      ) {
+        [lowYear] = lowTable
+          .substring(index1YearLow, index2YearLow)
+          .match(/(\d+)/);
+      }
 
-      [highYear] = highTable
-        .substring(index1YearHigh, index2YearHigh)
-        .match(/(\d+)/);
+      highYear = "-1";
+      if (
+        highTable.substring(index1YearHigh, index2YearHigh).indexOf("X,X") ===
+        -1
+      ) {
+        [highYear] = highTable
+          .substring(index1YearHigh, index2YearHigh)
+          .match(/(\d+)/);
+      }
+
       console.log("Lowest: " + "\t" + lowest.replace(/\s+/g, ""));
       console.log("LowYear: " + "\t" + lowYear);
-      console.log(
-        "lowBoxAndPapers" + "\t" + lowTable.substring(index1BPLow, index2BPLow)
-      );
-      console.log("LOWEST URL: " + lowP.url());
+      console.log("Papers Low" + "\t" + PLow);
+      console.log("LOWEST URL: " + lowP.url() + "\n");
 
       console.log("Highest: " + "\t" + highest.replace(/\s+/g, ""));
       console.log("HighYear: " + "\t" + highYear);
-      console.log(
-        "HighBoxAndPapers: " +
-          "\t" +
-          highTable.substring(index1BPHigh, index2BPHigh)
-      );
+      console.log("Papers High: " + "\t" + PHigh);
       console.log("HIGHEST URL: " + highP.url());
     }
   }
 }
 
+async function select(page, sel, Text) {
+  let $elemHandler = await page.$(sel);
+  let properties = await $elemHandler.getProperties();
+  for (const property of properties.values()) {
+    const element = property.asElement();
+    if (element) {
+      let hText = await element.getProperty("text");
+      let text = await hText.jsonValue();
+      if (text === Text) {
+        let hValue = await element.getProperty("value");
+        let value = await hValue.jsonValue();
+        await page.select(sel, value); // or use 58730
+      }
+    }
+  }
+}
 module.exports = { bobs };

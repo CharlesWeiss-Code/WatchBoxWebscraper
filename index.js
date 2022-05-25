@@ -34,7 +34,10 @@ async function start() {
   await lowPage.setRequestInterception(true);
   lowPage.on("request", (request) => {
     const url = request.url();
-    if (blocked_domains.some((domain) => url.includes(domain))) {
+    if (
+      blocked_domains.some((domain) => url.includes(domain)) ||
+      (request.isNavigationRequest() && request.redirectChain().length)
+    ) {
       request.abort();
     } else {
       request.continue();
@@ -44,7 +47,10 @@ async function start() {
   await highPage.setRequestInterception(true);
   highPage.on("request", (request) => {
     const url = request.url();
-    if (blocked_domains.some((domain) => url.includes(domain))) {
+    if (
+      blocked_domains.some((domain) => url.includes(domain)) ||
+      (request.isNavigationRequest() && request.redirectChain().length)
+    ) {
       request.abort();
     } else {
       request.continue();
@@ -52,11 +58,11 @@ async function start() {
   });
 
   //await CandC.crownAndCaliber(lowPage, highPage, testPage); // mostly done (daytona stuff)
-  //await Bobs.bobs(lowPage, highPage, testPage); // mostly done
+  await Bobs.bobs(lowPage, highPage, testPage); // mostly done
   //await david.davidsw(lowPage, highPage, testPage); // mostly done (filter table data)
   //await Bazaar.bazaar(lowPage, highPage, testPage); // Done
   //await ewc.EWC(lowPage, highPage, testPage); //pretty much done
-  await chrono.chrono24(lowPage, highPage, testPage); // done;
+  //await chrono.chrono24(lowPage, highPage, testPage); // done;
   //start();
 
   await browser.close();

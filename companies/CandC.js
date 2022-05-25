@@ -105,8 +105,8 @@ async function crownAndCaliber(lowP, highP, tPage) {
       await tPage.goto(url, { waitUntil: "networkidle0" });
 
       if (await utilFunc.noResults(tPage, "#searchspring-content > h3")) {
-        lowest = 0;
-        highest = 0;
+        lowest = -1;
+        highest = -1;
       } else {
         console.log("\n");
         lowP.goto(url + "#/sort:ss_price:asc", { waituntil: "networkidle0" });
