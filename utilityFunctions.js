@@ -1,3 +1,6 @@
+const fs = require("fs");
+const request = require("request");
+
 async function noResults(page, selector) {
   var noResultsVar = false;
   if ((await page.$(selector)) != null) {
@@ -17,17 +20,13 @@ async function noResults2(page, selector, s) {
   return noResults;
 }
 
-var downloadImage = function (uri, filename) {
-  request.head(uri, function (err, res, body) {
-    // console.log("content-type:", res.headers["content-type"]);
-    // console.log("content-length:", res.headers["content-length"]);
-    request(uri)
-      .pipe(fs.createWriteStream(filename))
-      .on("close", () => {
-        console.log("downloaded image");
-      });
+function downloadImage(uri, filename) {
+  return new Promise((resolve, reject) => {
+    request.head(uri, function (err, res, body) {
+      request(uri).pipe(fs.createWriteStream(filename)).on("close", resolve);
+    });
   });
-};
+}
 
 async function getItem(page, selector) {
   return String(await page.$eval(String(selector), (el) => el.textContent));

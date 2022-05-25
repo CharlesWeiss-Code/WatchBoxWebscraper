@@ -11,7 +11,7 @@ PLow = "";
 async function bobs(lowP, highP, tPage) {
   //DO DAYTONA. MAKE SCREENSHOT
 
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 2; i < refNums.length; i++) {
     console.log("");
     lowest = "";
     highest = "";
@@ -37,9 +37,19 @@ async function bobs(lowP, highP, tPage) {
         await prepare(lowP, highP, specialURL); // sorts page
         await getData(lowP, highP); // gets data tables and price
         // take screenshot
+        let lowURL = await lowP.evaluate(() => {
+          const image = document.querySelector("#mainImage");
+          return image.src;
+        });
+
+        highURL = await lowP.evaluate(() => {
+          const image = document.querySelector("#mainImage");
+          return image.src;
+        });
+        await utilFunc.downloadImage(lowURL, "####.png");
+        await utilFunc.downloadImage(highURL, "####.png");
       }
     } else {
-      console.log("Here");
       if (
         await utilFunc.noResults(
           tPage,
