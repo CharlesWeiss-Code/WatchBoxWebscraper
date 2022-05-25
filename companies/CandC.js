@@ -1,9 +1,9 @@
 const utilFunc = require("../utilityFunctions.js");
 
 async function crownAndCaliber(lowP, highP, tPage) {
-  for (var i = 4; i < refNums.length; i++) {
-    lowTable = null;
-    highTable = null;
+  for (var i = 0; i < refNums.length; i++) {
+    lowTable = "";
+    highTable = "";
     url =
       "https://www.crownandcaliber.com/search?view=shop&q=" +
       refNums[i] +
@@ -134,7 +134,9 @@ async function crownAndCaliber(lowP, highP, tPage) {
           { delay: 20 }
         );
         await lowP.waitForSelector('div[class="prod-specs"]');
-        lowTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
+        lowTable = String(
+          await utilFunc.getItem(lowP, 'div[class="prod-specs"]')
+        );
 
         await highP.click(
           "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
@@ -142,7 +144,9 @@ async function crownAndCaliber(lowP, highP, tPage) {
         );
 
         await highP.waitForSelector('div[class="prod-specs"]');
-        highTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
+        highTable = String(
+          await utilFunc.getItem(lowP, 'div[class="prod-specs"]')
+        );
       }
     }
     lowYearIndex1 = -1;
@@ -175,7 +179,7 @@ async function crownAndCaliber(lowP, highP, tPage) {
     highPaperIndex1 = highBoxIndex2 + 8;
     highPaperIndex2 = highTable.indexOf("Manual -");
 
-    console.log("Lowest:" + "\t" + lowest);
+    console.log("Lowest:" + "\t" + String(lowest).replace(/\s+/g, ""));
     console.log(
       "LowestYear:" +
         "\t" +
@@ -193,7 +197,7 @@ async function crownAndCaliber(lowP, highP, tPage) {
     );
     console.log("LOWEST URL: " + lowP.url() + "\n");
 
-    console.log("Highest:" + "\t" + highest);
+    console.log("Highest:" + "\t" + String(highest).replace(/\s+/g, ""));
 
     console.log(
       "highestYear:" +

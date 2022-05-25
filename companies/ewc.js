@@ -1,7 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
 
 async function EWC(lowP, highP, tPage) {
-  for (var i = 2; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = -1;
     highest = -1;

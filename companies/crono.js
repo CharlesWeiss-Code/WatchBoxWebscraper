@@ -2,7 +2,7 @@ const utilFunc = require("../utilityFunctions.js");
 
 async function chrono24(lowP, highP, tPage) {
   flag = true;
-  for (var i = 1; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = -1;
     highest = -1;

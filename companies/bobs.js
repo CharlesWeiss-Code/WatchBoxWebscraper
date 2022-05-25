@@ -1,7 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
 
 async function bobs(lowP, highP, tPage) {
-  for (var i = 8; i < refNums.length; i++) {
+  for (var i = 6; i < refNums.length; i++) {
     console.log("");
     lowest = -1;
     highest = -1;
@@ -92,9 +92,8 @@ async function bobs(lowP, highP, tPage) {
         .match(/(\d+)/);
 
       [highYear] = highTable
-        .substring(index1YearLow, index2YearLow)
+        .substring(index1YearHigh, index2YearHigh)
         .match(/(\d+)/);
-
       console.log("Lowest: " + "\t" + lowest.replace(/\s+/g, ""));
       console.log("LowYear: " + "\t" + lowYear);
       console.log(

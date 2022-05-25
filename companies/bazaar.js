@@ -1,7 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
 
 async function bazaar(lowP, highP, tPage) {
-  for (var i = 2; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = -1;
     highest = -1;
@@ -10,10 +10,10 @@ async function bazaar(lowP, highP, tPage) {
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
     if (
-      await utilFunc.exists(
+      !(await utilFunc.noResults(
         tPage,
-        "#searchspring-content > div.category-products.ng-scope > div > div:nth-child(1) > h3"
-      )
+        'ul[class="products-grid infinite-load-items-wrapper ss-targeted ng-scope"]'
+      ))
     ) {
       // this is the only one that can have its own function. there are two selectors
       lowest = 0;
@@ -50,7 +50,10 @@ async function bazaar(lowP, highP, tPage) {
       console.log("LOWPAGE URL: " + lowP.url());
       await lowP.waitForSelector('div[class="attributes-table-container"]');
 
-      lowTable = await getItem(lowP, 'div[class="attributes-table-container"]');
+      lowTable = await utilFunc.getItem(
+        lowP,
+        'div[class="attributes-table-container"]'
+      );
       lowYearIndex1 = lowTable.indexOf("Year of Manufacture") + 19;
       lowYearIndex2 = lowYearIndex1 + 5;
 
@@ -69,18 +72,22 @@ async function bazaar(lowP, highP, tPage) {
       highBPIndex2 = highTable.indexOf("Lug Material");
       console.log("Lowest: " + lowest);
       console.log(
-        "Low year: " + lowTable.substring(lowYearIndex1, lowYearIndex2)
+        "Low year: " +
+          lowTable.substring(lowYearIndex1, lowYearIndex2).replace("\n", "")
       );
       console.log(
-        "Low BP: " + lowTable.substring(lowBPIndex1, lowBPIndex2) + "\n"
+        "Low BP: " +
+          lowTable.substring(lowBPIndex1, lowBPIndex2).replace("\n", "")
       );
       console.log("LOWEST URL: " + lowP.url());
       console.log("Highest: " + highest);
       console.log(
-        "High year: " + highTable.substring(highYearIndex1, highYearIndex2)
+        "High year: " +
+          highTable.substring(highYearIndex1, highYearIndex2).replace("\n", "")
       );
       console.log(
-        "High BP: " + highTable.substring(highBPIndex1, highBPIndex2) + "\n"
+        "High BP: " +
+          highTable.substring(highBPIndex1, highBPIndex2).replace("\n", "")
       );
       console.log("HIGHEST URL: " + highP.url());
     }
