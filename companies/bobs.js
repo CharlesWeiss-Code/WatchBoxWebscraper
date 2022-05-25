@@ -11,8 +11,6 @@ lowURL = "";
 highURL = "";
 
 async function bobs(lowP, highP, tPage) {
-  //DO DAYTONA. MAKE SCREENSHOT
-
   for (var i = 0; i < refNums.length; i++) {
     lowest = "";
     highest = "";

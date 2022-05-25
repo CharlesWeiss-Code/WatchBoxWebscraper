@@ -57,8 +57,8 @@ async function start() {
     }
   });
 
-  //await CandC.crownAndCaliber(lowPage, highPage, testPage); // mostly done (daytona stuff)
-  await Bobs.bobs(lowPage, highPage, testPage); // mostly done
+  await CandC.crownAndCaliber(lowPage, highPage, testPage); // mostly done (daytona stuff)
+  //await Bobs.bobs(lowPage, highPage, testPage); // mostly done
   //await david.davidsw(lowPage, highPage, testPage); // mostly done (filter table data)
   //await Bazaar.bazaar(lowPage, highPage, testPage); // Done
   //await ewc.EWC(lowPage, highPage, testPage); //pretty much done
