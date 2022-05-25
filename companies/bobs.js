@@ -46,8 +46,8 @@ async function bobs(lowP, highP, tPage) {
           const image = document.querySelector("#mainImage");
           return image.src;
         });
-        await utilFunc.downloadImage(lowURL, refNums[i]);
-        await utilFunc.downloadImage(highURL, refNums[i]);
+        await utilFunc.downloadImage(lowURL, refNums[i] + "-Bobs");
+        await utilFunc.downloadImage(highURL, refNums[i] + "-Bobs");
       }
     } else {
       if (
