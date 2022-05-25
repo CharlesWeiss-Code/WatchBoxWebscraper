@@ -11,7 +11,7 @@ lowURL = "";
 highURL = "";
 
 async function bobs(lowP, highP, tPage) {
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 2; i < refNums.length; i++) {
     lowest = "";
     highest = "";
     highTable = "";
@@ -60,8 +60,8 @@ async function bobs(lowP, highP, tPage) {
           const image = document.querySelector("#mainImage");
           return image.src;
         });
-        await utilFunc.downloadImage(lowURL, refNums[i] + "-Bobs");
-        await utilFunc.downloadImage(highURL, refNums[i] + "-Bobs");
+        await utilFunc.downloadImage(lowURL, refNums[i] + "-Bobs-LOW");
+        await utilFunc.downloadImage(highURL, refNums[i] + "-Bobs-HIGH");
       }
     } else {
       if (
