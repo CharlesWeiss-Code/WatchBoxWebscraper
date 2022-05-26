@@ -31,7 +31,13 @@ function downloadImage(uri, fileName) {
 }
 
 async function getItem(page, selector) {
-  return String(await page.$eval(String(selector), (el) => el.textContent));
+  return String(
+    await page
+      .$eval(String(selector), (el) => el.textContent)
+      .catch(() => {
+        return "";
+      })
+  );
 }
 
 async function exists(page, selector) {

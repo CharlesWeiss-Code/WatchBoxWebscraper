@@ -97,7 +97,7 @@ async function crownAndCaliber(lowP, highP, tPage) {
         lowest = "";
         highest = "";
       } else {
-        prepare(lowP, highP, url);
+        await prepare(lowP, highP, url);
         await lowP.waitForSelector('div[class="prod-specs"]');
         lowTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
         await highP.waitForSelector('div[class="prod-specs"]');

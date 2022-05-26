@@ -1,7 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
 
 async function bazaar(lowP, highP, tPage) {
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 3; i < refNums.length; i++) {
     console.log("");
     lowest = -1;
     highest = -1;
@@ -37,7 +37,7 @@ async function bazaar(lowP, highP, tPage) {
       }
       if (await utilFunc.exists(highP, 'span[class="price ng-binding"]')) {
         highest = await utilFunc.getItem(
-          lowP,
+          highP,
           'span[class="price ng-binding"]'
         );
       }
@@ -54,6 +54,7 @@ async function bazaar(lowP, highP, tPage) {
         lowP,
         'div[class="attributes-table-container"]'
       );
+
       lowYearIndex1 = lowTable.indexOf("Year of Manufacture") + 19;
       lowYearIndex2 = lowYearIndex1 + 5;
 

@@ -4,6 +4,7 @@ import java.util.*;
 
 public class Watch {
     private Date dateOfScrape;
+    private String refNum;
     private String lowBox;
     private String lowPaper;
     private String highBox;
@@ -14,14 +15,13 @@ public class Watch {
     private String highLink;
     // IMAGE??????
 
-    private ArrayList<Watch> previousScrapes = new ArrayList<Watch>(); // watches of the same reference number from
-                                                                       // prevois
     // The scrape session that this watch was instantiated from.
     private Scrape scrape;
 
-    public Watch(String lowBox, String lowPaper, String highBox, String highPaper, float lowPrice, float highPrice,
+    public Watch(String refNum, String lowBox, String lowPaper, String highBox, String highPaper, float lowPrice,
+            float highPrice,
             String lowLink, String highLink) {
-
+        this.refNum = refNum;
         this.lowBox = lowBox;
         this.lowPaper = lowPaper;
         this.highBox = highBox;
@@ -37,13 +37,12 @@ public class Watch {
 
     }
 
-    public Scrape getScrape() {
-        return scrape;
-
+    public String getRefNum() {
+        return refNum;
     }
 
-    public ArrayList<Watch> getPreviousScrapes() {
-        return previousScrapes;
+    public Scrape getScrape() {
+        return scrape;
 
     }
 

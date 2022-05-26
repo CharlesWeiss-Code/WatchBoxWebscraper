@@ -6,22 +6,26 @@ public class Scrape {
     // create a new scrape every session. As watches are completeed,
     // they are added to the arraylist
     private Date dateOfScrape;
-    private ArrayList<Watch> watches = new ArrayList<Watch>();
+    private Map<String, Watch> dict = new HashMap<String, Watch>();
 
     public Scrape() {
         dateOfScrape = new Date();
     }
 
     public void addWatch(Watch w) {
-        watches.add(w);
+        dict.put(w.getRefNum(), w);
     }
 
     public Date getDate() {
         return dateOfScrape;
     }
 
-    public ArrayList<Watch> getWatches() {
-        return watches;
+    public Map<String, Watch> getDict() {
+        return dict;
+    }
+
+    public Watch getWatch(String refNum) {
+        return dict.get(refNum);
     }
 
 }

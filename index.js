@@ -12,7 +12,6 @@ const Bobs = require("./companies/bobs.js");
 
 const REF = require("./refNums.js");
 const minArgs = require("./minimalArgs");
-const utilFunc = require("./utilityFunctions.js");
 
 /*
 I HAVE MADE TIMEOUT: 0 ON SOME OF THE PAGE.GOTO(). just for testing. eventually should make timeout:60000 (1min)
@@ -22,7 +21,7 @@ async function start() {
   refNums = REF.getRefNums();
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     defaultViewport: null,
     args: minArgs.getMinimalArgs(),
   });
@@ -58,11 +57,11 @@ async function start() {
   });
 
   //await CandC.crownAndCaliber(lowPage, highPage, testPage); // mostly done (daytona stuff)
-  //await Bobs.bobs(lowPage, highPage, testPage); // mostly done
-  await david.davidsw(lowPage, highPage, testPage); // mostly done (filter table data)
+  await Bobs.bobs(lowPage, highPage, testPage); //  Best one.
+  //await david.davidsw(lowPage, highPage, testPage); // mostly done (filter table data)
   //await Bazaar.bazaar(lowPage, highPage, testPage); // Done
   //await ewc.EWC(lowPage, highPage, testPage); //pretty much done
-  await chrono.chrono24(lowPage, highPage, testPage); // done;
+  //await chrono.chrono24(lowPage, highPage, testPage); // done;
   //start();
 
   await browser.close();
