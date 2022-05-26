@@ -1,4 +1,5 @@
 const utilFunc = require("../utilityFunctions.js");
+import { Watch } from "../DataStructures/Watch.js";
 lowest = "";
 highest = "";
 highTable = "";
@@ -11,6 +12,7 @@ lowURL = "";
 highURL = "";
 
 async function bobs(lowP, highP, tPage) {
+  result = [];
   for (var i = 2; i < refNums.length; i++) {
     lowest = "";
     highest = "";
@@ -77,6 +79,21 @@ async function bobs(lowP, highP, tPage) {
         await getData(lowP, highP); // gets data tables and price
       }
     }
+    result.push(
+      new Watch(
+        refNums[i],
+        lowYear,
+        highYear,
+        "",
+        PLow,
+        "",
+        PHigh,
+        lowest,
+        hgihest,
+        lowP.url(),
+        highP.url()
+      )
+    );
     console.log("Lowest: " + "\t" + String(lowest).replace(/\s+/g, ""));
     console.log("LowYear: " + "\t" + lowYear);
     console.log("Papers Low: " + "\t" + PLow);
@@ -87,6 +104,7 @@ async function bobs(lowP, highP, tPage) {
     console.log("Papers High: " + "\t" + PHigh);
     console.log("HIGHEST URL: " + highURL + "\n\n\n");
   }
+  return result;
 }
 
 async function select(page, sel, Text) {

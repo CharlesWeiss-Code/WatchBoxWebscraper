@@ -1,26 +1,35 @@
-export class AllScrapes {
+class AllScrapes {
   constructor() {
-    startOfScraping = new Date();
-    allScrapes = []; // holdes all scrapes
-    dict = {}; // {String(refNum), ArrayList<Watch>}
+    this.startOfScraping = new Date();
+    this.allScrapes = []; // [scrape]
+    this.dict = new Map(); // {Site, {refNum, [watch]]}}
   }
 
   addScrape = (s) => {
-    allScrapes.add(s);
-    addToDict(s);
+    this.allScrapes.push(s);
+    this.addToDict(s);
   };
 
-  addToDict = (s) => {
-    s.getDict()
-      .entrySet()
-      .forEach((entry) => {
-        dict.get(entry.getKey()).push(entry.getValue());
+  addToDict = (scrape) => {
+    scrape.getDict().forEach((entry) => {
+      // {Site, {refNum, Watch}}
+
+      entry.values().forEach((secondEntry) => {
+        // {refNum, Watch}
+        if (this.dict.get(entry.key) === undefined) {
+          this.dict.set(entry.key, new Map());
+        }
+        if (this.dict.get(entry.key).get(secondEntry.key) === undefined) {
+          this.dict.get(entry.key).set(secondEntry.key, []);
+        }
+        this.dict.get(entry.key).get(secondEntry.key).push(secondEntry.value);
       });
+    });
   };
 
   getScrapesByTime = (d) => {
     var result = [];
-    allScrapes.forEach((s) => {
+    this.allScrapes.forEach((s) => {
       if (s.getDate() === d) {
         result.push(s);
       }
@@ -29,7 +38,7 @@ export class AllScrapes {
   };
 
   getAllScrapes = () => {
-    return allScrapes;
+    return this.allScrapes;
   };
 
   getWatchesByTime = (refNum, d) => {
@@ -42,10 +51,12 @@ export class AllScrapes {
   };
 
   getStartOfScraping = () => {
-    return startOfScraping;
+    return this.startOfScraping;
   };
 
   getDict = () => {
-    return dict;
+    return this.dict;
   };
 }
+
+module.exports = AllScrapes;

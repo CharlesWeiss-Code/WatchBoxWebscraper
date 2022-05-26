@@ -14,10 +14,12 @@ const REF = require("./refNums.js");
 const minArgs = require("./minimalArgs");
 
 import { AllScrapes } from "./DataStructures/AllScrapes.js";
+import { Scrape } from "./DataStructures/Scrape.js";
 
 /*
 I HAVE MADE TIMEOUT: 0 ON SOME OF THE PAGE.GOTO(). just for testing. eventually should make timeout:60000 (1min)
 */
+AS = new AllScrapes();
 
 async function start() {
   refNums = REF.getRefNums();
@@ -58,15 +60,16 @@ async function start() {
     }
   });
 
-  //await CandC.crownAndCaliber(lowPage, highPage, testPage); // mostly done (daytona stuff)
-  await Bobs.bobs(lowPage, highPage, testPage); //  Best one.
-  //await david.davidsw(lowPage, highPage, testPage); // mostly done (filter table data)
-  //await Bazaar.bazaar(lowPage, highPage, testPage); // Done
-  //await ewc.EWC(lowPage, highPage, testPage); //pretty much done
-  //await chrono.chrono24(lowPage, highPage, testPage); // done;
+  //CandC = await CandC.crownAndCaliber(lowPage, highPage, testPage); // mostly done (daytona stuff)
+  Bobs = Bobs.bobs(lowPage, highPage, testPage); //  Best one.
+  //David = david.davidsw(lowPage, highPage, testPage); // mostly done (filter table data)
+  //Bazaar = await Bazaar.bazaar(lowPage, highPage, testPage); // Done
+  //EWC = await ewc.EWC(lowPage, highPage, testPage); //pretty much done
+  //Chrono24 = await chrono.chrono24(lowPage, highPage, testPage); // done;
 
-  start();
-
+  thisScrape = new Scrape();
+  thisScrape.addWatches(Bobs, "Bobs");
+  await start();
   await browser.close();
 }
 start();

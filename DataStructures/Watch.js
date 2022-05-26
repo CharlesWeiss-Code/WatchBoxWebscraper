@@ -1,6 +1,8 @@
-export class Watch {
+class Watch {
   constructor(
     refNum,
+    lowAge,
+    highAge,
     lowBox,
     lowPaper,
     highBox,
@@ -19,54 +21,62 @@ export class Watch {
     this.highPrice = highPrice;
     this.highLink = highLink;
     this.lowLink = lowLink;
+    this.lowAge = lowAge;
+    this.highAge = highAge;
     this.dateOfScrape = new Date();
   }
 
   setScrape = (s) => {
-    scrape = s;
+    this.scrape = s;
+  };
+
+  setDate = (d, m, y) => {
+    this.dateOfScrape = new Date(d, m, y);
   };
 
   getRefNum = () => {
-    return refNum;
+    return this.refNum;
   };
 
   getScrape = () => {
-    return scrape;
+    return this.scrape;
   };
 
   getLowPrice = () => {
-    return lowPrice;
+    return this.lowPrice;
   };
 
   getHighPrice = () => {
-    return highPrice;
+    return this.highPrice;
   };
 
   getLowLink = () => {
-    return lowLink;
+    return this.lowLink;
   };
 
   getHighLink = () => {
-    return highLink;
+    return this.highLink;
   };
 
   getLowPaper = () => {
-    return lowPaper;
+    return this.lowPaper;
   };
 
   getHighPaper = () => {
-    return highPaper;
+    return this.highPaper;
   };
 
   getDateOfScrape = () => {
-    return dateOfScrape;
+    return this.dateOfScrape;
   };
 
   getLowBox = () => {
-    return lowBox;
+    return this.lowBox;
   };
 
   getHighBox = () => {
-    return highBox;
+    return this.highBox;
   };
 }
+
+module.exports = Watch;
