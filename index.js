@@ -13,6 +13,8 @@ const Bobs = require("./companies/bobs.js");
 const REF = require("./refNums.js");
 const minArgs = require("./minimalArgs");
 
+import { AllScrapes } from "./DataStructures/AllScrapes.js";
+
 /*
 I HAVE MADE TIMEOUT: 0 ON SOME OF THE PAGE.GOTO(). just for testing. eventually should make timeout:60000 (1min)
 */
@@ -62,7 +64,8 @@ async function start() {
   //await Bazaar.bazaar(lowPage, highPage, testPage); // Done
   //await ewc.EWC(lowPage, highPage, testPage); //pretty much done
   //await chrono.chrono24(lowPage, highPage, testPage); // done;
-  //start();
+
+  start();
 
   await browser.close();
 }
