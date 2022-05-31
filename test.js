@@ -30,8 +30,8 @@ start = () => {
     "yes",
     "2",
     "90",
-    "https://www.google.com",
-    "https://www.google.com"
+    "https://www.ebay.com",
+    "https://www.ebay.com"
   );
   w3 = new Watch(
     "3",
@@ -61,11 +61,14 @@ start = () => {
     "https://www.charlie.com"
   );
   scrape1.addWatch(w1, "google");
-  scrape1.addWatch(w2, "thing");
+  scrape1.addWatch(w2, "ebay");
   scrape1.addWatch(w3, "Charlie");
   scrape2.addWatch(w4, "Charlie");
   all.addScrape(scrape1);
   all.addScrape(scrape2);
+  console.log(w1);
+
+  console.log(all.getDict());
   console.log(all.getWebsite("Charlie"));
 };
 
