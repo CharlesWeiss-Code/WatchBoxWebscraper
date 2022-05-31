@@ -32,14 +32,14 @@ class AllScrapes {
   };
 
   //works
-  getScrapesByTime = (m, d, y) => {
+  getScrapesByTime = (d) => {
     var result = [];
     this.allScrapes.forEach((s) => {
       const scrapeDate = s.getDate();
       if (
-        scrapeDate.getMonth() + 1 === m &&
-        scrapeDate.getDate() === d &&
-        scrapeDate.getFullYear() === y
+        scrapeDate.getMonth() + 1 === d.getMonth() + 1 &&
+        scrapeDate.getDate() === d.getDate() &&
+        scrapeDate.getFullYear() === d.getFullYear()
       ) {
         result.push(s);
       }

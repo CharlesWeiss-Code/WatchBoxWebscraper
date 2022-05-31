@@ -66,10 +66,10 @@ start = () => {
   scrape2.addWatch(w4, "Charlie");
   all.addScrape(scrape1);
   all.addScrape(scrape2);
-  console.log(w1);
 
-  console.log(all.getDict());
-  console.log(all.getWebsite("Charlie"));
+  //console.log(all.getDict());
+  console.log(all.getWebsite("ebay"));
+  //console.log(all.getWebsite("Charlie"));
 };
 
 start();
