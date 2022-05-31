@@ -11,64 +11,83 @@ start = () => {
     "1",
     "2007",
     "2018",
-    "NO",
     "Yes",
     "No",
-    "yes",
-    "1184934",
-    "902343",
-    "https://www.google.com",
-    "https://www.google.com"
+    "",
+    "No",
+    "Yes",
+    "",
+    "17,000",
+    "22,000",
+    "",
+    "",
+    "www.google.com",
+    "www.google.com",
+    "www.google.com"
   );
   w2 = new Watch(
     "2",
-    "2027",
-    "2048",
-    "NO",
+    "2019",
+    "2022",
     "Yes",
+    "Yes",
+    "",
     "No",
-    "yes",
-    "2",
-    "90",
-    "https://www.ebay.com",
-    "https://www.ebay.com"
+    "Yes",
+    "",
+    "5,000",
+    "7,950",
+    "Yes",
+    "Yes",
+    "www.ebay.com",
+    "www.ebay.com",
+    "www.ebay.com"
   );
   w3 = new Watch(
     "3",
-    "7128",
-    "2048",
-    "NO",
-    "Yes",
-    "No",
-    "yes",
-    "2",
-    "90",
-    "https://www.charlie.com",
-    "https://www.charlie.com"
+    "1993",
+    "2005",
+    "",
+    "",
+    "BP",
+    "",
+    "",
+    "P",
+    "55,000",
+    "72,000",
+    "",
+    "",
+    "www.google.com",
+    "www.google.com",
+    "www.google.com"
   );
-  w3.setDate(1, 1, 1);
   w4 = new Watch(
     "3",
-    "1000",
-    "23488",
-    "NO",
+    "2022",
+    "2022",
     "Yes",
     "No",
-    "yes",
-    "2",
-    "90",
-    "https://www.charlie.com",
-    "https://www.charlie.com"
+    "",
+    "Yes",
+    "No",
+    "",
+    "17,000",
+    "17,000",
+    "",
+    "",
+    "www.charlie.com",
+    "www.charlie.com",
+    "www.charlie.com"
   );
-  scrape1.addWatch(w1, "google");
-  scrape1.addWatch(w2, "ebay");
-  scrape1.addWatch(w3, "Charlie");
-  scrape2.addWatch(w4, "Charlie");
+  scrape1.addWatch(w1);
+  scrape1.addWatch(w2);
+  scrape1.addWatch(w3);
+  scrape1.addWatch(w4);
   all.addScrape(scrape1);
   all.addScrape(scrape2);
 
   //console.log(all.getDict());
-  console.log(all.getWebsite("ebay"));
+  console.log(all.getAllScrapes()[0].getWatch("3"));
   //console.log(all.getWebsite("Charlie"));
 };
 

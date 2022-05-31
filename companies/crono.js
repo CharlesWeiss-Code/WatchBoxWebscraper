@@ -140,7 +140,7 @@ async function chrono24(lowP, highP, tPage, scrape) {
       highP.url(),
       tPage.url()
     );
-    scrape.addWatch(w, "chrono");
+    scrape.addWatch(w);
     console.log(w);
   }
 }

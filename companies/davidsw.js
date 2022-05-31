@@ -171,7 +171,7 @@ async function davidsw(lowP, highP, tPage, scrape) {
       tPage.url()
     );
     console.log(w);
-    scrape.addWatch(w, "davidsw");
+    scrape.addWatch(w);
     // console.log("Lowest: " + lowest);
     // console.log("Low Year: " + lowYear.replace(/\s+/g, ""));
     // console.log("Low Box: " + lowBox.replace(/\s+/g, ""));

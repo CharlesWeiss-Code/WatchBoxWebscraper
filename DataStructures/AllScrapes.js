@@ -1,7 +1,7 @@
 class AllScrapes {
   constructor() {
     this.startOfScraping = new Date();
-    this.allScrapes = []; // [scrape]
+    this.allScrapes = []; // [scrape] = [{Site, {refNum, Watch}}]
     this.dict = new Map(); // {Site, {refNum, [watch]}}
   }
 

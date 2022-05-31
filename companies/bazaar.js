@@ -88,7 +88,7 @@ async function bazaar(lowP, highP, tPage, scrape) {
       highP.url(),
       tPage.url()
     );
-    scrape.addWatch(w, "bazaar");
+    scrape.addWatch(w);
     console.log(w);
     // console.log("Lowest: " + lowest);
     // console.log("Low year: " + lowYear);

@@ -38,6 +38,10 @@ class Watch {
     this.dateOfScrape = new Date();
     this.imageLow = imageLow;
     this.imageHigh = imageHigh;
+    this.website = this.generalLink.substring(
+      0,
+      this.generalLink.indexOf(".com") + 4
+    );
   }
 
   setScrape = (s) => {
@@ -48,69 +52,39 @@ class Watch {
     this.dateOfScrape = new Date(m, d, y);
   };
 
-  getLowDealerStatus = () => {
-    return this.lowDealerStatus;
-  };
+  getLowDealerStatus = () => this.lowDealerStatus;
 
-  getHighDealerStatus = () => {
-    return this.highDealerStatus;
-  };
+  getHighDealerStatus = () => this.highDealerStatus;
 
-  getRefNum = () => {
-    return this.refNum;
-  };
+  getWebsite = () => this.website;
 
-  getScrape = () => {
-    return this.scrape;
-  };
+  getRefNum = () => this.refNum;
 
-  getGeneralLink = () => {
-    return this.generalLink;
-  };
+  getScrape = () => this.scrape;
 
-  getLowBP = () => {
-    return this.lowBP;
-  };
+  getGeneralLink = () => this.generalLink;
 
-  getHighBP = () => {
-    return this.highBP;
-  };
+  getLowBP = () => this.lowBP;
 
-  getLowPrice = () => {
-    return this.lowPrice;
-  };
+  getHighBP = () => this.highBP;
 
-  getHighPrice = () => {
-    return this.highPrice;
-  };
+  getLowPrice = () => this.lowPrice;
 
-  getLowLink = () => {
-    return this.lowLink;
-  };
+  getHighPrice = () => this.highPrice;
 
-  getHighLink = () => {
-    return this.highLink;
-  };
+  getLowLink = () => this.lowLink;
 
-  getLowPaper = () => {
-    return this.lowPaper;
-  };
+  getHighLink = () => this.highLink;
 
-  getHighPaper = () => {
-    return this.highPaper;
-  };
+  getLowPaper = () => this.lowPaper;
 
-  getDateOfScrape = () => {
-    return this.dateOfScrape;
-  };
+  getHighPaper = () => this.highPaper;
 
-  getLowBox = () => {
-    return this.lowBox;
-  };
+  getDateOfScrape = () => this.dateOfScrape;
 
-  getHighBox = () => {
-    return this.highBox;
-  };
+  getLowBox = () => this.lowBox;
+
+  getHighBox = () => this.highBox;
 }
 
 module.exports = Watch;

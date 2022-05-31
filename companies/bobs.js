@@ -101,7 +101,7 @@ async function bobs(lowP, highP, tPage, scrape) {
       highP.url(),
       tPage.url()
     );
-    scrape.addWatch(w, "bobs");
+    scrape.addWatch(w);
     console.log(w);
     // console.log("Lowest: " + "\t" + String(lowest).replace(/\s+/g, ""));
     // console.log("LowYear: " + "\t" + lowYear);
