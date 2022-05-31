@@ -21,6 +21,7 @@ class Scrape {
     }
     list.forEach((watch) => {
       this.dict.get(site).set(watch.getRefNum(), watch);
+      watch.setScrape(this);
     });
   };
 
@@ -33,6 +34,7 @@ class Scrape {
   };
 
   getWatchByWebsite = (refNum, site) => {
+    //{Site, {refNum, Watch}}
     return this.dict.get(site).get(refNum);
   };
 }

@@ -11,4 +11,3 @@ NEED TO DO:
     - add waitForSelector to getItem
     - change waitForTimeout to waitForSelector
     - bobs papers not rolex brand
-    - fix addToDict in AllScrapes

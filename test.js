@@ -43,8 +43,8 @@ start = () => {
     "yes",
     "2",
     "90",
-    "https://www.google.com",
-    "https://www.google.com"
+    "https://www.charlie.com",
+    "https://www.charlie.com"
   );
   w3.setDate(1, 1, 1);
   w4 = new Watch(
@@ -66,8 +66,7 @@ start = () => {
   scrape2.addWatch(w4, "Charlie");
   all.addScrape(scrape1);
   all.addScrape(scrape2);
-  //console.log(all.getScrapesByTime(5, 31, 2022));
-  console.log(w4.getScrape());
+  console.log(all.getWebsite("Charlie"));
 };
 
 start();

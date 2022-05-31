@@ -5,12 +5,14 @@ class AllScrapes {
     this.dict = new Map(); // {Site, {refNum, [watch]}}
   }
 
+  // works
   addScrape = (s) => {
     this.allScrapes.push(s);
     //console.log(this.allScrapes[0].getDict());
     this.addToDict(s);
   };
 
+  //works
   addToDict = (scrape) => {
     for (const [site, val] of scrape.getDict().entries()) {
       // {Site, {refNum, Watch}}
@@ -29,6 +31,7 @@ class AllScrapes {
     }
   };
 
+  //works
   getScrapesByTime = (m, d, y) => {
     var result = [];
     this.allScrapes.forEach((s) => {
@@ -48,19 +51,17 @@ class AllScrapes {
     return this.allScrapes;
   };
 
+  // works
   getWatches = (refNum) => {
     var result = [];
-    //{Site, {refNum, [watch]}}
-    this.allScrapes.forEach((s) => {
-      for (const [site, map] of s.getDict().entries()) {
-        for (const [ref, watchArray] of map.entries()) {
-          // {refNum, [watch]}
-          if (ref === refNum) {
-            result.push(watchArray);
-          }
+    for (const [site, map] of this.dict.entries()) {
+      //console.log(site, map);
+      for (const [ref, watchArray] of map.entries()) {
+        if (ref === refNum) {
+          result.push(...watchArray);
         }
       }
-    });
+    }
     return result;
   };
 
@@ -70,6 +71,10 @@ class AllScrapes {
 
   getDict = () => {
     return this.dict;
+  };
+
+  getWebsite = (site) => {
+    return this.dict.get(site);
   };
 }
 
