@@ -1,3 +1,5 @@
+const utilFunc = require("../utilityFunctions.js");
+
 class AllScrapes {
   constructor() {
     this.startOfScraping = new Date();
@@ -5,14 +7,12 @@ class AllScrapes {
     this.dict = new Map(); // {Site, {refNum, [watch]}}
   }
 
-  // works
   addScrape = (s) => {
     this.allScrapes.push(s);
     //console.log(this.allScrapes[0].getDict());
     this.addToDict(s);
   };
 
-  //works
   addToDict = (scrape) => {
     for (const [site, val] of scrape.getDict().entries()) {
       // {Site, {refNum, Watch}}
@@ -31,7 +31,6 @@ class AllScrapes {
     }
   };
 
-  //works
   getScrapesByTime = (d) => {
     var result = [];
     this.allScrapes.forEach((s) => {
@@ -51,7 +50,6 @@ class AllScrapes {
     return this.allScrapes;
   };
 
-  // works
   getWatches = (refNum) => {
     var result = [];
     for (const [site, map] of this.dict.entries()) {
@@ -65,17 +63,38 @@ class AllScrapes {
     return result;
   };
 
-  getStartOfScraping = () => {
-    return this.startOfScraping;
+  getStartOfScraping = () => this.startOfScraping;
+
+  getWatchByWebsiteAndDate = (refNum, site, d) => {
+    this.dict
+      .get(site)
+      .get(refNum)
+      .forEach((watch) => {
+        if (watch.getDate() === d) {
+          return watch;
+        }
+      });
   };
 
-  getDict = () => {
-    return this.dict;
+  getWatchesByDate = (refNum, d) => {
+    var result = [];
+    this.getScrapesByTime(d).forEach((scrape) => {
+      //[{Site, {refNum, Watch}}]
+      for (const [site, map] of scrape.getDict().entries()) {
+        // {site, {refNum, Watch}}
+        for (const [ref, watch] of map.entries()) {
+          if (utilFunc.sameDate(watch.getDate(), d) && refNum === ref) {
+            result.push(watch);
+          }
+        }
+      }
+    });
+    return result;
   };
 
-  getWebsite = (site) => {
-    return this.dict.get(site);
-  };
+  getDict = () => this.dict;
+
+  getWebsite = (site) => this.dict.get(site);
 }
 
 module.exports = AllScrapes;

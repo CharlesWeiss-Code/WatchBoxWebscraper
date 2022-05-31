@@ -47,5 +47,22 @@ async function exists(page, selector) {
   }
   return existsVar;
 }
+sameDate = (d1, d2) => {
+  if (
+    d1.getMonth() === d2.getMonth() &&
+    d1.getDate() === d2.getDate() &&
+    d1.getFullYear() === d2.getFullYear()
+  ) {
+    return true;
+  }
+  return false;
+};
 
-module.exports = { noResults, noResults2, downloadImage, getItem, exists };
+module.exports = {
+  noResults,
+  noResults2,
+  downloadImage,
+  getItem,
+  exists,
+  sameDate,
+};

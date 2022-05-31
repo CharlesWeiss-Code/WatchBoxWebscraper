@@ -80,7 +80,7 @@ class Watch {
 
   getHighPaper = () => this.highPaper;
 
-  getDateOfScrape = () => this.dateOfScrape;
+  getDate = () => this.dateOfScrape;
 
   getLowBox = () => this.lowBox;
 

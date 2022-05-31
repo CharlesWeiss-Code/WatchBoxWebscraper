@@ -82,13 +82,12 @@ start = () => {
   scrape1.addWatch(w1);
   scrape1.addWatch(w2);
   scrape1.addWatch(w3);
-  scrape1.addWatch(w4);
+  scrape2.addWatch(w4);
   all.addScrape(scrape1);
   all.addScrape(scrape2);
 
   //console.log(all.getDict());
-  console.log(all.getAllScrapes()[0].getWatch("3"));
-  //console.log(all.getWebsite("Charlie"));
+  console.log(all.getWatchesByDate("3", new Date()));
 };
 
 start();
