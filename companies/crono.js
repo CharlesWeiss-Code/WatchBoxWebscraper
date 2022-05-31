@@ -88,61 +88,60 @@ async function chrono24(lowP, highP, tPage, scrape) {
       index1BPHigh = lowTable.indexOf("Scope of delivery") + 17;
       index2BPHigh = lowTable.indexOf("Gender");
 
-      console.log("Lowest: " + "\t" + lowest.replace(/\s+/g, ""));
-      console.log(
-        "lowDealerStatus" + "\t" + lowDealerStatus.replace(/\s+/g, "")
-      );
-      console.log(
-        "LowYear: " +
-          "\t" +
-          lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, "")
-      );
-      console.log(
-        "lowBoxAndPapers" +
-          "\t" +
-          lowTable.substring(index1BPLow, index2BPLow).replace(/\s+/g, "")
-      );
-      console.log("LOW URL: " + lowP.url());
+      // console.log("Lowest: " + "\t" + lowest.replace(/\s+/g, ""));
+      // console.log(
+      //   "lowDealerStatus" + "\t" + lowDealerStatus.replace(/\s+/g, "")
+      // );
+      // console.log(
+      //   "LowYear: " +
+      //     "\t" +
+      //     lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, "")
+      // );
+      // console.log(
+      //   "lowBoxAndPapers" +
+      //     "\t" +
+      //     lowTable.substring(index1BPLow, index2BPLow).replace(/\s+/g, "")
+      // );
+      // console.log("LOW URL: " + lowP.url());
 
-      console.log("Highest: " + "\t" + highest.replace(/\s+/g, ""));
-      console.log(
-        "HighDealerStatus" + "\t" + highDealerStatus.replace(/\s+/g, "")
-      );
-      console.log(
-        "HighYear: " +
-          "\t" +
-          highTable
-            .substring(index1YearHigh, index2YearHigh)
-            .replace(/\s+/g, "")
-      );
-      console.log(
-        "HighBoxAndPapers" +
-          "\t" +
-          highTable.substring(index1BPHigh, index2BPHigh).replace(/\s+/g, "")
-      );
-      console.log("HIGH URL: " + highP.url());
+      // console.log("Highest: " + "\t" + highest.replace(/\s+/g, ""));
+      // console.log(
+      //   "HighDealerStatus" + "\t" + highDealerStatus.replace(/\s+/g, "")
+      // );
+      // console.log(
+      //   "HighYear: " +
+      //     "\t" +
+      //     highTable
+      //       .substring(index1YearHigh, index2YearHigh)
+      //       .replace(/\s+/g, "")
+      // );
+      // console.log(
+      //   "HighBoxAndPapers" +
+      //     "\t" +
+      //     highTable.substring(index1BPHigh, index2BPHigh).replace(/\s+/g, "")
+      // );
+      // console.log("HIGH URL: " + highP.url());
     }
-    scrape.addWatch(
-      new Watch(
-        refNums[i],
-        lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, ""),
-        highTable.substring(index1YearHigh, index2YearHigh).replace(/\s+/g, ""),
-        "",
-        "",
-        lowTable.substring(index1BPLow, index2BPLow).replace(/\s+/g, ""),
-        "",
-        "",
-        highTable.substring(index1BPHigh, index2BPHigh).replace(/\s+/g, ""),
-        lowest,
-        highest,
-        lowDealerStatus.replace(/\s+/g, ""),
-        highDealerStatus.replace(/\s+/g, ""),
-        lowP.url(),
-        highP.url(),
-        tPage.url()
-      ),
-      "chrono"
+    w = new Watch(
+      refNums[i],
+      lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, ""),
+      highTable.substring(index1YearHigh, index2YearHigh).replace(/\s+/g, ""),
+      "",
+      "",
+      lowTable.substring(index1BPLow, index2BPLow).replace(/\s+/g, ""),
+      "",
+      "",
+      highTable.substring(index1BPHigh, index2BPHigh).replace(/\s+/g, ""),
+      lowest,
+      highest,
+      lowDealerStatus.replace(/\s+/g, ""),
+      highDealerStatus.replace(/\s+/g, ""),
+      lowP.url(),
+      highP.url(),
+      tPage.url()
     );
+    scrape.addWatch(w, "chrono");
+    console.log(w);
   }
 }
 

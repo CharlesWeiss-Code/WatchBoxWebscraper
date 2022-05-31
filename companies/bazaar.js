@@ -70,35 +70,34 @@ async function bazaar(lowP, highP, tPage, scrape) {
 
       assignData();
     }
-    scrape.addWatch(
-      new Watch(
-        refNums[i],
-        lowYear,
-        highYear,
-        "",
-        "",
-        lowBP,
-        "",
-        "",
-        highBP,
-        lowest,
-        highest,
-        "",
-        "",
-        lowP.url(),
-        highP.url(),
-        tPage.url()
-      ),
-      "bazaar"
+    w = new Watch(
+      refNums[i],
+      lowYear,
+      highYear,
+      "",
+      "",
+      lowBP,
+      "",
+      "",
+      highBP,
+      lowest,
+      highest,
+      "",
+      "",
+      lowP.url(),
+      highP.url(),
+      tPage.url()
     );
-    console.log("Lowest: " + lowest);
-    console.log("Low year: " + lowYear);
-    console.log("Low BP: " + lowBP);
-    console.log("LOWEST URL: " + lowP.url());
-    console.log("Highest: " + highest);
-    console.log("High year: " + highYear);
-    console.log("High BP: " + highBP);
-    console.log("HIGHEST URL: " + highP.url());
+    scrape.addWatch(w, "bazaar");
+    console.log(w);
+    // console.log("Lowest: " + lowest);
+    // console.log("Low year: " + lowYear);
+    // console.log("Low BP: " + lowBP);
+    // console.log("LOWEST URL: " + lowP.url());
+    // console.log("Highest: " + highest);
+    // console.log("High year: " + highYear);
+    // console.log("High BP: " + highBP);
+    // console.log("HIGHEST URL: " + highP.url());
   }
 }
 

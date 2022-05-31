@@ -44,31 +44,29 @@ async function EWC(lowP, highP, tPage, scrape) {
         highest = await findPriceEWC(highP, newURL, "desc");
       }
     }
-
-    scrape.addWatch(
-      new Watch(
-        refNums[i],
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        "",
-        lowest,
-        highest,
-        "",
-        "",
-        "",
-        "",
-        tPage.url()
-      ),
-      "ewc"
+    w = new Watch(
+      refNums[i],
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      lowest,
+      highest,
+      "",
+      "",
+      "",
+      "",
+      tPage.url()
     );
-    console.log("Lowest: " + lowest);
-    console.log("Highest: " + highest);
-    console.log("URL: " + tPage.url());
+    console.log(w);
+    scrape.addWatch(w, "ewc");
+    // console.log("Lowest: " + lowest);
+    // console.log("Highest: " + highest);
+    // console.log("URL: " + tPage.url());
   }
 }
 
