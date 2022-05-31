@@ -22,6 +22,7 @@ I HAVE MADE TIMEOUT: 0 ON SOME OF THE PAGE.GOTO(). just for testing. eventually 
 AS = new AllScrapes();
 
 async function start() {
+  currentScrape = new Scrape();
   refNums = REF.getRefNums();
 
   const browser = await puppeteer.launch({
@@ -60,15 +61,18 @@ async function start() {
     }
   });
 
-  //CandC = await CandC.crownAndCaliber(lowPage, highPage, testPage); // mostly done (daytona stuff)
-  Bobs = Bobs.bobs(lowPage, highPage, testPage); //  Best one.
-  //David = david.davidsw(lowPage, highPage, testPage); // mostly done (filter table data)
-  //Bazaar = await Bazaar.bazaar(lowPage, highPage, testPage); // Done
-  //EWC = await ewc.EWC(lowPage, highPage, testPage); //pretty much done
-  //Chrono24 = await chrono.chrono24(lowPage, highPage, testPage); // done;
-
-  thisScrape = new Scrape();
-  thisScrape.addWatches(Bobs, "Bobs");
+  CandC = await CandC.crownAndCaliber(
+    lowPage,
+    highPage,
+    testPage,
+    currentScrape
+  ); // mostly done (daytona stuff)
+  //Bobs = Bobs.bobs(lowPage, highPage, testPage, currentScrape); //  Best one.
+  //David = david.davidsw(lowPage, highPage, testPage, currentScrape); // mostly done (filter table data)
+  //Bazaar = await Bazaar.bazaar(lowPage, highPage, testPage, currentScrape); // Done
+  //EWC = await ewc.EWC(lowPage, highPage, testPage, currentScrape); //pretty much done
+  //Chrono24 = await chrono.chrono24(lowPage, highPage, testPage, currentScrape); // done;
+  AS.addScrape(currentScrape);
   await start();
   await browser.close();
 }

@@ -5,12 +5,17 @@ class Watch {
     highAge,
     lowBox,
     lowPaper,
+    lowBP,
     highBox,
     highPaper,
+    highBP,
     lowPrice,
     highPrice,
+    lowDealerStatus,
+    highDealerStatus,
     lowLink,
-    highLink
+    highLink,
+    generalLink
   ) {
     this.refNum = refNum;
     this.lowBox = lowBox;
@@ -23,6 +28,11 @@ class Watch {
     this.lowLink = lowLink;
     this.lowAge = lowAge;
     this.highAge = highAge;
+    this.lowDealerStatus = lowDealerStatus;
+    this.highDealerStatus = highDealerStatus;
+    this.lowBP = lowBP;
+    this.highBP = highBP;
+    this.generalLink = generalLink;
     this.dateOfScrape = new Date();
   }
 
@@ -34,12 +44,32 @@ class Watch {
     this.dateOfScrape = new Date(m, d, y);
   };
 
+  getLowDealerStatus = () => {
+    return this.lowDealerStatus;
+  };
+
+  getHighDealerStatus = () => {
+    return this.highDealerStatus;
+  };
+
   getRefNum = () => {
     return this.refNum;
   };
 
   getScrape = () => {
     return this.scrape;
+  };
+
+  getGeneralLink = () => {
+    return this.generalLink;
+  };
+
+  getLowBP = () => {
+    return this.lowBP;
+  };
+
+  getHighBP = () => {
+    return this.highBP;
   };
 
   getLowPrice = () => {
