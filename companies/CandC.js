@@ -13,6 +13,8 @@ lowYearIndex2 = -1;
 
 async function crownAndCaliber(lowP, highP, tPage, scrape) {
   for (var i = 3; i < refNums.length; i++) {
+    lowImage = null;
+    highImage = null;
     url = "https://www.crownandcaliber.com/search?view=shop&q=" + refNums[i];
     console.log("CandC URL: ***  " + url);
 
@@ -49,8 +51,14 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
           );
           return image.src;
         });
-        await utilFunc.downloadImage(lowURL, refNums[i] + "-CandC-LOW");
-        await utilFunc.downloadImage(highURL, refNums[i] + "-CandC-HIGH");
+        lowImage = await utilFunc.downloadImage(
+          lowURL,
+          refNums[i] + "-CandC-LOW"
+        );
+        highImage = await utilFunc.downloadImage(
+          highURL,
+          refNums[i] + "-CandC-HIGH"
+        );
       }
     } else if (refNums[i] == "116500LN-0002") {
       //SPECIAL BLACK DAYTONA
@@ -82,8 +90,14 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
           );
           return image.src;
         });
-        await utilFunc.downloadImage(lowURL, refNums[i] + "-CandC-LOW");
-        await utilFunc.downloadImage(highURL, refNums[i] + "-CandC-HIGH");
+        lowImage = await utilFunc.downloadImage(
+          lowURL,
+          refNums[i] + "-CandC-LOW"
+        );
+        highImage = await utilFunc.downloadImage(
+          highURL,
+          refNums[i] + "-CandC-HIGH"
+        );
       }
     } else {
       await tPage.goto(url, { waitUntil: "networkidle0" });
@@ -160,7 +174,9 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
       "",
       lowP.url(),
       highP.url(),
-      tPage.url()
+      tPage.url(),
+      lowImage,
+      highImage
     );
     scrape.addWatch(w, "CandC");
     console.log(w);
