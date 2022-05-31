@@ -1,6 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
+import { Watch } from "../DataStructures/Watch";
 
-async function EWC(lowP, highP, tPage) {
+async function EWC(lowP, highP, tPage, scrape) {
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = -1;
@@ -41,11 +42,33 @@ async function EWC(lowP, highP, tPage) {
         //EWC Is weird and needs its own function.
         lowest = await findPriceEWC(lowP, newURL, "asc");
         highest = await findPriceEWC(highP, newURL, "desc");
-        console.log("Lowest: " + lowest);
-        console.log("Highest: " + highest);
-        console.log("URL: " + tPage.url());
       }
     }
+
+    scrape.addWatch(
+      new Watch(
+        refNums[i],
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        lowest,
+        highest,
+        "",
+        "",
+        "",
+        "",
+        tPage.url()
+      ),
+      "ewc"
+    );
+    console.log("Lowest: " + lowest);
+    console.log("Highest: " + highest);
+    console.log("URL: " + tPage.url());
   }
 }
 

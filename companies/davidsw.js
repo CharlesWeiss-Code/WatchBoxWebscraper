@@ -1,6 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
+import { Watch } from "../DataStructures/Watch";
 
-async function davidsw(lowP, highP, tPage) {
+async function davidsw(lowP, highP, tPage, scrape) {
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowTables = null;
@@ -150,6 +151,27 @@ async function davidsw(lowP, highP, tPage) {
     if (indexHigh != -1) {
       highYear = highTableGeneral.substring(indexHigh + 4);
     }
+    scrape.addWatch(
+      new Watch(
+        refNums[i],
+        lowYear,
+        highYear,
+        lowBox.replace(/\s+/g, ""),
+        lowPaper.replace(/\s+/g, ""),
+        "",
+        highBox.replace(/\s+/g, ""),
+        highPaper.replace(/\s+/g, ""),
+        "",
+        lowest,
+        highest,
+        "",
+        "",
+        lowP.url(),
+        highP.url(),
+        tPage.url()
+      ),
+      "davidsw"
+    );
     console.log("Lowest: " + lowest);
     console.log("Low Year: " + lowYear.replace(/\s+/g, ""));
     console.log("Low Box: " + lowBox.replace(/\s+/g, ""));

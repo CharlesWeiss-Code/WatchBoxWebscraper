@@ -1,4 +1,5 @@
 const utilFunc = require("../utilityFunctions.js");
+import { Watch } from "../DataStructures/Watch.js";
 lowYear = "";
 lowPaper = "";
 lowBox = "";
@@ -8,7 +9,7 @@ highBox = "";
 lowTable = "";
 highTable = "";
 
-async function crownAndCaliber(lowP, highP, tPage) {
+async function crownAndCaliber(lowP, highP, tPage, scrape) {
   for (var i = 3; i < refNums.length; i++) {
     lowYear = "";
     lowPaper = "";
@@ -105,6 +106,27 @@ async function crownAndCaliber(lowP, highP, tPage) {
       }
     }
     assignData();
+    scrape.addWatch(
+      new Watch(
+        refNums[i],
+        lowYear,
+        highYear,
+        lowBox,
+        lowPaper,
+        "",
+        highBox,
+        highPaper,
+        "",
+        lowest,
+        highest,
+        "",
+        "",
+        lowP.url(),
+        highP.url(),
+        tPage.url()
+      ),
+      "CandC"
+    );
     console.log("Lowest:" + "\t" + String(lowest).replace(/\s+/g, ""));
     console.log("LowestYear:" + "\t" + lowYear);
     console.log("LowestPaper" + "\t" + lowPaper);

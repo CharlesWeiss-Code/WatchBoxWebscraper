@@ -1,10 +1,17 @@
 const utilFunc = require("../utilityFunctions.js");
+import { Watch } from "../DataStructures/Watch";
 
-async function bazaar(lowP, highP, tPage) {
+async function bazaar(lowP, highP, tPage, scrape) {
   for (var i = 3; i < refNums.length; i++) {
     console.log("");
-    lowest = -1;
-    highest = -1;
+    lowest = "-1";
+    lowYear = "";
+    lowTable = "";
+    lowBP = "";
+    highest = "-1";
+    highYear = "";
+    highTable = "";
+    highBP = "";
     //https://www.luxurybazaar.com/search-results?q=116500LN-0001
     var newURL = "https://www.luxurybazaar.com/search-results?q=" + refNums[i];
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
@@ -71,28 +78,47 @@ async function bazaar(lowP, highP, tPage) {
 
       highBPIndex1 = highTable.indexOf("Included") + 8;
       highBPIndex2 = highTable.indexOf("Lug Material");
-      console.log("Lowest: " + lowest);
-      console.log(
-        "Low year: " +
-          lowTable.substring(lowYearIndex1, lowYearIndex2).replace("\n", "")
-      );
-      console.log(
-        "Low BP: " +
-          lowTable.substring(lowBPIndex1, lowBPIndex2).replace("\n", "")
-      );
-      console.log("LOWEST URL: " + lowP.url());
-      console.log("Highest: " + highest);
-      console.log(
-        "High year: " +
-          highTable.substring(highYearIndex1, highYearIndex2).replace("\n", "")
-      );
-      console.log(
-        "High BP: " +
-          highTable.substring(highBPIndex1, highBPIndex2).replace("\n", "")
-      );
-      console.log("HIGHEST URL: " + highP.url());
+      assignData();
     }
+    scrape.addWatch(
+      new Watch(
+        refNums[i],
+        lowYear,
+        highYear,
+        "",
+        "",
+        lowBP,
+        "",
+        "",
+        highBP,
+        lowest,
+        hgihest,
+        "",
+        "",
+        lowP.url(),
+        highP.url(),
+        tPage.url()
+      ),
+      "bazaar"
+    );
+    console.log("Lowest: " + lowest);
+    console.log("Low year: " + lowYear);
+    console.log("Low BP: " + lowBP);
+    console.log("LOWEST URL: " + lowP.url());
+    console.log("Highest: " + highest);
+    console.log("High year: " + highYear);
+    console.log("High BP: " + highBP);
+    console.log("HIGHEST URL: " + highP.url());
   }
 }
+
+assignData = () => {
+  lowYear = lowTable.substring(lowYearIndex1, lowYearIndex2).replace("\n", "");
+  lowBP = lowTable.substring(lowBPIndex1, lowBPIndex2).replace("\n", "");
+  highYear = highTable
+    .substring(highYearIndex1, highYearIndex2)
+    .replace("\n", "");
+  highBP = highTable.substring(highBPIndex1, highBPIndex2).replace("\n", "");
+};
 
 module.exports = { bazaar };

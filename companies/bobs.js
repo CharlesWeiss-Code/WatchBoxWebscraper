@@ -1,5 +1,6 @@
 const utilFunc = require("../utilityFunctions.js");
 import { Watch } from "../DataStructures/Watch.js";
+
 lowest = "";
 highest = "";
 highTable = "";
@@ -11,8 +12,7 @@ PLow = "";
 lowURL = "";
 highURL = "";
 
-async function bobs(lowP, highP, tPage) {
-  result = [];
+async function bobs(lowP, highP, tPage, scrape) {
   for (var i = 2; i < refNums.length; i++) {
     lowest = "";
     highest = "";
@@ -79,7 +79,7 @@ async function bobs(lowP, highP, tPage) {
         await getData(lowP, highP); // gets data tables and price
       }
     }
-    result.push(
+    scrape.addWatch(
       new Watch(
         refNums[i],
         lowYear,
@@ -87,12 +87,18 @@ async function bobs(lowP, highP, tPage) {
         "",
         PLow,
         "",
+        "",
         PHigh,
+        "",
         lowest,
-        hgihest,
+        highest,
+        "",
+        "",
         lowP.url(),
-        highP.url()
-      )
+        highP.url(),
+        tPage.url()
+      ),
+      "bobs"
     );
     console.log("Lowest: " + "\t" + String(lowest).replace(/\s+/g, ""));
     console.log("LowYear: " + "\t" + lowYear);
@@ -104,7 +110,6 @@ async function bobs(lowP, highP, tPage) {
     console.log("Papers High: " + "\t" + PHigh);
     console.log("HIGHEST URL: " + highURL + "\n\n\n");
   }
-  return result;
 }
 
 async function select(page, sel, Text) {

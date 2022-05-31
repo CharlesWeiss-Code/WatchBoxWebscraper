@@ -1,11 +1,14 @@
 const utilFunc = require("../utilityFunctions.js");
+import { Watch } from "../DataStructures/Watch";
 
-async function chrono24(lowP, highP, tPage) {
+async function chrono24(lowP, highP, tPage, scrape) {
   flag = true;
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
-    lowest = -1;
-    highest = -1;
+    lowest = "-1";
+    highest = "-1";
+    highTable = "";
+    lowTable = "";
     var newURL =
       "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=" +
       refNums[i];
@@ -108,15 +111,38 @@ async function chrono24(lowP, highP, tPage) {
       console.log(
         "HighYear: " +
           "\t" +
-          lowTable.substring(index1YearHigh, index2YearHigh).replace(/\s+/g, "")
+          highTable
+            .substring(index1YearHigh, index2YearHigh)
+            .replace(/\s+/g, "")
       );
       console.log(
         "HighBoxAndPapers" +
           "\t" +
-          lowTable.substring(index1BPHigh, index2BPHigh).replace(/\s+/g, "")
+          highTable.substring(index1BPHigh, index2BPHigh).replace(/\s+/g, "")
       );
       console.log("HIGH URL: " + highP.url());
     }
+    scrape.addWatch(
+      new Watch(
+        refNums[i],
+        lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, ""),
+        highTable.substring(index1YearHigh, index2YearHigh).replace(/\s+/g, ""),
+        "",
+        "",
+        lowTable.substring(index1BPLow, index2BPLow).replace(/\s+/g, ""),
+        "",
+        "",
+        highTable.substring(index1BPHigh, index2BPHigh).replace(/\s+/g, ""),
+        lowest,
+        highest,
+        lowDealerStatus.replace(/\s+/g, ""),
+        highDealerStatus.replace(/\s+/g, ""),
+        lowP.url(),
+        highP.url(),
+        tPage.url()
+      ),
+      "chrono"
+    );
   }
 }
 
