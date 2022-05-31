@@ -62,22 +62,12 @@ async function bazaar(lowP, highP, tPage, scrape) {
         'div[class="attributes-table-container"]'
       );
 
-      lowYearIndex1 = lowTable.indexOf("Year of Manufacture") + 19;
-      lowYearIndex2 = lowYearIndex1 + 5;
-
-      lowBPIndex1 = lowTable.indexOf("Included") + 8;
-      lowBPIndex2 = lowTable.indexOf("Lug Material");
-
       await highP.waitForSelector('div[class="attributes-table-container"]');
       highTable = await utilFunc.getItem(
         highP,
         'div[class="attributes-table-container"]'
       );
-      highYearIndex1 = highTable.indexOf("Year of Manufacture") + 19;
-      highYearIndex2 = highYearIndex1 + 5;
 
-      highBPIndex1 = highTable.indexOf("Included") + 8;
-      highBPIndex2 = highTable.indexOf("Lug Material");
       assignData();
     }
     scrape.addWatch(
@@ -113,6 +103,16 @@ async function bazaar(lowP, highP, tPage, scrape) {
 }
 
 assignData = () => {
+  lowYearIndex1 = lowTable.indexOf("Year of Manufacture") + 19;
+  lowYearIndex2 = lowYearIndex1 + 5;
+
+  lowBPIndex1 = lowTable.indexOf("Included") + 8;
+  lowBPIndex2 = lowTable.indexOf("Lug Material");
+  highYearIndex1 = highTable.indexOf("Year of Manufacture") + 19;
+  highYearIndex2 = highYearIndex1 + 5;
+
+  highBPIndex1 = highTable.indexOf("Included") + 8;
+  highBPIndex2 = highTable.indexOf("Lug Material");
   lowYear = lowTable.substring(lowYearIndex1, lowYearIndex2).replace("\n", "");
   lowBP = lowTable.substring(lowBPIndex1, lowBPIndex2).replace("\n", "");
   highYear = highTable

@@ -8,17 +8,11 @@ highPaper = "";
 highBox = "";
 lowTable = "";
 highTable = "";
+lowYearIndex1 = -1;
+lowYearIndex2 = -1;
 
 async function crownAndCaliber(lowP, highP, tPage, scrape) {
   for (var i = 3; i < refNums.length; i++) {
-    lowYear = "";
-    lowPaper = "";
-    lowBox = "";
-    highYear = "";
-    highPaper = "";
-    highBox = "";
-    lowTable = "";
-    highTable = "";
     url = "https://www.crownandcaliber.com/search?view=shop&q=" + refNums[i];
     console.log("CandC URL: ***  " + url);
 
@@ -42,7 +36,7 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
         await highP.waitForTimeout(500);
         lowTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
         highTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
-
+        assignData();
         let lowURL = await lowP.evaluate(() => {
           const image = document.querySelector(
             "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-5.medium-12.small-12 > div > div > div > div.slider.slick-initialized.slick-slider > div.slick-list.draggable > div > div.slick-slide.slick-current.slick-active > div > div > img:nth-child(1)"
@@ -105,91 +99,73 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
         highTable = await utilFunc.getItem(highP, 'div[class="prod-specs"]');
       }
     }
-    assignData();
-    scrape.addWatch(
-      new Watch(
-        refNums[i],
-        lowYear,
-        highYear,
-        lowBox,
-        lowPaper,
-        "",
-        highBox,
-        highPaper,
-        "",
-        lowest,
-        highest,
-        "",
-        "",
-        lowP.url(),
-        highP.url(),
-        tPage.url()
-      ),
-      "CandC"
+    var lowYearIndex1 = lowTable.indexOf("Approximate Age - ") + 18;
+    var lowYearIndex2 = lowTable.indexOf("Case Material - ");
+    if (lowTable.indexOf("Paper Date - ") != -1) {
+      lowYearIndex1 = lowTable.indexOf("Paper Date - ") + 13;
+      lowYearIndex2 = lowTable.indexOf("Case Size");
+    }
+
+    var lowBoxIndex1 = lowTable.indexOf("Box - ") + 6;
+    var lowBoxIndex2 = lowTable.indexOf("Papers - ");
+    var lowPaperIndex1 = lowBoxIndex2 + 9;
+    var lowPaperIndex2 = lowTable.indexOf("Manual -");
+
+    var highYearIndex1 = highTable.indexOf("Approximate Age - ") + 18;
+    var highYearIndex2 = highTable.indexOf("Case Material - ");
+
+    if (highTable.indexOf("Paper Date -") != -1) {
+      highYearIndex1 = highTable.indexOf("Paper Date - ") + 13;
+      highYearIndex2 = highTable.indexOf("Case Size");
+    }
+
+    var highBoxIndex1 = highTable.indexOf("Box - ") + 6;
+    var highBoxIndex2 = highTable.indexOf("Papers - ");
+    var highPaperIndex1 = highBoxIndex2 + 8;
+    var highPaperIndex2 = highTable.indexOf("Manual -");
+
+    const lowYear = lowTable
+      .substring(lowYearIndex1, lowYearIndex2)
+      .replace(/\s+/g, "");
+
+    const lowPaper = lowTable
+      .substring(lowBoxIndex1, lowBoxIndex2)
+      .replace(/\s+/g, "");
+    const lowBox = lowTable
+      .substring(lowPaperIndex1, lowPaperIndex2)
+      .replace(/\s+/g, "");
+    const highYear = highTable
+      .substring(highYearIndex1, highYearIndex2)
+      .replace(/\s+/g, "");
+    const highPaper = highTable
+      .substring(highBoxIndex1, highBoxIndex2)
+      .replace(/\s+/g, "");
+    const highBox = highTable
+      .substring(highPaperIndex1, highPaperIndex2)
+      .replace(/\s+/g, "");
+
+    w = new Watch(
+      refNums[i],
+      lowYear,
+      highYear,
+      lowBox,
+      lowPaper,
+      "",
+      highBox,
+      highPaper,
+      "",
+      lowest.replace(/\s+/g, ""),
+      highest.replace(/\s+/g, ""),
+      "",
+      "",
+      lowP.url(),
+      highP.url(),
+      tPage.url()
     );
-    console.log("Lowest:" + "\t" + String(lowest).replace(/\s+/g, ""));
-    console.log("LowestYear:" + "\t" + lowYear);
-    console.log("LowestPaper" + "\t" + lowPaper);
-    console.log("LowestBox" + "\t" + lowBox);
-    console.log("LOWEST URL: " + lowP.url() + "\n");
-
-    console.log("Highest:" + "\t" + String(highest).replace(/\s+/g, ""));
-
-    console.log("highestYear:" + "\t" + highYear);
-    console.log("highestPaper" + "\t" + highPaper);
-    console.log("highestBox" + "\t" + highBox);
-    console.log("HIGHEST URL: " + highP.url() + "\n\n");
+    scrape.addWatch(w, "CandC");
+    console.log(w);
   }
 }
-
-assignData = () => {
-  lowYearIndex1 = -1;
-  lowYearIndex2 = -1;
-  if (lowTable.indexOf("Paper Date - ") != -1) {
-    lowYearIndex1 = lowTable.indexOf("Paper Date - ") + 13;
-    lowYearIndex2 = lowTable.indexOf("Case Size");
-  } else {
-    lowYearIndex1 = lowTable.indexOf("Approximate Age -") + 17;
-    lowYearIndex2 = lowTable.indexOf("Case Material");
-  }
-
-  lowBoxIndex1 = lowTable.indexOf("Box - ") + 6;
-  lowBoxIndex2 = lowTable.indexOf("Papers - ");
-  lowPaperIndex1 = lowBoxIndex2 + 9;
-  lowPaperIndex2 = lowTable.indexOf("Manual -");
-  highYearIndex1 = -1;
-  highYearIndex2 = -1;
-  if (highTable.indexOf("Paper Date -") != -1) {
-    highYearIndex1 = highTable.indexOf("Paper Date - ") + 13;
-    highYearIndex2 = highTable.indexOf("Case Size");
-  } else {
-    highYearIndex1 = highTable.indexOf("Approximate Age -") + 17;
-    highYearIndex2 = highTable.indexOf("Case Material");
-  }
-
-  highBoxIndex1 = highTable.indexOf("Box - ") + 6;
-  highBoxIndex2 = highTable.indexOf("Papers - ");
-  highPaperIndex1 = highBoxIndex2 + 8;
-  highPaperIndex2 = highTable.indexOf("Manual -");
-
-  lowYear = lowTable
-    .substring(lowYearIndex1, lowYearIndex2)
-    .replace(/\s+/g, "");
-
-  lowPaper = lowTable.substring(lowBoxIndex1, lowBoxIndex2).replace(/\s+/g, "");
-  lowBox = lowTable
-    .substring(lowPaperIndex1, lowPaperIndex2)
-    .replace(/\s+/g, "");
-  highYear = highTable
-    .substring(highYearIndex1, highYearIndex2)
-    .replace(/\s+/g, "");
-  highPaper = highTable
-    .substring(highBoxIndex1, highBoxIndex2)
-    .replace(/\s+/g, "");
-  highBox = highTable
-    .substring(highPaperIndex1, highPaperIndex2)
-    .replace(/\s+/g, "");
-};
 
 prepare = async (lowP, highP, link) => {
   endAsc = "#/sort:ss_price:asc";
@@ -202,7 +178,6 @@ prepare = async (lowP, highP, link) => {
   await highP.goto(link + endDesc, {
     waitUntil: "networkidle0",
   });
-  console.log("lowurl: " + lowP.url());
   lowest = await utilFunc.getItem(
     lowP,
     'span[class="current-price product-price__price"]'

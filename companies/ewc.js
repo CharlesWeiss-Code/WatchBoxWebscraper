@@ -66,7 +66,6 @@ async function EWC(lowP, highP, tPage, scrape) {
       ),
       "ewc"
     );
-
     console.log("Lowest: " + lowest);
     console.log("Highest: " + highest);
     console.log("URL: " + tPage.url());

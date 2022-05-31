@@ -15,7 +15,9 @@ class Watch {
     highDealerStatus,
     lowLink,
     highLink,
-    generalLink
+    generalLink,
+    imageLow,
+    imageHigh
   ) {
     this.refNum = refNum;
     this.lowBox = lowBox;
@@ -34,6 +36,8 @@ class Watch {
     this.highBP = highBP;
     this.generalLink = generalLink;
     this.dateOfScrape = new Date();
+    this.imageLow = imageLow;
+    this.imageHigh = imageHigh;
   }
 
   setScrape = (s) => {

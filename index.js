@@ -13,7 +13,6 @@ const Bobs = require("./companies/bobs.js");
 const REF = require("./refNums.js");
 const minArgs = require("./minimalArgs");
 
-//import { AllScrapes } from "./DataStructures/AllScrapes.js";
 const AllScrapes = require("./DataStructures/AllScrapes");
 const Scrape = require("./DataStructures/Scrape");
 /*
@@ -61,22 +60,20 @@ async function start() {
     }
   });
 
-  /*
   CandC = await CandC.crownAndCaliber(
     lowPage,
     highPage,
     testPage,
     currentScrape
   ); // mostly done (daytona stuff)
-  */
-  await Bobs.bobs(lowPage, highPage, testPage, currentScrape); //  Best one.
-  //David = david.davidsw(lowPage, highPage, testPage, currentScrape); // mostly done (filter table data)
-  await Bazaar.bazaar(lowPage, highPage, testPage, currentScrape); // Done
-  //EWC = await ewc.EWC(lowPage, highPage, testPage, currentScrape); //pretty much done
-  await chrono.chrono24(lowPage, highPage, testPage, currentScrape); // done;
+
+  //await Bobs.bobs(lowPage, highPage, testPage, currentScrape); //  Best one.
+  //await david.davidsw(lowPage, highPage, testPage, currentScrape); // mostly done (filter table data)
+  //await Bazaar.bazaar(lowPage, highPage, testPage, currentScrape); // Done
+  //await ewc.EWC(lowPage, highPage, testPage, currentScrape); //pretty much done
+  //await chrono.chrono24(lowPage, highPage, testPage, currentScrape); // done;
   AS.addScrape(currentScrape);
   console.log(AS.getDict());
-
-  //await start();
+  await start();
 }
 start();
