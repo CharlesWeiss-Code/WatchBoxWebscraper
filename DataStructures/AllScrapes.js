@@ -7,30 +7,34 @@ class AllScrapes {
 
   addScrape = (s) => {
     this.allScrapes.push(s);
+    //console.log(this.allScrapes[0].getDict());
     this.addToDict(s);
   };
 
   addToDict = (scrape) => {
-    scrape.getDict().forEach((entry) => {
+    for (const [site, val] of scrape.getDict().entries()) {
       // {Site, {refNum, Watch}}
-
-      entry.values().forEach((secondEntry) => {
-        // {refNum, Watch}
-        if (this.dict.get(entry.key) === undefined) {
-          this.dict.set(entry.key, new Map());
+      if (this.dict.get(site) === undefined) {
+        this.dict.set(site, new Map());
+        //console.log("new Map");
+      }
+      for (const [refNum, watch] of val) {
+        // this isnt a real loop. it is used to get the key and value out of val
+        if (this.dict.get(site).get(refNum) === undefined) {
+          this.dict.get(site).set(refNum, new Array());
+          //console.log("new array");
         }
-        if (this.dict.get(entry.key).get(secondEntry.key) === undefined) {
-          this.dict.get(entry.key).set(secondEntry.key, []);
-        }
-        this.dict.get(entry.key).get(secondEntry.key).push(secondEntry.value);
-      });
-    });
+        //console.log(this.dict.get(site).get(refNum));
+        this.dict.get(site).get(refNum).push(watch);
+        //console.log(this.dict.get(site).get(refNum));
+      }
+    }
   };
 
   getScrapesByTime = (d) => {
     var result = [];
     this.allScrapes.forEach((s) => {
-      if (s.getDate() === d) {
+      if (s.getDate().equals(d)) {
         result.push(s);
       }
     });
