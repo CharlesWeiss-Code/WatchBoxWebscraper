@@ -2,7 +2,7 @@ class AllScrapes {
   constructor() {
     this.startOfScraping = new Date();
     this.allScrapes = []; // [scrape]
-    this.dict = new Map(); // {Site, {refNum, [watch]]}}
+    this.dict = new Map(); // {Site, {refNum, [watch]}}
   }
 
   addScrape = (s) => {
@@ -24,17 +24,20 @@ class AllScrapes {
           this.dict.get(site).set(refNum, new Array());
           //console.log("new array");
         }
-        //console.log(this.dict.get(site).get(refNum));
         this.dict.get(site).get(refNum).push(watch);
-        //console.log(this.dict.get(site).get(refNum));
       }
     }
   };
 
-  getScrapesByTime = (d) => {
+  getScrapesByTime = (m, d, y) => {
     var result = [];
     this.allScrapes.forEach((s) => {
-      if (s.getDate().equals(d)) {
+      const scrapeDate = s.getDate();
+      if (
+        scrapeDate.getMonth() + 1 === m &&
+        scrapeDate.getDate() === d &&
+        scrapeDate.getFullYear() === y
+      ) {
         result.push(s);
       }
     });
@@ -45,11 +48,18 @@ class AllScrapes {
     return this.allScrapes;
   };
 
-  getWatchesByTime = (refNum, d) => {
-    const byTime = getScrapesByTime(d);
+  getWatches = (refNum) => {
     var result = [];
-    byTime.forEach((s) => {
-      result.add(s.getWatch(refNum));
+    //{Site, {refNum, [watch]}}
+    this.allScrapes.forEach((s) => {
+      for (const [site, map] of s.getDict().entries()) {
+        for (const [ref, watchArray] of map.entries()) {
+          // {refNum, [watch]}
+          if (ref === refNum) {
+            result.push(watchArray);
+          }
+        }
+      }
     });
     return result;
   };

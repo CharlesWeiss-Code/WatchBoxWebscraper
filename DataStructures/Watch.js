@@ -30,8 +30,8 @@ class Watch {
     this.scrape = s;
   };
 
-  setDate = (d, m, y) => {
-    this.dateOfScrape = new Date(d, m, y);
+  setDate = (m, d, y) => {
+    this.dateOfScrape = new Date(m, d, y);
   };
 
   getRefNum = () => {

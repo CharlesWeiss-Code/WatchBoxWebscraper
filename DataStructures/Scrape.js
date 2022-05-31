@@ -12,6 +12,7 @@ class Scrape {
       this.dict.set(site, new Map());
     }
     this.dict.get(site).set(w.getRefNum(), w);
+    w.setScrape(this);
   };
 
   addWatches = (list, site) => {
