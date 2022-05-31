@@ -1,5 +1,5 @@
 const utilFunc = require("../utilityFunctions.js");
-import { Watch } from "../DataStructures/Watch.js";
+const Watch = require("../DataStructures/Watch");
 
 lowest = "";
 highest = "";
@@ -67,10 +67,14 @@ async function bobs(lowP, highP, tPage, scrape) {
       }
     } else {
       if (
-        await utilFunc.noResults(
-          tPage,
-          "#searchspring-content > div > div > div > div > div > div.no-results"
-        )
+        await utilFunc
+          .noResults(
+            tPage,
+            "#searchspring-content > div > div > div > div > div > div.no-results"
+          )
+          .catch((e) => {
+            console.log(e);
+          })
       ) {
         lowest = "";
         highest = "";
@@ -79,36 +83,35 @@ async function bobs(lowP, highP, tPage, scrape) {
         await getData(lowP, highP); // gets data tables and price
       }
     }
-    scrape.addWatch(
-      new Watch(
-        refNums[i],
-        lowYear,
-        highYear,
-        "",
-        PLow,
-        "",
-        "",
-        PHigh,
-        "",
-        lowest,
-        highest,
-        "",
-        "",
-        lowP.url(),
-        highP.url(),
-        tPage.url()
-      ),
-      "bobs"
+    w = new Watch(
+      refNums[i],
+      lowYear,
+      highYear,
+      "",
+      PLow,
+      "",
+      "",
+      PHigh,
+      "",
+      lowest,
+      highest,
+      "",
+      "",
+      lowP.url(),
+      highP.url(),
+      tPage.url()
     );
-    console.log("Lowest: " + "\t" + String(lowest).replace(/\s+/g, ""));
-    console.log("LowYear: " + "\t" + lowYear);
-    console.log("Papers Low: " + "\t" + PLow);
-    console.log("LOWEST URL: " + lowURL + "\n");
+    scrape.addWatch(w, "bobs");
+    console.log(w);
+    // console.log("Lowest: " + "\t" + String(lowest).replace(/\s+/g, ""));
+    // console.log("LowYear: " + "\t" + lowYear);
+    // console.log("Papers Low: " + "\t" + PLow);
+    // console.log("LOWEST URL: " + lowURL + "\n");
 
-    console.log("Highest: " + "\t" + String(highest).replace(/\s+/g, ""));
-    console.log("HighYear: " + "\t" + highYear);
-    console.log("Papers High: " + "\t" + PHigh);
-    console.log("HIGHEST URL: " + highURL + "\n\n\n");
+    // console.log("Highest: " + "\t" + String(highest).replace(/\s+/g, ""));
+    // console.log("HighYear: " + "\t" + highYear);
+    // console.log("Papers High: " + "\t" + PHigh);
+    // console.log("HIGHEST URL: " + highURL + "\n\n\n");
   }
 }
 

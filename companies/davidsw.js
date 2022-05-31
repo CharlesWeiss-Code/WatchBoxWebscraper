@@ -1,5 +1,5 @@
 const utilFunc = require("../utilityFunctions.js");
-import { Watch } from "../DataStructures/Watch";
+const Watch = require("../DataStructures/Watch");
 
 async function davidsw(lowP, highP, tPage, scrape) {
   for (var i = 0; i < refNums.length; i++) {
@@ -151,37 +151,37 @@ async function davidsw(lowP, highP, tPage, scrape) {
     if (indexHigh != -1) {
       highYear = highTableGeneral.substring(indexHigh + 4);
     }
-    scrape.addWatch(
-      new Watch(
-        refNums[i],
-        lowYear,
-        highYear,
-        lowBox.replace(/\s+/g, ""),
-        lowPaper.replace(/\s+/g, ""),
-        "",
-        highBox.replace(/\s+/g, ""),
-        highPaper.replace(/\s+/g, ""),
-        "",
-        lowest,
-        highest,
-        "",
-        "",
-        lowP.url(),
-        highP.url(),
-        tPage.url()
-      ),
-      "davidsw"
+
+    w = new Watch(
+      refNums[i],
+      lowYear,
+      highYear,
+      lowBox.replace(/\s+/g, ""),
+      lowPaper.replace(/\s+/g, ""),
+      "",
+      highBox.replace(/\s+/g, ""),
+      highPaper.replace(/\s+/g, ""),
+      "",
+      lowest,
+      highest,
+      "",
+      "",
+      lowP.url(),
+      highP.url(),
+      tPage.url()
     );
-    console.log("Lowest: " + lowest);
-    console.log("Low Year: " + lowYear.replace(/\s+/g, ""));
-    console.log("Low Box: " + lowBox.replace(/\s+/g, ""));
-    console.log("Low Paper: " + lowPaper.replace(/\s+/g, ""));
-    console.log("lOWEST URL: " + lowP.url() + "\n");
-    console.log("Highest: " + highest);
-    console.log("High Year: " + highYear.replace(/\s+/g, ""));
-    console.log("High Box: " + highBox.replace(/\s+/g, ""));
-    console.log("High Paper: " + highPaper.replace(/\s+/g, ""));
-    console.log("HIGHEST URL: " + highP.url());
+    console.log(w);
+    scrape.addWatch(w, "davidsw");
+    // console.log("Lowest: " + lowest);
+    // console.log("Low Year: " + lowYear.replace(/\s+/g, ""));
+    // console.log("Low Box: " + lowBox.replace(/\s+/g, ""));
+    // console.log("Low Paper: " + lowPaper.replace(/\s+/g, ""));
+    // console.log("lOWEST URL: " + lowP.url() + "\n");
+    // console.log("Highest: " + highest);
+    // console.log("High Year: " + highYear.replace(/\s+/g, ""));
+    // console.log("High Box: " + highBox.replace(/\s+/g, ""));
+    // console.log("High Paper: " + highPaper.replace(/\s+/g, ""));
+    // console.log("HIGHEST URL: " + highP.url());
   }
 }
 

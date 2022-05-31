@@ -1,5 +1,5 @@
 const utilFunc = require("../utilityFunctions.js");
-import { Watch } from "../DataStructures/Watch";
+const Watch = require("../DataStructures/Watch");
 
 async function chrono24(lowP, highP, tPage, scrape) {
   flag = true;
@@ -67,7 +67,7 @@ async function chrono24(lowP, highP, tPage, scrape) {
         highP,
         "#wt-watches > div:nth-child(1) > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
       );
-      HighDealerStatus = await utilFunc.getItem(
+      highDealerStatus = await utilFunc.getItem(
         highP,
         "#wt-watches > div:nth-child(1) > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
       );
@@ -106,7 +106,7 @@ async function chrono24(lowP, highP, tPage, scrape) {
 
       console.log("Highest: " + "\t" + highest.replace(/\s+/g, ""));
       console.log(
-        "HighDealerStatus" + "\t" + HighDealerStatus.replace(/\s+/g, "")
+        "HighDealerStatus" + "\t" + highDealerStatus.replace(/\s+/g, "")
       );
       console.log(
         "HighYear: " +

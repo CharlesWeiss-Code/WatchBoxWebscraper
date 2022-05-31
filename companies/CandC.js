@@ -1,5 +1,5 @@
 const utilFunc = require("../utilityFunctions.js");
-import { Watch } from "../DataStructures/Watch.js";
+const Watch = require("../DataStructures/Watch");
 lowYear = "";
 lowPaper = "";
 lowBox = "";

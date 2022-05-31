@@ -1,5 +1,5 @@
 const utilFunc = require("../utilityFunctions.js");
-import { Watch } from "../DataStructures/Watch";
+const Watch = require("../DataStructures/Watch");
 
 async function bazaar(lowP, highP, tPage, scrape) {
   for (var i = 3; i < refNums.length; i++) {
@@ -92,7 +92,7 @@ async function bazaar(lowP, highP, tPage, scrape) {
         "",
         highBP,
         lowest,
-        hgihest,
+        highest,
         "",
         "",
         lowP.url(),

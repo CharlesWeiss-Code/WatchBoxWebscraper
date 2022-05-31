@@ -1,5 +1,5 @@
 const utilFunc = require("../utilityFunctions.js");
-import { Watch } from "../DataStructures/Watch";
+const Watch = require("../DataStructures/Watch");
 
 async function EWC(lowP, highP, tPage, scrape) {
   for (var i = 0; i < refNums.length; i++) {
@@ -66,6 +66,7 @@ async function EWC(lowP, highP, tPage, scrape) {
       ),
       "ewc"
     );
+
     console.log("Lowest: " + lowest);
     console.log("Highest: " + highest);
     console.log("URL: " + tPage.url());
