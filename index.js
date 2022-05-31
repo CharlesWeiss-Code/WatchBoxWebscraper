@@ -15,6 +15,8 @@ const minArgs = require("./minimalArgs");
 
 const AllScrapes = require("./DataStructures/AllScrapes");
 const Scrape = require("./DataStructures/Scrape");
+
+const utilFunc = require("./utilityFunctions");
 /*
 I HAVE MADE TIMEOUT: 0 ON SOME OF THE PAGE.GOTO(). just for testing. eventually should make timeout:60000 (1min)
 */
@@ -60,20 +62,22 @@ async function start() {
     }
   });
 
-  CandC = await CandC.crownAndCaliber(
-    lowPage,
-    highPage,
-    testPage,
-    currentScrape
-  ); // mostly done (daytona stuff)
+  // CandC = await CandC.crownAndCaliber(
+  //   lowPage,
+  //   highPage,
+  //   testPage,
+  //   currentScrape
+  // ); // mostly done (daytona stuff)
 
-  //await Bobs.bobs(lowPage, highPage, testPage, currentScrape); //  Best one.
+  await Bobs.bobs(lowPage, highPage, testPage, currentScrape); //  Best one.
   //await david.davidsw(lowPage, highPage, testPage, currentScrape); // mostly done (filter table data)
-  //await Bazaar.bazaar(lowPage, highPage, testPage, currentScrape); // Done
+  await Bazaar.bazaar(lowPage, highPage, testPage, currentScrape); // Done
   //await ewc.EWC(lowPage, highPage, testPage, currentScrape); //pretty much done
-  //await chrono.chrono24(lowPage, highPage, testPage, currentScrape); // done;
+  await chrono.chrono24(lowPage, highPage, testPage, currentScrape); // done;
   AS.addScrape(currentScrape);
-  console.log(AS.getDict());
+  console.log(AS.getDict()) + "\n\n\n";
+  walkDict(AS.getDict());
   await start();
 }
+
 start();

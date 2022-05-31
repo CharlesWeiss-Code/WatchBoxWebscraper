@@ -4,6 +4,4 @@ NEED TO DO:
       https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=311.30.42.30.01.005&resultview=list&sortorder=1
       - when gettin prices, the price of "TOP" comes up first
     - add promise catches to all functions that use them. This cannot crash. 
-    - add waitForSelector to getItem
     - change waitForTimeout to waitForSelector
-    - bobs papers not rolex brand

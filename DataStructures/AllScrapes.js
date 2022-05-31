@@ -24,7 +24,6 @@ class AllScrapes {
         // this isnt a real loop. it is used to get the key and value out of val
         if (this.dict.get(site).get(refNum) === undefined) {
           this.dict.get(site).set(refNum, new Array());
-          //console.log("new array");
         }
         this.dict.get(site).get(refNum).push(watch);
       }
