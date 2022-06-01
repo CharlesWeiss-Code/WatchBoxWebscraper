@@ -2,10 +2,8 @@ const utilFunc = require("../utilityFunctions.js");
 
 class AllScrapes {
   static allScrapes = []; // [scrape] = [{Site, {refNum, Watch}}]
-  static dict = new Map(); // {Site, {refNum, [watch]}}
-  constructor() {
-    this.startOfScraping = new Date();
-  }
+  static dict = new Map(); // {} = {Site, {refNum, [watch]}}
+  static startOfScraping = new Date();
 
   static addScrape = (s) => {
     this.allScrapes.push(s);
