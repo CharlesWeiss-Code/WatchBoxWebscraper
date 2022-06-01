@@ -1,10 +1,8 @@
 const Watch = require("./DataStructures/Watch.js");
 const Scrape = require("./DataStructures/Scrape.js");
 const AllScrapes = require("./DataStructures/AllScrapes.js");
-const { all } = require("express/lib/application");
 
 start = () => {
-  var all = new AllScrapes();
   scrape1 = new Scrape();
   scrape2 = new Scrape();
   w1 = new Watch(
