@@ -6,6 +6,7 @@ const utilFunc = require("./utilityFunctions");
 start = () => {
   scrape1 = new Scrape();
   scrape2 = new Scrape();
+
   w1 = new Watch(
     "1",
     "2007",
@@ -24,6 +25,7 @@ start = () => {
     "www.pc.com",
     "www.pc.com"
   );
+
   w2 = new Watch(
     "2",
     "2019",
@@ -42,8 +44,9 @@ start = () => {
     "www.ebay.com",
     "www.ebay.com"
   );
+
   w3 = new Watch(
-    "3",
+    "1",
     "1993",
     "2005",
     "",
@@ -60,6 +63,7 @@ start = () => {
     "www.pc.com",
     "www.pc.com"
   );
+
   w4 = new Watch(
     "3",
     "2022",
@@ -80,10 +84,11 @@ start = () => {
   );
   scrape1.addWatch(w1);
   scrape1.addWatch(w2);
-  scrape1.addWatch(w3);
-  scrape2.addWatch(w4);
+  scrape2.addWatch(w3);
+  scrape1.addWatch(w4);
   AllScrapes.addScrape(scrape1);
   AllScrapes.addScrape(scrape2);
+
   console.log(JSON.stringify(AllScrapes.getDict(), null, 3));
 };
 

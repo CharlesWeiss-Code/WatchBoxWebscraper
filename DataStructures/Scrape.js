@@ -16,20 +16,10 @@ class Scrape {
   // adds a scraped watch to the dictionary
   addWatch = (w) => {
     const site = w.getWebsite();
-    if (this.dict.get(site) === undefined) {
+    if (!this.dict.has(site)) {
       this.dict.set(site, new Map());
     }
     this.dict.get(site).set(w.getRefNum(), w);
-    w.setScrape(this);
-    //this.addWatch2(w);
-  };
-
-  addWatch2 = (w) => {
-    const site = w.getWebsite();
-    if (this.dict[site] === undefined) {
-      this.dict[site] = new Map();
-    }
-    this.dict[site][w.getRefNum()] = w;
     w.setScrape(this);
   };
 
