@@ -74,7 +74,7 @@ async function start() {
   await Bazaar.bazaar(lowPage, highPage, testPage, currentScrape); // Done
   //await ewc.EWC(lowPage, highPage, testPage, currentScrape); //pretty much done
   await chrono.chrono24(lowPage, highPage, testPage, currentScrape); // done;
-  AS.addScrape(currentScrape);
+  AllScrapes.addScrape(currentScrape);
   console.log(AS.getDict()) + "\n\n\n";
   walkDict(AS.getDict());
   await start();

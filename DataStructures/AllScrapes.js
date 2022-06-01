@@ -1,19 +1,19 @@
 const utilFunc = require("../utilityFunctions.js");
 
 class AllScrapes {
+  static allScrapes = []; // [scrape] = [{Site, {refNum, Watch}}]
+  static dict = new Map(); // {Site, {refNum, [watch]}}
   constructor() {
     this.startOfScraping = new Date();
-    this.allScrapes = []; // [scrape] = [{Site, {refNum, Watch}}]
-    this.dict = new Map(); // {Site, {refNum, [watch]}}
   }
 
-  addScrape = (s) => {
+  static addScrape = (s) => {
     this.allScrapes.push(s);
     //console.log(this.allScrapes[0].getDict());
     this.addToDict(s);
   };
 
-  addToDict = (scrape) => {
+  static addToDict = (scrape) => {
     for (const [site, val] of scrape.getDict().entries()) {
       // {Site, {refNum, Watch}}
       if (this.dict.get(site) === undefined) {
@@ -21,7 +21,6 @@ class AllScrapes {
         //console.log("new Map");
       }
       for (const [refNum, watch] of val) {
-        // this isnt a real loop. it is used to get the key and value out of val
         if (this.dict.get(site).get(refNum) === undefined) {
           this.dict.get(site).set(refNum, new Array());
         }
@@ -30,26 +29,22 @@ class AllScrapes {
     }
   };
 
-  getScrapesByTime = (d) => {
+  static getScrapesByTime = (d) => {
     var result = [];
     this.allScrapes.forEach((s) => {
       const scrapeDate = s.getDate();
-      if (
-        scrapeDate.getMonth() + 1 === d.getMonth() + 1 &&
-        scrapeDate.getDate() === d.getDate() &&
-        scrapeDate.getFullYear() === d.getFullYear()
-      ) {
+      if (utilFunc.sameDate(scrapeDate, d)) {
         result.push(s);
       }
     });
     return result;
   };
 
-  getAllScrapes = () => {
+  static getAllScrapes = () => {
     return this.allScrapes;
   };
 
-  getWatches = (refNum) => {
+  static getWatches = (refNum) => {
     var result = [];
     for (const [site, map] of this.dict.entries()) {
       //console.log(site, map);
@@ -62,9 +57,9 @@ class AllScrapes {
     return result;
   };
 
-  getStartOfScraping = () => this.startOfScraping;
+  static getStartOfScraping = () => this.startOfScraping;
 
-  getWatchByWebsiteAndDate = (refNum, site, d) => {
+  static getWatchByWebsiteAndDate = (refNum, site, d) => {
     this.dict
       .get(site)
       .get(refNum)
@@ -75,7 +70,7 @@ class AllScrapes {
       });
   };
 
-  getWatchesByDate = (refNum, d) => {
+  static getWatchesByDate = (refNum, d) => {
     var result = [];
     this.getScrapesByTime(d).forEach((scrape) => {
       //[{Site, {refNum, Watch}}]
@@ -91,9 +86,9 @@ class AllScrapes {
     return result;
   };
 
-  getDict = () => this.dict;
+  static getDict = () => this.dict;
 
-  getWebsite = (site) => this.dict.get(site);
+  static getWebsite = (site) => this.dict.get(site);
 }
 
 module.exports = AllScrapes;

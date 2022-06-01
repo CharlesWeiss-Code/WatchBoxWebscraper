@@ -58,16 +58,6 @@ sameDate = (d1, d2) => {
   return false;
 };
 
-printDict = (d) => {
-  for (const [k, v] of d.entries()) {
-    if (v instanceof Map) {
-      printDict(d);
-    } else {
-      console.log(k, v);
-    }
-  }
-};
-
 module.exports = {
   noResults,
   noResults2,
@@ -75,5 +65,4 @@ module.exports = {
   getItem,
   exists,
   sameDate,
-  printDict,
 };
