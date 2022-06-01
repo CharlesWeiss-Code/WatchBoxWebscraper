@@ -1,6 +1,8 @@
 const utilFunc = require("../utilityFunctions.js");
 
 class AllScrapes {
+  static totalScrapes = 0;
+  static totalWatches = 0;
   static allScrapes = []; // [scrape] = [{Site, {refNum, Watch}}]
   static dict = new Map(); // {} = {Site, {refNum, [watch]}}
   static startOfScraping = new Date();
@@ -37,10 +39,8 @@ class AllScrapes {
     });
     return result;
   };
-
-  static getAllScrapes = () => {
-    return this.allScrapes;
-  };
+  static getTotalScrapes = () => this.totalScrapes;
+  static getAllScrapes = () => this.allScrapes;
 
   static getWatches = (refNum) => {
     var result = [];
@@ -87,6 +87,16 @@ class AllScrapes {
   static getDict = () => this.dict;
 
   static getWebsite = (site) => this.dict.get(site);
+
+  static getAllWatches = () => {
+    var result = [];
+    for (const [site, map] of this.dict.entries()) {
+      for (const [refNum, watchArray] of map.entries()) {
+        result.push(...watchArray);
+      }
+    }
+    return result;
+  };
 }
 
 module.exports = AllScrapes;

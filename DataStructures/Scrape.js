@@ -1,3 +1,5 @@
+const AllScrapes = require("./AllScrapes");
+
 class Scrape {
   // create a new scrape every session. As watches are completeed,
   // they are added to the arraylist
@@ -5,9 +7,13 @@ class Scrape {
   constructor() {
     this.dateOfScrape = new Date();
     this.dict = new Map(); //{Site, {refNum, Watch}}
+    // this.watchScrapeNum = AllScrapes.totalWatches;
+    // AllScrapes.totalWatches++;
+    this.scapeNum = AllScrapes.totalScrapes;
+    AllScrapes.totalScrapes++;
   }
-  // adds a scraped watch to the dictionary
 
+  // adds a scraped watch to the dictionary
   addWatch = (w) => {
     const site = w.getWebsite();
     if (this.dict.get(site) === undefined) {

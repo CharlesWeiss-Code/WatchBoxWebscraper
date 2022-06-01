@@ -86,8 +86,7 @@ start = () => {
   AllScrapes.addScrape(scrape1);
   AllScrapes.addScrape(scrape2);
 
-  //console.log(all.getDict());
-  console.log(AllScrapes.getWatchesByDate("3", new Date()));
+  console.log(AllScrapes.getAllWatches());
 };
 
 start();

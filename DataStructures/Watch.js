@@ -1,3 +1,5 @@
+const AllScrapes = require("./AllScrapes");
+
 class Watch {
   constructor(
     refNum,
@@ -42,6 +44,8 @@ class Watch {
       0,
       this.generalLink.indexOf(".com") + 4
     );
+    this.watchScrapeNum = AllScrapes.totalWatches;
+    AllScrapes.totalWatches++;
   }
 
   setScrape = (s) => {
