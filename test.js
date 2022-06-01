@@ -56,9 +56,9 @@ start = () => {
     "72,000",
     "",
     "",
-    "www.google.com",
-    "www.google.com",
-    "www.google.com"
+    "www.pc.com",
+    "www.pc.com",
+    "www.pc.com"
   );
   w4 = new Watch(
     "3",
@@ -84,7 +84,7 @@ start = () => {
   scrape2.addWatch(w4);
   AllScrapes.addScrape(scrape1);
   AllScrapes.addScrape(scrape2);
-  console.log(JSON.stringify(AllScrapes.getDict(), null, 5));
+  console.log(JSON.stringify(AllScrapes.getDict(), null, 3));
 };
 
 start();

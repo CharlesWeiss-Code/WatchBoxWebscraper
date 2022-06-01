@@ -21,6 +21,16 @@ class Scrape {
     }
     this.dict.get(site).set(w.getRefNum(), w);
     w.setScrape(this);
+    //this.addWatch2(w);
+  };
+
+  addWatch2 = (w) => {
+    const site = w.getWebsite();
+    if (this.dict[site] === undefined) {
+      this.dict[site] = new Map();
+    }
+    this.dict[site][w.getRefNum()] = w;
+    w.setScrape(this);
   };
 
   getDate = () => {
