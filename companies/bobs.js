@@ -103,15 +103,6 @@ async function bobs(lowP, highP, tPage, scrape) {
     );
     scrape.addWatch(w);
     console.log(w);
-    // console.log("Lowest: " + "\t" + String(lowest).replace(/\s+/g, ""));
-    // console.log("LowYear: " + "\t" + lowYear);
-    // console.log("Papers Low: " + "\t" + PLow);
-    // console.log("LOWEST URL: " + lowURL + "\n");
-
-    // console.log("Highest: " + "\t" + String(highest).replace(/\s+/g, ""));
-    // console.log("HighYear: " + "\t" + highYear);
-    // console.log("Papers High: " + "\t" + PHigh);
-    // console.log("HIGHEST URL: " + highURL + "\n\n\n");
   }
 }
 

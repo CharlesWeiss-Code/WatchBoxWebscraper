@@ -75,8 +75,8 @@ async function start() {
   //await ewc.EWC(lowPage, highPage, testPage, currentScrape); //pretty much done
   await chrono.chrono24(lowPage, highPage, testPage, currentScrape); // done;
   AllScrapes.addScrape(currentScrape);
-  console.log(AS.getDict()) + "\n\n\n";
-  walkDict(AS.getDict());
+  console.log(AllScrapes.getDict()) + "\n\n\n";
+  console.log(AllScrapes.getAllScrapes());
   await start();
 }
 

@@ -1,6 +1,7 @@
 const Watch = require("./DataStructures/Watch.js");
 const Scrape = require("./DataStructures/Scrape.js");
 const AllScrapes = require("./DataStructures/AllScrapes.js");
+const utilFunc = require("./utilityFunctions");
 
 start = () => {
   scrape1 = new Scrape();
@@ -19,9 +20,9 @@ start = () => {
     "22,000",
     "",
     "",
-    "www.google.com",
-    "www.google.com",
-    "www.google.com"
+    "www.pc.com",
+    "www.pc.com",
+    "www.pc.com"
   );
   w2 = new Watch(
     "2",
@@ -83,8 +84,7 @@ start = () => {
   scrape2.addWatch(w4);
   AllScrapes.addScrape(scrape1);
   AllScrapes.addScrape(scrape2);
-
-  console.log(AllScrapes.getAllWatches());
+  console.log(JSON.stringify(AllScrapes.getDict(), null, 5));
 };
 
 start();

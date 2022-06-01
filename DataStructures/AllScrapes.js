@@ -16,15 +16,14 @@ class AllScrapes {
   static addToDict = (scrape) => {
     for (const [site, val] of scrape.getDict().entries()) {
       // {Site, {refNum, Watch}}
-      if (this.dict.get(site) === undefined) {
-        this.dict.set(site, new Map());
-        //console.log("new Map");
+      if (this.dict[site] === undefined) {
+        this.dict[site] = new Map();
       }
       for (const [refNum, watch] of val) {
-        if (this.dict.get(site).get(refNum) === undefined) {
-          this.dict.get(site).set(refNum, new Array());
+        if (this.dict[site][refNum] === undefined) {
+          this.dict[site][refNum] = new Array();
         }
-        this.dict.get(site).get(refNum).push(watch);
+        this.dict[site][refNum].push(watch);
       }
     }
   };
@@ -39,6 +38,7 @@ class AllScrapes {
     });
     return result;
   };
+
   static getTotalScrapes = () => this.totalScrapes;
   static getAllScrapes = () => this.allScrapes;
 
