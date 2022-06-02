@@ -1,118 +1,118 @@
 {
-  "pc": {
-    "1": [
-      {
-        "refNum": "1",
-        "lowBox": "Yes",
-        "lowPaper": "No",
-        "highBox": "No",
-        "highPaper": "Yes",
-        "lowPrice": "17,000",
-        "highPrice": "22,000",
-        "highLink": "www.pc.com",
-        "lowLink": "www.pc.com",
-        "lowAge": "2007",
-        "highAge": "2018",
-        "lowDealerStatus": "",
-        "highDealerStatus": "",
-        "lowBP": "",
-        "highBP": "",
-        "generalLink": "www.pc.com",
-        "dateOfScrape": "2022-06-01T20:12:57.444Z",
-        "website": "pc",
-        "watchScrapeNum": 0,
-        "scrape": {
-          "dateOfScrape": "2022-06-01T20:12:57.443Z",
-          "dict": {},
-          "scapeNum": 0
-        }
-      },
-      {
-        "refNum": "1",
-        "lowBox": "",
-        "lowPaper": "",
-        "highBox": "",
-        "highPaper": "",
-        "lowPrice": "55,000",
-        "highPrice": "72,000",
-        "highLink": "www.pc.com",
-        "lowLink": "www.pc.com",
-        "lowAge": "1993",
-        "highAge": "2005",
-        "lowDealerStatus": "",
-        "highDealerStatus": "",
-        "lowBP": "BP",
-        "highBP": "P",
-        "generalLink": "www.pc.com",
-        "dateOfScrape": "2022-06-01T20:12:57.444Z",
-        "website": "pc",
-        "watchScrapeNum": 2,
-        "scrape": {
-          "dateOfScrape": "2022-06-01T20:12:57.443Z",
-          "dict": {},
-          "scapeNum": 1
-        }
-      }
-    ]
-  },
-  "ebay": {
-    "2": [
-      {
-        "refNum": "2",
-        "lowBox": "Yes",
-        "lowPaper": "Yes",
-        "highBox": "No",
-        "highPaper": "Yes",
-        "lowPrice": "5,000",
-        "highPrice": "7,950",
-        "highLink": "www.ebay.com",
-        "lowLink": "www.ebay.com",
-        "lowAge": "2019",
-        "highAge": "2022",
-        "lowDealerStatus": "Yes",
-        "highDealerStatus": "Yes",
-        "lowBP": "",
-        "highBP": "",
-        "generalLink": "www.ebay.com",
-        "dateOfScrape": "2022-06-01T20:12:57.444Z",
-        "website": "ebay",
-        "watchScrapeNum": 1,
-        "scrape": {
-          "dateOfScrape": "2022-06-01T20:12:57.443Z",
-          "dict": {},
-          "scapeNum": 0
-        }
-      }
-    ]
-  },
-  "charlie": {
-    "3": [
-      {
-        "refNum": "3",
-        "lowBox": "Yes",
-        "lowPaper": "No",
-        "highBox": "Yes",
-        "highPaper": "No",
-        "lowPrice": "69,000",
-        "highPrice": "17,000",
-        "highLink": "www.charlie.com",
-        "lowLink": "www.charlie.com",
-        "lowAge": "2022",
-        "highAge": "2022",
-        "lowDealerStatus": "",
-        "highDealerStatus": "",
-        "lowBP": "",
-        "highBP": "",
-        "generalLink": "www.charlie.com",
-        "dateOfScrape": "2022-06-01T20:12:57.444Z",
-        "website": "charlie",
-        "watchScrapeNum": 3,
-        "scrape": {
-          "dateOfScrape": "2022-06-01T20:12:57.443Z",
-          "dict": {},
-          "scapeNum": 0
-        }
-      }
-    ]
-  }
+   "pc": {
+      "1": [
+         {
+            "refNum": "1",
+            "lowBox": "Yes",
+            "lowPaper": "No",
+            "highBox": "No",
+            "highPaper": "Yes",
+            "lowPrice": "17,000",
+            "highPrice": "22,000",
+            "highLink": "www.pc.com",
+            "lowLink": "www.pc.com",
+            "lowAge": "2007",
+            "highAge": "2018",
+            "lowDealerStatus": "",
+            "highDealerStatus": "",
+            "lowBP": "",
+            "highBP": "",
+            "generalLink": "www.pc.com",
+            "dateOfScrape": "2022-06-02T13:23:32.806Z",
+            "website": "pc",
+            "watchScrapeNum": 0,
+            "scrape": {
+               "dateOfScrape": "2022-06-02T13:23:32.806Z",
+               "dict": {},
+               "scapeNum": 0
+            }
+         },
+         {
+            "refNum": "1",
+            "lowBox": "",
+            "lowPaper": "",
+            "highBox": "",
+            "highPaper": "",
+            "lowPrice": "55,000",
+            "highPrice": "72,000",
+            "highLink": "www.pc.com",
+            "lowLink": "www.pc.com",
+            "lowAge": "1993",
+            "highAge": "2005",
+            "lowDealerStatus": "",
+            "highDealerStatus": "",
+            "lowBP": "BP",
+            "highBP": "P",
+            "generalLink": "www.pc.com",
+            "dateOfScrape": "2022-06-02T13:23:32.806Z",
+            "website": "pc",
+            "watchScrapeNum": 2,
+            "scrape": {
+               "dateOfScrape": "2022-06-02T13:23:32.806Z",
+               "dict": {},
+               "scapeNum": 1
+            }
+         }
+      ]
+   },
+   "ebay": {
+      "2": [
+         {
+            "refNum": "2",
+            "lowBox": "Yes",
+            "lowPaper": "Yes",
+            "highBox": "No",
+            "highPaper": "Yes",
+            "lowPrice": "5,000",
+            "highPrice": "7,950",
+            "highLink": "www.ebay.com",
+            "lowLink": "www.ebay.com",
+            "lowAge": "2019",
+            "highAge": "2022",
+            "lowDealerStatus": "Yes",
+            "highDealerStatus": "Yes",
+            "lowBP": "",
+            "highBP": "",
+            "generalLink": "www.ebay.com",
+            "dateOfScrape": "2022-06-02T13:23:32.806Z",
+            "website": "ebay",
+            "watchScrapeNum": 1,
+            "scrape": {
+               "dateOfScrape": "2022-06-02T13:23:32.806Z",
+               "dict": {},
+               "scapeNum": 0
+            }
+         }
+      ]
+   },
+   "charlie": {
+      "3": [
+         {
+            "refNum": "3",
+            "lowBox": "Yes",
+            "lowPaper": "No",
+            "highBox": "Yes",
+            "highPaper": "No",
+            "lowPrice": "69,000",
+            "highPrice": "17,000",
+            "highLink": "www.charlie.com",
+            "lowLink": "www.charlie.com",
+            "lowAge": "2022",
+            "highAge": "2022",
+            "lowDealerStatus": "",
+            "highDealerStatus": "",
+            "lowBP": "",
+            "highBP": "",
+            "generalLink": "www.charlie.com",
+            "dateOfScrape": "2022-06-02T13:23:32.806Z",
+            "website": "charlie",
+            "watchScrapeNum": 3,
+            "scrape": {
+               "dateOfScrape": "2022-06-02T13:23:32.806Z",
+               "dict": {},
+               "scapeNum": 0
+            }
+         }
+      ]
+   }
 }

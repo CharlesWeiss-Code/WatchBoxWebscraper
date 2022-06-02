@@ -95,22 +95,21 @@ start = () => {
 
   data = JSON.stringify(AllScrapes.getDict(), null, 3);
 
-  // fs.writeFile(
-  //   "/Users/charlesweiss/Desktop/CharlieWebscrapeTest/data.json",
-  //   data,
-  //   (err) => {
-  //     if (err) {
-  //       console.log(err);
-  //     }
-  //   }
-  // );
-
-  let file = editJsonFile(
-    `/Users/charlesweiss/Desktop/CharlieWebscrapeTest/data.json`
-    //   , {autosave: true}
+  // check to see if file already exists. If it does then append it
+  // if not then write normally with code below.
+  fs.writeFile(
+    "/Users/charlesweiss/Desktop/CharlieWebscrapeTest/data.json",
+    data,
+    (err) => {
+      if (err) {
+        console.log(err);
+      }
+    }
   );
-  console.log("$." + String(w4.getWebsite() + "." + String(w4.getRefNum())));
-  file.append("charlie.3", w4);
-  file.save();
+
+  // let data = fs.readFileSync("data.json");
+  // let parsed = JSON.parse(data);
+  // parsed["charlie"]["3"].push(w4);
+  // fs.writeFileSync("data.json", JSON.stringify(parsed, null, 3));
 };
 start();
