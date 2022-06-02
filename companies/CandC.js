@@ -165,7 +165,7 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
     );
     scrape.addWatch(w);
     console.log(w);
-    //utilFunc.addToJson(w);
+    utilFunc.addToJson(w);
   }
 }
 

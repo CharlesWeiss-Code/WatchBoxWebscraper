@@ -196,16 +196,7 @@ async function davidsw(lowP, highP, tPage, scrape) {
     );
     console.log(w);
     scrape.addWatch(w);
-    // console.log("Lowest: " + lowest);
-    // console.log("Low Year: " + lowYear.replace(/\s+/g, ""));
-    // console.log("Low Box: " + lowBox.replace(/\s+/g, ""));
-    // console.log("Low Paper: " + lowPaper.replace(/\s+/g, ""));
-    // console.log("lOWEST URL: " + lowP.url() + "\n");
-    // console.log("Highest: " + highest);
-    // console.log("High Year: " + highYear.replace(/\s+/g, ""));
-    // console.log("High Box: " + highBox.replace(/\s+/g, ""));
-    // console.log("High Paper: " + highPaper.replace(/\s+/g, ""));
-    // console.log("HIGHEST URL: " + highP.url());
+
     console.log(w.getWebsite());
     utilFunc.addToJson(w);
   }
