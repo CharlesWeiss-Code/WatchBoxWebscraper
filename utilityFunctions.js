@@ -60,6 +60,13 @@ sameDate = (d1, d2) => {
   return false;
 };
 
+addToJson = (watch) => {
+  let data = fs.readFileSync("blank.json");
+  let parsed = JSON.parse(data);
+  parsed[watch.getWebsite()][watch.getRefNum()].push(watch);
+  fs.writeFileSync("blank.json", JSON.stringify(parsed, null, 3));
+};
+
 module.exports = {
   noResults,
   noResults2,
@@ -67,4 +74,5 @@ module.exports = {
   getItem,
   exists,
   sameDate,
+  addToJson,
 };

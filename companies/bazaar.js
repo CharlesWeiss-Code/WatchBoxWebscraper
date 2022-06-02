@@ -2,7 +2,7 @@ const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 
 async function bazaar(lowP, highP, tPage, scrape) {
-  for (var i = 3; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = "-1";
     lowYear = "";
@@ -91,6 +91,7 @@ async function bazaar(lowP, highP, tPage, scrape) {
     scrape.addWatch(w);
     console.log(w);
     // console.log("Lowest: " + lowest);
+
     // console.log("Low year: " + lowYear);
     // console.log("Low BP: " + lowBP);
     // console.log("LOWEST URL: " + lowP.url());
@@ -98,6 +99,7 @@ async function bazaar(lowP, highP, tPage, scrape) {
     // console.log("High year: " + highYear);
     // console.log("High BP: " + highBP);
     // console.log("HIGHEST URL: " + highP.url());
+    utilFunc.addToJson(w);
   }
 }
 

@@ -65,29 +65,19 @@ async function start() {
     }
   });
 
-  // CandC = await CandC.crownAndCaliber(
-  //   lowPage,
-  //   highPage,
-  //   testPage,
-  //   currentScrape
-  // ); // mostly done (daytona stuff)
+  //await CandC.crownAndCaliber(lowPage, highPage, testPage, currentScrape); // mostly done (daytona stuff)
 
-  await Bobs.bobs(lowPage, highPage, testPage, currentScrape); //  Best one.
-  //await david.davidsw(lowPage, highPage, testPage, currentScrape); // mostly done (filter table data)
+  //await Bobs.bobs(lowPage, highPage, testPage, currentScrape); //  Best one.
+  await david.davidsw(lowPage, highPage, testPage, currentScrape); // mostly done (filter table data)
   await Bazaar.bazaar(lowPage, highPage, testPage, currentScrape); // Done
-  //await ewc.EWC(lowPage, highPage, testPage, currentScrape); //pretty much done
+  await ewc.EWC(lowPage, highPage, testPage, currentScrape); //pretty much done
   await chrono.chrono24(lowPage, highPage, testPage, currentScrape); // done;
-  AllScrapes.addScrape(currentScrape);
+  //AllScrapes.addScrape(currentScrape);
   // console.log(AllScrapes.getDict()) + "\n\n\n";
   // console.log(AllScrapes.getAllScrapes());
 
-  data = JSON.stringify(AllScrapes.getDict(), null, 3);
-
-  let file = editJsonFile(
-    `/Users/charlesweiss/Desktop/CharlieWebscrapeTest/data.json`
-  );
-  file.set(data, "");
-  await start();
+  await browser.close();
+  //await start();
 }
 
 start();

@@ -93,23 +93,24 @@ start = () => {
   AllScrapes.addScrape(scrape1);
   AllScrapes.addScrape(scrape2);
 
-  data = JSON.stringify(AllScrapes.getDict(), null, 3);
+  //data = JSON.stringify(AllScrapes.getDict(), null, 3);
 
   // check to see if file already exists. If it does then append it
   // if not then write normally with code below.
-  fs.writeFile(
-    "/Users/charlesweiss/Desktop/CharlieWebscrapeTest/data.json",
-    data,
-    (err) => {
-      if (err) {
-        console.log(err);
-      }
-    }
-  );
+  // fs.writeFile(
+  //   "/Users/charlesweiss/Desktop/CharlieWebscrapeTest/data.json",
+  //   data,
+  //   (err) => {
+  //     if (err) {
+  //       console.log(err);
+  //     }
+  //   }
+  // );
 
-  // let data = fs.readFileSync("data.json");
-  // let parsed = JSON.parse(data);
-  // parsed["charlie"]["3"].push(w4);
-  // fs.writeFileSync("data.json", JSON.stringify(parsed, null, 3));
+  console.log(scrape1.getAllWatches());
+  let data = fs.readFileSync("data.json");
+  let parsed = JSON.parse(data);
+  parsed["charlie"]["3"].push(w4);
+  fs.writeFileSync("data.json", JSON.stringify(parsed, null, 3));
 };
 start();

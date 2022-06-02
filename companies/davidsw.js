@@ -36,14 +36,26 @@ async function davidsw(lowP, highP, tPage, scrape) {
         continue;
       } else {
         await tPage.waitForTimeout(1000);
-        await lowP.goto(
-          "https://davidsw.com/?orderby=price&paged=1&filter_dial-color=white&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1",
-          { waitUntil: "networkidle0" }
-        );
-        await highP.goto(
-          "https://davidsw.com/?orderby=price-desc&paged=1&filter_dial-color=white&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1",
-          { waitUntil: "networkidle0" }
-        );
+        await lowP
+          .goto(
+            "https://davidsw.com/?orderby=price&paged=1&filter_dial-color=white&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1",
+            { waitUntil: "networkidle0" }
+          )
+          .catch(async (error) => {
+            await lowP.waitForTimeout(1000);
+            await lowP.reload();
+            await lowP.waitForTimeout(1000);
+          });
+        await highP
+          .goto(
+            "https://davidsw.com/?orderby=price-desc&paged=1&filter_dial-color=white&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1",
+            { waitUntil: "networkidle0" }
+          )
+          .catch(async (error) => {
+            await highP.waitForTimeout(1000);
+            await highP.reload();
+            await highP.waitForTimeout(1000);
+          });
 
         //checkign to see if lowP is the list of watches or if it went straight to one watch.
         if (
@@ -95,18 +107,30 @@ async function davidsw(lowP, highP, tPage, scrape) {
         // no results
         continue;
       } else {
-        await lowP.goto(
-          "https://davidsw.com/?orderby=price&paged=1&s=" +
-            refNums[i] +
-            "&post_type=product&type_aws=true&aws_id=1&aws_filter=1",
-          { waitUntil: "networkidle0" }
-        );
-        await highP.goto(
-          "https://davidsw.com/?orderby=price-desc&paged=1&s=" +
-            refNums[i] +
-            "&post_type=product&type_aws=true&aws_id=1&aws_filter=1",
-          { waitUntil: "networkidle0" }
-        );
+        await lowP
+          .goto(
+            "https://davidsw.com/?orderby=price&paged=1&s=" +
+              refNums[i] +
+              "&post_type=product&type_aws=true&aws_id=1&aws_filter=1",
+            { waitUntil: "networkidle0" }
+          )
+          .catch(async () => {
+            await lowP.waitForTimeout(1000);
+            await lowP.reload();
+            await lowP.waitForTimeout(1000);
+          });
+        await highP
+          .goto(
+            "https://davidsw.com/?orderby=price-desc&paged=1&s=" +
+              refNums[i] +
+              "&post_type=product&type_aws=true&aws_id=1&aws_filter=1",
+            { waitUntil: "networkidle0" }
+          )
+          .catch(async () => {
+            await highP.waitForTimeout(1000);
+            await highP.reload();
+            await highP.waitForTimeout(1000);
+          });
         if (
           await utilFunc.exists(
             tPage,
@@ -154,8 +178,8 @@ async function davidsw(lowP, highP, tPage, scrape) {
 
     w = new Watch(
       refNums[i],
-      lowYear,
-      highYear,
+      lowYear.replace("\t", ""),
+      highYear.replace("\t", ""),
       lowBox.replace(/\s+/g, ""),
       lowPaper.replace(/\s+/g, ""),
       "",
@@ -182,13 +206,20 @@ async function davidsw(lowP, highP, tPage, scrape) {
     // console.log("High Box: " + highBox.replace(/\s+/g, ""));
     // console.log("High Paper: " + highPaper.replace(/\s+/g, ""));
     // console.log("HIGHEST URL: " + highP.url());
+    console.log(w.getWebsite());
+    utilFunc.addToJson(w);
   }
 }
 
 module.exports = { davidsw };
 
 async function assignDataOneResult(lowP) {
-  await lowP.waitForSelector("tbody");
+  lowTables = "";
+  await lowP.waitForSelector("tbody").catch(async (e) => {
+    await lowP.reload().then(async () => {
+      await lowP.waitForSelector("tbody");
+    });
+  });
   lowTables = await lowP.$$eval("tbody", (options) =>
     options.map((option) => option.textContent)
   );

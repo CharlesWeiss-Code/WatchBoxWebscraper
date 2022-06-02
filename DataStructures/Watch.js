@@ -40,10 +40,55 @@ class Watch {
     this.dateOfScrape = new Date();
     this.imageLow = imageLow;
     this.imageHigh = imageHigh;
-    this.website = this.generalLink.substring(
-      this.generalLink.indexOf("www.") + 4,
-      this.generalLink.indexOf(".com")
-    );
+    this.website;
+
+    if (this.generalLink.indexOf("www2.") != -1) {
+      this.website = this.generalLink.substring(
+        this.generalLink.indexOf("www2.") + 5,
+        this.generalLink.indexOf(".com")
+      );
+    } else if (this.generalLink.indexOf("www.") === -1) {
+      this.website = this.generalLink.substring(
+        this.generalLink.indexOf("//") + 2,
+        this.generalLink.indexOf(".com")
+      );
+    } else if (this.generalLink.indexOf("www.") != -1) {
+      this.website = this.generalLink.substring(
+        this.generalLink.indexOf("www.") + 4,
+        this.generalLink.indexOf(".com")
+      );
+    }
+
+    // if (this.generalLink.indexOf(".") != -1) {
+    //   this.website = this.generalLink.substring(
+    //     this.generalLink.indexOf(".") + 1,
+    //     this.generalLink.indexOf(".com")
+    //   );
+    // } else {
+    //   this.webste = this.generalLink.substring(
+    //     this.generalLink.indexOf("//") + 2,
+    //     this.generalLink.indexOf(".com")
+    //   );
+    // }
+
+    // var thing = this.generalLink.indexOf("www.");
+    // if (thing === -1) {
+    //   thing = this.generalLink.indexOf("https://") + 8;
+    //   this.website = this.generalLink.substring(
+    //     thing,
+    //     this.generalLink.indexOf(".com")
+    //   );
+    // } else if (this.generalLink.indexOf("www2.") != -1) {
+    //   this.website = this.generalLink.substring(
+    //     this.generalLink.indexOf("www2.") + 5,
+    //     this.generalLink.indexOf(".com")
+    //   );
+    // } else {
+    //   this.website = this.generalLink.substring(
+    //     thing + 4,
+    //     this.generalLink.indexOf(".com")
+    //   );
+    // }
     this.watchScrapeNum = AllScrapes.totalWatches;
     AllScrapes.totalWatches++;
   }

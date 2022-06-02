@@ -12,7 +12,7 @@ lowYearIndex1 = -1;
 lowYearIndex2 = -1;
 
 async function crownAndCaliber(lowP, highP, tPage, scrape) {
-  for (var i = 3; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     lowImage = null;
     highImage = null;
     url = "https://www.crownandcaliber.com/search?view=shop&q=" + refNums[i];
@@ -180,6 +180,7 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
     );
     scrape.addWatch(w);
     console.log(w);
+    utilFunc.addToJson(w);
   }
 }
 

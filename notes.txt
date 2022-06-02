@@ -6,3 +6,4 @@ NEED TO DO:
     - add promise catches to all functions that use them. This cannot crash. 
     - change waitForTimeout to waitForSelector
     - https://www.npmjs.com/package/edit-json-file
+    - crono is a little messed up

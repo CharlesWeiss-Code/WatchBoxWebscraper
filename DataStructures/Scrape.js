@@ -45,6 +45,17 @@ class Scrape {
     }
     return result;
   };
+
+  getAllWatches = () => {
+    var result = [];
+    //{Site, {refNum, Watch}}
+    for (const [site, map] of this.dict.entries()) {
+      for (const [refNum, watch] of map.entries()) {
+        result.push(watch);
+      }
+    }
+    return result;
+  };
 }
 
 module.exports = Scrape;

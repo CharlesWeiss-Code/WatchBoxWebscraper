@@ -142,6 +142,7 @@ async function chrono24(lowP, highP, tPage, scrape) {
     );
     scrape.addWatch(w);
     console.log(w);
+    utilFunc.addToJson(w);
   }
 }
 
