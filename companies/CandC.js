@@ -10,6 +10,8 @@ lowTable = "";
 highTable = "";
 lowYearIndex1 = -1;
 lowYearIndex2 = -1;
+lowImage = "";
+highImage = "";
 
 async function crownAndCaliber(lowP, highP, tPage, scrape) {
   for (var i = 0; i < refNums.length; i++) {
@@ -38,27 +40,18 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
         await highP.waitForTimeout(500);
         lowTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
         highTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
-        assignData();
-        let lowURL = await lowP.evaluate(() => {
+        lowImage = await lowP.evaluate(() => {
           const image = document.querySelector(
             "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-5.medium-12.small-12 > div > div > div > div.slider.slick-initialized.slick-slider > div.slick-list.draggable > div > div.slick-slide.slick-current.slick-active > div > div > img:nth-child(1)"
           );
           return image.src;
         });
-        let highURL = await highP.evaluate(() => {
+        highImage = await highP.evaluate(() => {
           const image = document.querySelector(
             "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-5.medium-12.small-12 > div > div > div > div.slider.slick-initialized.slick-slider > div.slick-list.draggable > div > div.slick-slide.slick-current.slick-active > div > div > img:nth-child(1)"
           );
           return image.src;
         });
-        lowImage = await utilFunc.downloadImage(
-          lowURL,
-          refNums[i] + "-CandC-LOW"
-        );
-        highImage = await utilFunc.downloadImage(
-          highURL,
-          refNums[i] + "-CandC-HIGH"
-        );
       }
     } else if (refNums[i] == "116500LN-0002") {
       //SPECIAL BLACK DAYTONA
@@ -78,26 +71,18 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
 
         lowTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
         highTable = await utilFunc.getItem(highP, 'div[class="prod-specs"]');
-        let lowURL = await lowP.evaluate(() => {
+        lowImage = await lowP.evaluate(() => {
           const image = document.querySelector(
             "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-5.medium-12.small-12 > div > div > div > div.slider.slick-initialized.slick-slider > div.slick-list.draggable > div > div.slick-slide.slick-current.slick-active > div > div > img:nth-child(1)"
           );
           return image.src;
         });
-        let highURL = await highP.evaluate(() => {
+        highImage = await highP.evaluate(() => {
           const image = document.querySelector(
             "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-5.medium-12.small-12 > div > div > div > div.slider.slick-initialized.slick-slider > div.slick-list.draggable > div > div.slick-slide.slick-current.slick-active > div > div > img:nth-child(1)"
           );
           return image.src;
         });
-        lowImage = await utilFunc.downloadImage(
-          lowURL,
-          refNums[i] + "-CandC-LOW"
-        );
-        highImage = await utilFunc.downloadImage(
-          highURL,
-          refNums[i] + "-CandC-HIGH"
-        );
       }
     } else {
       await tPage.goto(url, { waitUntil: "networkidle0" });
@@ -180,7 +165,7 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
     );
     scrape.addWatch(w);
     console.log(w);
-    utilFunc.addToJson(w);
+    //utilFunc.addToJson(w);
   }
 }
 

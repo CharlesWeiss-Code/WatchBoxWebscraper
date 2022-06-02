@@ -65,13 +65,13 @@ async function start() {
     }
   });
 
-  //await CandC.crownAndCaliber(lowPage, highPage, testPage, currentScrape); // mostly done (daytona stuff)
+  await CandC.crownAndCaliber(lowPage, highPage, testPage, currentScrape); // mostly done (daytona stuff)
 
   // await Bobs.bobs(lowPage, highPage, testPage, currentScrape); //  Best one.
   // await david.davidsw(lowPage, highPage, testPage, currentScrape); // mostly done (filter table data)
-  await Bazaar.bazaar(lowPage, highPage, testPage, currentScrape); // Done
-  await ewc.EWC(lowPage, highPage, testPage, currentScrape); //pretty much done
-  await chrono.chrono24(lowPage, highPage, testPage, currentScrape); // done;
+  //await Bazaar.bazaar(lowPage, highPage, testPage, currentScrape); // Done
+  //await ewc.EWC(lowPage, highPage, testPage, currentScrape); //pretty much done
+  //await chrono.chrono24(lowPage, highPage, testPage, currentScrape); // done;
   //AllScrapes.addScrape(currentScrape);
   //console.log(AllScrapes.getDict()) + "\n\n\n";
   //console.log(AllScrapes.getAllScrapes());
