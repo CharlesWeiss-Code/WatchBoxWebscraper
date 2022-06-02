@@ -23,9 +23,7 @@ start = () => {
     }
   }
 
-  console.log(dict + "\n\n\n");
   data = JSON.stringify(dict, null, 3);
-  console.log(dict);
   fs.writeFile(
     "/Users/charlesweiss/Desktop/CharlieWebscrapeTest/blank.json",
     data,
@@ -35,6 +33,8 @@ start = () => {
       }
     }
   );
+
+  console.log("Created new data json file");
 };
 
 start();
