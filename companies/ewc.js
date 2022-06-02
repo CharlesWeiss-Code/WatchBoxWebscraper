@@ -64,10 +64,6 @@ async function EWC(lowP, highP, tPage, scrape) {
     );
     console.log(w);
     scrape.addWatch(w);
-    // console.log("Lowest: " + lowest);
-    // console.log("Highest: " + highest);
-    // console.log("URL: " + tPage.url());
-    console.log(w.getWebsite());
 
     utilFunc.addToJson(w);
   }

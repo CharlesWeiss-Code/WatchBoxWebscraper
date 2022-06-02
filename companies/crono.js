@@ -29,7 +29,7 @@ async function chrono24(lowP, highP, tPage, scrape) {
       // deal with "TOP" choice from chrono.
       // https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=311.30.42.30.01.005&resultview=list&sortorder=1
       // when gettin prices, the price of "TOP" comes up first
-      await lowP.goto(newURL + "&searchorder=11&sortorder=1");
+      await lowP.goto(newURL + "&sortorder=1");
       await lowP.waitForTimeout(500);
       if (flag) {
         await lowP.click("#modal-content > div > a", { delay: 20 });
