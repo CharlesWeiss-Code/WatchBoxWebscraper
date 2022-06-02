@@ -24,6 +24,8 @@ async function bobs(lowP, highP, tPage, scrape) {
     PLow = "";
     lowURL = "";
     highURL = "";
+    imageLow = "";
+    imageHigh = "";
     console.log("");
 
     var newURL =
@@ -53,17 +55,15 @@ async function bobs(lowP, highP, tPage, scrape) {
         await getData(lowP, highP); // gets data tables and price
         // take screenshot
 
-        let lowURL = await lowP.evaluate(() => {
+        imageLow = await lowP.evaluate(() => {
           const image = document.querySelector("#mainImage");
           return image.src;
         });
 
-        highURL = await lowP.evaluate(() => {
+        imageHigh = await lowP.evaluate(() => {
           const image = document.querySelector("#mainImage");
           return image.src;
         });
-        await utilFunc.downloadImage(lowURL, refNums[i] + "-Bobs-LOW");
-        await utilFunc.downloadImage(highURL, refNums[i] + "-Bobs-HIGH");
       }
     } else {
       if (
@@ -99,7 +99,9 @@ async function bobs(lowP, highP, tPage, scrape) {
       "",
       lowP.url(),
       highP.url(),
-      tPage.url()
+      tPage.url(),
+      imageLow,
+      imageHigh
     );
     scrape.addWatch(w);
     console.log(w);

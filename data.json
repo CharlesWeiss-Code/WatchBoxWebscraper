@@ -238,6 +238,34 @@
                "dict": {},
                "scapeNum": 0
             }
+         },
+         {
+            "refNum": "311.30.42.30.01.005",
+            "lowBox": "",
+            "lowPaper": "",
+            "highBox": "",
+            "highPaper": "warranty card dated 12/2020 ",
+            "lowPrice": "4,995",
+            "highPrice": "5,195",
+            "highLink": "https://www.bobswatches.com/omega/omega-42mm-speedmaster-moonwatch.html",
+            "lowLink": "https://www.bobswatches.com/omega/omega-speedmaster-moonwatch-31130423001005.html",
+            "lowAge": "",
+            "highAge": "2020 ",
+            "lowDealerStatus": "",
+            "highDealerStatus": "",
+            "lowBP": "",
+            "highBP": "",
+            "generalLink": "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=311.30.42.30.01.005",
+            "dateOfScrape": "2022-06-02T19:33:00.238Z",
+            "imageLow": "",
+            "imageHigh": "",
+            "website": "bobswatches",
+            "watchScrapeNum": 0,
+            "scrape": {
+               "dateOfScrape": "2022-06-02T19:32:44.625Z",
+               "dict": {},
+               "scapeNum": 0
+            }
          }
       ],
       "116500LN-0001": [
@@ -318,6 +346,34 @@
                "dict": {},
                "scapeNum": 0
             }
+         },
+         {
+            "refNum": "116500LN-0001",
+            "lowBox": "",
+            "lowPaper": "warranty card dated 11/2019 ",
+            "highBox": "",
+            "highPaper": "warranty card dated 11/2021 ",
+            "lowPrice": "34,995",
+            "highPrice": "35,995",
+            "highLink": "https://www.bobswatches.com/rolex-daytona-116500-black-ceramic-model.html",
+            "lowLink": "https://www.bobswatches.com/mens-rolex-daytona-cosmograph-116500ln.html",
+            "lowAge": "2019 ",
+            "highAge": "2021 ",
+            "lowDealerStatus": "",
+            "highDealerStatus": "",
+            "lowBP": "",
+            "highBP": "",
+            "generalLink": "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=116500LN",
+            "dateOfScrape": "2022-06-02T19:33:16.716Z",
+            "imageLow": "https://www.bobswatches.com/images/y-147148.png",
+            "imageHigh": "https://www.bobswatches.com/images/y-147148.png",
+            "website": "bobswatches",
+            "watchScrapeNum": 1,
+            "scrape": {
+               "dateOfScrape": "2022-06-02T19:32:44.625Z",
+               "dict": {},
+               "scapeNum": 0
+            }
          }
       ],
       "116500LN-0002": [
@@ -395,6 +451,34 @@
             "watchScrapeNum": 11,
             "scrape": {
                "dateOfScrape": "2022-06-02T16:14:21.106Z",
+               "dict": {},
+               "scapeNum": 0
+            }
+         },
+         {
+            "refNum": "116500LN-0002",
+            "lowBox": "",
+            "lowPaper": "warranty card dated 11/2019 ",
+            "highBox": "",
+            "highPaper": "warranty card dated 11/2021 ",
+            "lowPrice": "34,995",
+            "highPrice": "35,995",
+            "highLink": "https://www.bobswatches.com/rolex-daytona-116500-black-ceramic-model.html",
+            "lowLink": "https://www.bobswatches.com/mens-rolex-daytona-cosmograph-116500ln.html",
+            "lowAge": "2019 ",
+            "highAge": "2021 ",
+            "lowDealerStatus": "",
+            "highDealerStatus": "",
+            "lowBP": "",
+            "highBP": "",
+            "generalLink": "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=116500LN",
+            "dateOfScrape": "2022-06-02T19:33:34.281Z",
+            "imageLow": "https://www.bobswatches.com/images/y-147148.png",
+            "imageHigh": "https://www.bobswatches.com/images/y-147148.png",
+            "website": "bobswatches",
+            "watchScrapeNum": 2,
+            "scrape": {
+               "dateOfScrape": "2022-06-02T19:32:44.625Z",
                "dict": {},
                "scapeNum": 0
             }
