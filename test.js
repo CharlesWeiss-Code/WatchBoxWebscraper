@@ -3,6 +3,10 @@ const Scrape = require("./DataStructures/Scrape.js");
 const AllScrapes = require("./DataStructures/AllScrapes.js");
 const utilFunc = require("./utilityFunctions");
 
+const fs = require("fs");
+const editJsonFile = require("edit-json-file");
+const path = require("path");
+
 start = () => {
   scrape1 = new Scrape();
   scrape2 = new Scrape();
@@ -74,7 +78,7 @@ start = () => {
     "Yes",
     "No",
     "",
-    "17,000",
+    "69,000",
     "17,000",
     "",
     "",
@@ -89,7 +93,24 @@ start = () => {
   AllScrapes.addScrape(scrape1);
   AllScrapes.addScrape(scrape2);
 
-  console.log(JSON.stringify(AllScrapes.getDict(), null, 3));
-};
+  data = JSON.stringify(AllScrapes.getDict(), null, 3);
 
+  // fs.writeFile(
+  //   "/Users/charlesweiss/Desktop/CharlieWebscrapeTest/data.json",
+  //   data,
+  //   (err) => {
+  //     if (err) {
+  //       console.log(err);
+  //     }
+  //   }
+  // );
+
+  let file = editJsonFile(
+    `/Users/charlesweiss/Desktop/CharlieWebscrapeTest/data.json`
+    //   , {autosave: true}
+  );
+  console.log("$." + String(w4.getWebsite() + "." + String(w4.getRefNum())));
+  file.append("charlie.3", w4);
+  file.save();
+};
 start();

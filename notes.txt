@@ -5,3 +5,4 @@ NEED TO DO:
       - when gettin prices, the price of "TOP" comes up first
     - add promise catches to all functions that use them. This cannot crash. 
     - change waitForTimeout to waitForSelector
+    - https://www.npmjs.com/package/edit-json-file

@@ -1,6 +1,9 @@
 const { download } = require("express/lib/response");
 const puppeteer = require("puppeteer");
+
 const fs = require("fs");
+const editJsonFile = require("edit-json-file");
+
 const request = require("request");
 
 const CandC = require("./companies/CandC.js");
@@ -75,8 +78,15 @@ async function start() {
   //await ewc.EWC(lowPage, highPage, testPage, currentScrape); //pretty much done
   await chrono.chrono24(lowPage, highPage, testPage, currentScrape); // done;
   AllScrapes.addScrape(currentScrape);
-  console.log(AllScrapes.getDict()) + "\n\n\n";
-  console.log(AllScrapes.getAllScrapes());
+  // console.log(AllScrapes.getDict()) + "\n\n\n";
+  // console.log(AllScrapes.getAllScrapes());
+
+  data = JSON.stringify(AllScrapes.getDict(), null, 3);
+
+  let file = editJsonFile(
+    `/Users/charlesweiss/Desktop/CharlieWebscrapeTest/data.json`
+  );
+  file.set(data, "");
   await start();
 }
 

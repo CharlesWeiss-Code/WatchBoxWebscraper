@@ -23,13 +23,10 @@ class Scrape {
     w.setScrape(this);
   };
 
-  getDate = () => {
-    return this.dateOfScrape;
-  };
+  getDate = () => this.dateOfScrape;
 
-  getDict = () => {
-    return this.dict;
-  };
+  getDict = () => this.dict;
+
   //gets a specific watch in a website
   getWatchByWebsite = (refNum, site) => {
     //{Site, {refNum, Watch}}

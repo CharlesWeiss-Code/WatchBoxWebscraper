@@ -41,8 +41,8 @@ class Watch {
     this.imageLow = imageLow;
     this.imageHigh = imageHigh;
     this.website = this.generalLink.substring(
-      0,
-      this.generalLink.indexOf(".com") + 4
+      this.generalLink.indexOf("www.") + 4,
+      this.generalLink.indexOf(".com")
     );
     this.watchScrapeNum = AllScrapes.totalWatches;
     AllScrapes.totalWatches++;
