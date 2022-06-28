@@ -25,7 +25,7 @@ start = () => {
 
   data = JSON.stringify(dict, null, 3);
   fs.writeFile(
-    "/Users/charlesweiss/Desktop/CharlieWebscrapeTest/blank.json",
+    "/Users/charlieweiss/Desktop/CharlieCoding/GitHub/WatchBoxWebscraper/blank.json",
     data,
     (err) => {
       if (err) {
