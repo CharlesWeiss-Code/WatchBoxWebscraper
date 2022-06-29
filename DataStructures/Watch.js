@@ -37,6 +37,10 @@ class Watch {
     this.lowBP = lowBP;
     this.highBP = highBP;
     this.generalLink = generalLink;
+    /**
+     * possibly delete dateOfScrape field because the name of the json object in S3 
+     * will be the date
+     */
     this.dateOfScrape = new Date();
     this.imageLow = imageLow;
     this.imageHigh = imageHigh;
