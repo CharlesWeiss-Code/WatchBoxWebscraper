@@ -70,14 +70,14 @@ async function bazaar(lowP, highP, tPage, scrape) {
     }
     w = new Watch(
       refNums[i],
-      lowYear,
-      highYear,
+      lowYear.trim(),
+      highYear.trim(),
       "",
       "",
-      lowBP,
+      lowBP.trim(),
       "",
       "",
-      highBP,
+      highBP.trim(),
       lowest,
       highest,
       "",
