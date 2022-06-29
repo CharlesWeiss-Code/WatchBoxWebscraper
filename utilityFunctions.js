@@ -68,6 +68,21 @@ addToJson = (watch) => {
   console.log(JSON.stringify(watch,null,'\t'))
 };
 
+CSV = (w) => {
+  s = "\n"
+  for (var propt in w) {
+    if (typeof propt != "function") {
+      if (w[propt].indexOf(",") != -1) {
+        w[propt].replace(","," and ")
+      }
+      s+=propt+","+w[propt]+"\n"
+      //console.log(propt+","+w[propt])
+    }
+  }
+  fs.writeFileSync("dataInCSV.csv", s)
+  //console.log(s)
+}
+
 module.exports = {
   noResults,
   noResults2,
@@ -76,4 +91,5 @@ module.exports = {
   exists,
   sameDate,
   addToJson,
+  CSV
 };

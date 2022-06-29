@@ -36,10 +36,10 @@ class Watch {
     this.highBP = highBP;
     this.generalLink = generalLink;
     /**
-     * possibly delete dateOfScrape field because the name of the json object in S3 
+     * possibly delete dateOfScrape field because the name of the json object in S3
      * will be the date
      */
-    this.dateOfScrape = new Date().toUTCString();
+    this.dateOfScrape = new Date().toUTCString().replace(",","");
     this.imageLow = imageLow;
     this.imageHigh = imageHigh;
     this.website;
@@ -60,44 +60,73 @@ class Watch {
         this.generalLink.indexOf(".com")
       );
     }
-
   }
 
-  setDate = (m, d, y) => {
+  setDate(m, d, y){
     this.dateOfScrape = new Date(m, d, y);
   };
 
-  getLowDealerStatus = () => this.lowDealerStatus;
+  getLowDealerStatus() {
+    return this.lowDealerStatus;
+  }
 
-  getHighDealerStatus = () => this.highDealerStatus;
+  getHighDealerStatus() {
+    return this.highDealerStatus;
+  }
 
-  getWebsite = () => this.website;
+  getWebsite() {
+    return this.website;
+  }
 
-  getRefNum = () => this.refNum;
+  getRefNum() {
+    return this.refNum;
+  }
 
-  getGeneralLink = () => this.generalLink;
+  getGeneralLink() {
+    return this.generalLink;
+  }
 
-  getLowBP = () => this.lowBP;
+  getLowBP() {
+    return this.lowBP;
+  }
 
-  getHighBP = () => this.highBP;
+  getHighBP() {
+    return this.highBP;
+  }
 
-  getLowPrice = () => this.lowPrice;
+  getLowPrice() {
+    return this.lowPrice;
+  }
 
-  getHighPrice = () => this.highPrice;
+  getHighPrice() {
+    return this.highPrice;
+  }
+  getLowLink() {
+    return this.lowLink;
+  }
 
-  getLowLink = () => this.lowLink;
+  getHighLink() {
+    return this.highLink;
+  }
 
-  getHighLink = () => this.highLink;
+  getLowPaper() {
+    return this.lowPaper;
+  }
 
-  getLowPaper = () => this.lowPaper;
+  getHighPaper() {
+    return this.highPaper;
+  }
+  getDate() {
+    return this.dateOfScrape;
+  }
 
-  getHighPaper = () => this.highPaper;
+  getLowBox() {
+    return this.lowBox;
+  }
 
-  getDate = () => this.dateOfScrape;
-
-  getLowBox = () => this.lowBox;
-
-  getHighBox = () => this.highBox;
+  getHighBox() {
+    return this.highBox;
+  }
 }
 
 module.exports = Watch;

@@ -7,3 +7,4 @@ NEED TO DO:
     - crono is a little messed up. Possiby exclude chrono?
 
     upload to aws = https://www.youtube.com/watch?v=xtRYi8ud1sM
+    - fix check top in Chrono

@@ -7,7 +7,7 @@ async function chrono24(lowP, highP, tPage) {
     console.log("");
     lowest = "-1";
     highest = "-1";
-    var child = 1
+    var child = 1;
     highTable = "";
     lowTable = "";
     var newURL =
@@ -31,21 +31,28 @@ async function chrono24(lowP, highP, tPage) {
       // when gettin prices, the price of "TOP" comes up first
       await lowP.goto(newURL + "&sortorder=1");
       await lowP.waitForTimeout(500);
+      await checkTop(lowP, child);
+
       if (flag) {
         await lowP.click("#modal-content > div > a", { delay: 20 });
         flag = false;
       }
       await lowP.waitForTimeout(1000);
-      await checkTop(lowP, child);
       lowest = await utilFunc.getItem(
         lowP,
-        "#wt-watches > div:nth-child("+child+") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
+        "#wt-watches > div:nth-child(" +
+          child +
+          ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
       );
       lowDealerStatus = await utilFunc.getItem(
         lowP,
-        "#wt-watches > div:nth-child("+child+") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
+        "#wt-watches > div:nth-child(" +
+          child +
+          ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
       );
-      await lowP.click("#wt-watches > div:nth-child("+child+") > a", { delay: 20 });
+      await lowP.click("#wt-watches > div:nth-child(" + child + ") > a", {
+        delay: 20,
+      });
       await lowP.waitForTimeout(500);
       lowTable = String(
         await utilFunc.getItem(
@@ -66,14 +73,20 @@ async function chrono24(lowP, highP, tPage) {
       await checkTop(highP, child);
       highest = await utilFunc.getItem(
         highP,
-        "#wt-watches > div:nth-child("+child+") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
+        "#wt-watches > div:nth-child(" +
+          child +
+          ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
       );
       highDealerStatus = await utilFunc.getItem(
         highP,
-        "#wt-watches > div:nth-child("+child+") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
+        "#wt-watches > div:nth-child(" +
+          child +
+          ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
       );
 
-      await highP.click("#wt-watches > div:nth-child("+child+") > a", { delay: 20 });
+      await highP.click("#wt-watches > div:nth-child(" + child + ") > a", {
+        delay: 20,
+      });
 
       await highP.waitForTimeout(500);
 
@@ -107,19 +120,28 @@ async function chrono24(lowP, highP, tPage) {
       highP.url(),
       tPage.url()
     );
-    console.log(w);
-    //utilFunc.addToJson(w);
+    utilFunc.CSV(w)
   }
 }
 
-// checkTop = async (page, c) => {
-//   while (await page.$$("#wt-watches > div:nth-child("+c+") > a > div.article-image-container > span.article-badge.top.reduced") != [] || page.$$("#wt-watches > div:nth-child("+c+")").then(async (handles) => {
-//     return await (await [handles].getProperty('localName') != "div")
-//   })) {
-//     c++;
-//   }
-//   console.log("Child",c)
-//   // result of this finds the nth-child that does not have the "top" tag.
-// }
+checkTop = async (page, c) => {
+  // var n = c;
+  // // while (await page.$$("#wt-watches > div:nth-child("+c+") > a > div.article-image-container > span.article-badge.top.reduced") != [] || await page.$$("#wt-watches > div:nth-child("+c+")").then(async (handles) => {
+  // //   console.log("test")
+  // //   const name = await [handles].getProperty('localName')
+  // //   console.log(name)
+  // //   return (name != "div")
+  // // })) {
+  // //   c++;
+  // // }
+  // // console.log("Child",c)
+  // // result of this finds the nth-child that does not have the "top" tag.
+  // while (await page.$$("#wt-watches > div:nth-child("+n+") > a > div.article-image-container > span.article-badge.top.reduced") != []) {
+  //   console.log(n)
+  //    n++;
+  // }
+  // console.log("THING",n)
+  // return n
+};
 
 module.exports = { chrono24 };
