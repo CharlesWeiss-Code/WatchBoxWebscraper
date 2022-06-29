@@ -33,6 +33,7 @@ const minimal_args = [
   "--password-store=basic",
   "--use-gl=swiftshader",
   "--use-mock-keychain",
+  "--incognito"
 ];
 
 getMinimalArgs = () => minimal_args;

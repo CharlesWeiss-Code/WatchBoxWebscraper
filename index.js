@@ -29,7 +29,7 @@ async function start() {
   refNums = REF.getRefNums();
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     defaultViewport: null,
     args: minArgs.getMinimalArgs(),
   });
