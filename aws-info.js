@@ -1,6 +1,10 @@
-const SECRET = "qwerty";
-const KEY_ID = "qwerty";
+
+const SECRET = "";
+const KEY_ID = "";
+const BUCKET_NAME = ""
+// body = JSON.stringify(watch,null,'\t')
 
 getSecret = () => SECRET
 getKeyID = () => KEY_ID
-module.exports = {getSecret, getKeyID}
+getBucketName = () => BUCKET_NAME
+module.exports = {getSecret, getKeyID, getBucketName}
