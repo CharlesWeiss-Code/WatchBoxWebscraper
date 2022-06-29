@@ -20,8 +20,7 @@ async function EWC(lowP, highP, tPage, scrape) {
       await highP.goto(url, { waituntil: "networkidle0" });
 
       if (await utilFunc.noResults(tPage, "body > section > h3")) {
-        lowest = 0;
-        highest = 0;
+        // no reults
         continue;
       } else {
         //EWC Is weird and needs its own function.
@@ -54,8 +53,8 @@ async function EWC(lowP, highP, tPage, scrape) {
       "",
       "",
       "",
-      lowest,
-      highest,
+      String(lowest),
+      String(highest),
       "",
       "",
       "",

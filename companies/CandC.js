@@ -28,8 +28,7 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
       );
 
       if (await utilFunc.noResults(tPage, "#searchspring-content > h3")) {
-        lowest = 0;
-        highest = 0;
+        continue;
       } else {
         await prepare(
           lowP,
@@ -60,8 +59,7 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
         { waituntil: "networkidle0" }
       );
       if (await utilFunc.noResults(tPage, "#searchspring-content > h3")) {
-        lowest = 0;
-        highest = 0;
+        continue;
       } else {
         await prepare(
           lowP,
@@ -88,8 +86,7 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
       await tPage.goto(url, { waitUntil: "networkidle0" });
 
       if (await utilFunc.noResults(tPage, "#searchspring-content > h3")) {
-        lowest = "";
-        highest = "";
+        continue;
       } else {
         await prepare(lowP, highP, url);
         await lowP.waitForSelector('div[class="prod-specs"]');

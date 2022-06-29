@@ -4,11 +4,5 @@ NEED TO DO:
       https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=311.30.42.30.01.005&resultview=list&sortorder=1
       - when gettin prices, the price of "TOP" comes up first
     - add promise catches to all functions that use them. This cannot crash. 
-    - change waitForTimeout to waitForSelector
     - crono is a little messed up. Possiby exclude chrono?
 
-
-    - use 'continue' when the search has no results
-      - dont even create a watch object. Waste of space.
-    - make sure all object fields are strings
-    - remove 'Scrape' and 'AllScrapes' classes

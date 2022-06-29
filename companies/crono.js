@@ -22,8 +22,7 @@ async function chrono24(lowP, highP, tPage, scrape) {
         "We've found no results for"
       )
     ) {
-      lowest = 0;
-      highest = 0;
+      // no results
       continue;
     } else {
       // deal with "TOP" choice from chrono.
@@ -87,40 +86,6 @@ async function chrono24(lowP, highP, tPage, scrape) {
       index2YearHigh = lowTable.indexOf("Condition");
       index1BPHigh = lowTable.indexOf("Scope of delivery") + 17;
       index2BPHigh = lowTable.indexOf("Gender");
-
-      // console.log("Lowest: " + "\t" + lowest.replace(/\s+/g, ""));
-      // console.log(
-      //   "lowDealerStatus" + "\t" + lowDealerStatus.replace(/\s+/g, "")
-      // );
-      // console.log(
-      //   "LowYear: " +
-      //     "\t" +
-      //     lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, "")
-      // );
-      // console.log(
-      //   "lowBoxAndPapers" +
-      //     "\t" +
-      //     lowTable.substring(index1BPLow, index2BPLow).replace(/\s+/g, "")
-      // );
-      // console.log("LOW URL: " + lowP.url());
-
-      // console.log("Highest: " + "\t" + highest.replace(/\s+/g, ""));
-      // console.log(
-      //   "HighDealerStatus" + "\t" + highDealerStatus.replace(/\s+/g, "")
-      // );
-      // console.log(
-      //   "HighYear: " +
-      //     "\t" +
-      //     highTable
-      //       .substring(index1YearHigh, index2YearHigh)
-      //       .replace(/\s+/g, "")
-      // );
-      // console.log(
-      //   "HighBoxAndPapers" +
-      //     "\t" +
-      //     highTable.substring(index1BPHigh, index2BPHigh).replace(/\s+/g, "")
-      // );
-      // console.log("HIGH URL: " + highP.url());
     }
     w = new Watch(
       refNums[i],
@@ -132,8 +97,8 @@ async function chrono24(lowP, highP, tPage, scrape) {
       "",
       "",
       highTable.substring(index1BPHigh, index2BPHigh).replace(/\s+/g, ""),
-      lowest,
-      highest,
+      lowest.trim(),
+      highest.trim(),
       lowDealerStatus.replace(/\s+/g, ""),
       highDealerStatus.replace(/\s+/g, ""),
       lowP.url(),

@@ -22,9 +22,7 @@ async function bazaar(lowP, highP, tPage, scrape) {
         'ul[class="products-grid infinite-load-items-wrapper ss-targeted ng-scope"]'
       ))
     ) {
-      // this is the only one that can have its own function. there are two selectors
-      lowest = 0;
-      highest = 0;
+      // no results
       continue;
     } else {
       await lowP.goto(

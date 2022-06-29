@@ -48,8 +48,7 @@ async function bobs(lowP, highP, tPage, scrape) {
           "#searchspring-content > div > div > div > div > div > div.no-results"
         )
       ) {
-        lowest = "";
-        highest = "";
+        continue;
       } else {
         await prepare(lowP, highP, specialURL); // sorts page
         await getData(lowP, highP); // gets data tables and price
@@ -76,8 +75,7 @@ async function bobs(lowP, highP, tPage, scrape) {
             console.log(e);
           })
       ) {
-        lowest = "";
-        highest = "";
+        continue;
       } else {
         await prepare(lowP, highP, newURL); // sorts page
         await getData(lowP, highP); // gets data tables and price
