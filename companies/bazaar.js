@@ -87,7 +87,6 @@ async function bazaar(lowP, highP, tPage, scrape) {
       tPage.url()
     );
 
-    scrape.addWatch(w);
     console.log(w);
 
     utilFunc.addToJson(w);

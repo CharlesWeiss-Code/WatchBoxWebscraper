@@ -195,7 +195,6 @@ async function davidsw(lowP, highP, tPage, scrape) {
       tPage.url()
     );
     console.log(w);
-    scrape.addWatch(w);
     utilFunc.addToJson(w);
   }
 }

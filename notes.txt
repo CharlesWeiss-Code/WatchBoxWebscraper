@@ -5,3 +5,5 @@ NEED TO DO:
       - when gettin prices, the price of "TOP" comes up first
     - add promise catches to all functions that use them. This cannot crash. 
     - crono is a little messed up. Possiby exclude chrono?
+
+    upload to aws = https://www.youtube.com/watch?v=xtRYi8ud1sM

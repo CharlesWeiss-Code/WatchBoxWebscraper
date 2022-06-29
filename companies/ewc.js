@@ -1,7 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 
-async function EWC(lowP, highP, tPage, scrape) {
+async function EWC(lowP, highP, tPage) {
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = -1;
@@ -62,7 +62,6 @@ async function EWC(lowP, highP, tPage, scrape) {
       tPage.url()
     );
     console.log(w);
-    scrape.addWatch(w);
 
     utilFunc.addToJson(w);
   }

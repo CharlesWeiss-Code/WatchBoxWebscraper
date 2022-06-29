@@ -1,7 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 
-async function chrono24(lowP, highP, tPage, scrape) {
+async function chrono24(lowP, highP, tPage) {
   flag = true;
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
@@ -105,7 +105,6 @@ async function chrono24(lowP, highP, tPage, scrape) {
       highP.url(),
       tPage.url()
     );
-    scrape.addWatch(w);
     console.log(w);
     utilFunc.addToJson(w);
   }

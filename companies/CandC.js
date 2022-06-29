@@ -161,8 +161,7 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
       lowImage,
       highImage
     );
-    scrape.addWatch(w);
-    //console.log(w);
+    console.log(JSON.stringify(w,null,"\t"));
     utilFunc.addToJson(w);
   }
 }

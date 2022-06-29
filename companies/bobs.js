@@ -101,7 +101,6 @@ async function bobs(lowP, highP, tPage, scrape) {
       imageLow,
       imageHigh
     );
-    scrape.addWatch(w);
     console.log(w);
     utilFunc.addToJson(w);
   }

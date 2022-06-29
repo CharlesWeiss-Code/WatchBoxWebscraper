@@ -23,7 +23,6 @@ const utilFunc = require("./utilityFunctions");
 /*
 I HAVE MADE TIMEOUT: 0 ON SOME OF THE PAGE.GOTO(). just for testing. eventually should make timeout:60000 (1min)
 */
-AS = new AllScrapes();
 
 async function start() {
   currentScrape = new Scrape();
@@ -65,15 +64,12 @@ async function start() {
     }
   });
 
-  await CandC.crownAndCaliber(lowPage, highPage, testPage, currentScrape);
-  await Bobs.bobs(lowPage, highPage, testPage, currentScrape);
-  await david.davidsw(lowPage, highPage, testPage, currentScrape); 
-  await Bazaar.bazaar(lowPage, highPage, testPage, currentScrape);
-  await ewc.EWC(lowPage, highPage, testPage, currentScrape);
-  await chrono.chrono24(lowPage, highPage, testPage, currentScrape);;
-  //AllScrapes.addScrape(currentScrape);
-  //console.log(AllScrapes.getDict()) + "\n\n\n";
-  //console.log(AllScrapes.getAllScrapes());
+  await CandC.crownAndCaliber(lowPage, highPage, testPage);
+  // await Bobs.bobs(lowPage, highPage, testPage);
+  // await david.davidsw(lowPage, highPage, testPage); 
+  // await Bazaar.bazaar(lowPage, highPage, testPage);
+  // await ewc.EWC(lowPage, highPage, testPage);
+  // await chrono.chrono24(lowPage, highPage, testPage);
 
   //await browser.close();
   //await start();
