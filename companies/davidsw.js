@@ -178,8 +178,8 @@ async function davidsw(lowP, highP, tPage, scrape) {
 
     w = new Watch(
       refNums[i],
-      lowYear.replace("\t", ""),
-      highYear.replace("\t", ""),
+      lowYear.trim(),
+      highYear.trim(),
       lowBox.replace(/\s+/g, ""),
       lowPaper.replace(/\s+/g, ""),
       "",
@@ -196,8 +196,6 @@ async function davidsw(lowP, highP, tPage, scrape) {
     );
     console.log(w);
     scrape.addWatch(w);
-
-    console.log(w.getWebsite());
     utilFunc.addToJson(w);
   }
 }

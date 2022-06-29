@@ -5,5 +5,10 @@ NEED TO DO:
       - when gettin prices, the price of "TOP" comes up first
     - add promise catches to all functions that use them. This cannot crash. 
     - change waitForTimeout to waitForSelector
-    - https://www.npmjs.com/package/edit-json-file
     - crono is a little messed up. Possiby exclude chrono?
+
+
+    - use 'continue' when the search has no results
+      - dont even create a watch object. Waste of space.
+    - make sure all object fields are strings
+    - remove 'Scrape' and 'AllScrapes' classes

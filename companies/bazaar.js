@@ -2,7 +2,7 @@ const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 
 async function bazaar(lowP, highP, tPage, scrape) {
-  for (var i = 3; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = "-1";
     lowYear = "";
@@ -88,6 +88,7 @@ async function bazaar(lowP, highP, tPage, scrape) {
       highP.url(),
       tPage.url()
     );
+
     scrape.addWatch(w);
     console.log(w);
 

@@ -41,7 +41,7 @@ class Watch {
      * possibly delete dateOfScrape field because the name of the json object in S3 
      * will be the date
      */
-    this.dateOfScrape = new Date();
+    this.dateOfScrape = new Date().toUTCString();
     this.imageLow = imageLow;
     this.imageHigh = imageHigh;
     this.website;
@@ -63,36 +63,6 @@ class Watch {
       );
     }
 
-    // if (this.generalLink.indexOf(".") != -1) {
-    //   this.website = this.generalLink.substring(
-    //     this.generalLink.indexOf(".") + 1,
-    //     this.generalLink.indexOf(".com")
-    //   );
-    // } else {
-    //   this.webste = this.generalLink.substring(
-    //     this.generalLink.indexOf("//") + 2,
-    //     this.generalLink.indexOf(".com")
-    //   );
-    // }
-
-    // var thing = this.generalLink.indexOf("www.");
-    // if (thing === -1) {
-    //   thing = this.generalLink.indexOf("https://") + 8;
-    //   this.website = this.generalLink.substring(
-    //     thing,
-    //     this.generalLink.indexOf(".com")
-    //   );
-    // } else if (this.generalLink.indexOf("www2.") != -1) {
-    //   this.website = this.generalLink.substring(
-    //     this.generalLink.indexOf("www2.") + 5,
-    //     this.generalLink.indexOf(".com")
-    //   );
-    // } else {
-    //   this.website = this.generalLink.substring(
-    //     thing + 4,
-    //     this.generalLink.indexOf(".com")
-    //   );
-    // }
     this.watchScrapeNum = AllScrapes.totalWatches;
     AllScrapes.totalWatches++;
   }

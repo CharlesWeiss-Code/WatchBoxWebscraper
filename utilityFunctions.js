@@ -65,6 +65,7 @@ addToJson = (watch) => {
   let parsed = JSON.parse(data);
   parsed[watch.getWebsite()][watch.getRefNum()].push(watch);
   fs.writeFileSync("data.json", JSON.stringify(parsed, null, 3));
+  console.log(JSON.stringify(watch,null,'\t'))
 };
 
 module.exports = {
