@@ -5,4 +5,3 @@ NEED TO DO:
       - when gettin prices, the price of "TOP" comes up first
     - add promise catches to all functions that use them. This cannot crash. 
     - crono is a little messed up. Possiby exclude chrono?
-
