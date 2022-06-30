@@ -6,6 +6,8 @@ async function EWC(lowP, highP, tPage) {
     console.log("");
     lowest = -1;
     highest = -1;
+    brandLow = ""
+    brandHigh = ""
 
     var newURL =
       "https://www2.europeanwatch.com/cgi-bin/search.pl?search=" + refNums[i];
@@ -26,7 +28,12 @@ async function EWC(lowP, highP, tPage) {
         //EWC Is weird and needs its own function.
         lowest = await findPriceEWC(lowP, url, "asc");
         highest = await findPriceEWC(highP, url, "desc");
-        await lowP.waitForTimeout(4000);
+                
+        brandLow = await utilFunc.getItem(lowP, "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3")
+        brandHigh = await utilFunc.getItem(highP, "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3")
+        brandLow = brandLow.substring(0,brandLow.indexOf(" "))
+        brandHigh = brandHigh.substring(0,brandHigh.indexOf(" "))
+        console.log(brandLow,brandHigh)
 
         console.log("Lowest: " + lowest);
         console.log("Highest: " + highest);
@@ -41,6 +48,14 @@ async function EWC(lowP, highP, tPage) {
         //EWC Is weird and needs its own function.
         lowest = await findPriceEWC(lowP, newURL, "asc");
         highest = await findPriceEWC(highP, newURL, "desc");
+        
+        brandLow = await utilFunc.getItem(lowP, "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3")
+        brandHigh = await utilFunc.getItem(highP, "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3")
+        brandLow = brandLow.substring(0,brandLow.indexOf(" "))
+        brandHigh = brandHigh.substring(0,brandHigh.indexOf(" "))
+        console.log(brandLow,brandHigh)
+
+
       }
     }
     w = new Watch(
@@ -61,9 +76,9 @@ async function EWC(lowP, highP, tPage) {
       "",
       tPage.url()
     );
-    console.log(w);
+    //console.log(w);
 
-    utilFunc.addToJson(w);
+    //utilFunc.addToJson(w);
   }
 }
 

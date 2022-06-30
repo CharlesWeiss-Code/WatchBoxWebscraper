@@ -67,8 +67,8 @@ async function start() {
    //await CandC.crownAndCaliber(lowPage, highPage, testPage);
   //await Bobs.bobs(lowPage, highPage, testPage);
    //await david.davidsw(lowPage, highPage, testPage); 
-   await Bazaar.bazaar(lowPage, highPage, testPage);
-  // await ewc.EWC(lowPage, highPage, testPage);
+  // await Bazaar.bazaar(lowPage, highPage, testPage);
+   await ewc.EWC(lowPage, highPage, testPage);
   // await chrono.chrono24(lowPage, highPage, testPage);
 
   await browser.close();
