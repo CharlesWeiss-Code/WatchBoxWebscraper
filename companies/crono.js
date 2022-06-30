@@ -33,8 +33,7 @@ async function chrono24(lowP, highP, tPage) {
       // when gettin prices, the price of "TOP" comes up first
       await lowP.goto(newURL + "&sortorder=1");
       await lowP.waitForTimeout(500);
-      //childLow = await checkTop(lowP);
-      await checkTop(tPage);
+      childLow = await checkTop(lowP);
       if (flag) {
         await lowP.click("#modal-content > div > a", { delay: 20 });
         flag = false;
@@ -72,7 +71,7 @@ async function chrono24(lowP, highP, tPage) {
       await highP.goto(newURL + "&searchorder=11&sortorder=11");
       await highP.waitForTimeout(500);
       //await highP.click("#modal-content > div > a", {delay: 20})
-      //childHigh = await checkTop(highP);
+      childHigh = await checkTop(highP);
       highest = await utilFunc.getItem(
         highP,
         "#wt-watches > div:nth-child(" +
@@ -129,32 +128,27 @@ async function chrono24(lowP, highP, tPage) {
 }
 
 checkTop = async (page) => {
-  for (var i = 1; i < 1000; i++) {
-    // if (await noTop(page, "#wt-watches > div:nth-child(" + i + ")")) {
-    //                     // #wt-watches > div:nth-child(1)
-    //   console.log("NO TOP", i);
-    //   await page.waitForTimeout(9999999)
-    //   break;
-    // } else {
-    //   console.log(i);
-    // }
-    await typeOf(page,"#wt-watches > div:nth-child("+i+")")
+  for (var i = 1; i < 20; i++) {
+    var watch = await typeOf(page,"#wt-watches > div:nth-child("+i+")", i)
+    var isntTop = await noTop(page,"#wt-watches > div:nth-child("+i+")")
+    if (isntTop && watch) {
+      return i
+    }
   }
 };
 
-typeOf = async (page, s) => {
+typeOf = async (page, s, i) => {
   let element = await page.$(s)
   if (element === null) {
-    console.log(null)
     return false
   } else {
   let value = await page.evaluate(el => el.className, element)
-  if (value.equals("article-item-container wt-search-result")) {
+  if (String(value) ==="article-item-container wt-search-result") {
+    //console.log(value, i)
     return true;
   } else {
     return false;
   }
-  console.log(value)
   }
 };
 
