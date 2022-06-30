@@ -2,7 +2,7 @@ const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 
 async function bazaar(lowP, highP, tPage, scrape) {
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 2; i < refNums.length; i++) {
     console.log("");
     lowest = "-1";
     lowYear = "";
@@ -12,6 +12,8 @@ async function bazaar(lowP, highP, tPage, scrape) {
     highYear = "";
     highTable = "";
     highBP = "";
+    brandLow = ""
+    brandHigh =""
     //https://www.luxurybazaar.com/search-results?q=116500LN-0001
     var newURL = "https://www.luxurybazaar.com/search-results?q=" + refNums[i];
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
@@ -87,9 +89,9 @@ async function bazaar(lowP, highP, tPage, scrape) {
       tPage.url()
     );
 
-    console.log(w);
+    //console.log(w);
 
-    utilFunc.addToJson(w);
+    //utilFunc.addToJson(w);
   }
 }
 
@@ -110,6 +112,17 @@ assignData = () => {
     .substring(highYearIndex1, highYearIndex2)
     .replace("\n", "");
   highBP = highTable.substring(highBPIndex1, highBPIndex2).replace("\n", "");
+  index1BrandLow = lowTable.indexOf("Signatures")+10
+  index2BrandLow = lowTable.indexOf("Strap Color")
+
+  index1BrandHigh = highTable.indexOf("Signatures")+10
+  index2BrandHigh = highTable.indexOf("Strap Color")
+
+  brandHigh = highTable.substring(index1BrandHigh,index2BrandHigh).trim()
+
+  brandLow = lowTable.substring(index1BrandLow,index2BrandLow).trim()
+  console.log(brandLow,brandHigh)
+
 };
 
 module.exports = { bazaar };
