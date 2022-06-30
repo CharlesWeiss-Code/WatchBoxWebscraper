@@ -13,11 +13,11 @@ lowYearIndex1 = -1;
 lowYearIndex2 = -1;
 lowImage = "";
 highImage = "";
+brandLow = "";
+brandHigh = "";
 
 async function crownAndCaliber(lowP, highP, tPage, scrape) {
   for (var i = 0; i < refNums.length; i++) {
-    lowImage = null;
-    highImage = null;
     url = "https://www.crownandcaliber.com/search?view=shop&q=" + refNums[i];
     console.log("CandC URL: ***  " + url);
 
@@ -70,6 +70,18 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
 
         lowTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
         highTable = await utilFunc.getItem(highP, 'div[class="prod-specs"]');
+        
+        brandLow = await (
+          await utilFunc.getItem(lowP, "tbody > tr:nth-child(1)")
+        )
+          .replace("Brand:", "")
+          .trim();
+        brandLow = await (
+          await utilFunc.getItem(lowP, "tbody > tr:nth-child(1)")
+        )
+          .replace("Brand:", "")
+          .trim();
+
         lowImage = await lowP.evaluate(() => {
           const image = document.querySelector(
             "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-5.medium-12.small-12 > div > div > div > div.slider.slick-initialized.slick-slider > div.slick-list.draggable > div > div.slick-slide.slick-current.slick-active > div > div > img:nth-child(1)"
@@ -87,6 +99,7 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
       await tPage.goto(url, { waitUntil: "networkidle0" });
 
       if (await utilFunc.noResults(tPage, "#searchspring-content > h3")) {
+        // no results
         continue;
       } else {
         await prepare(lowP, highP, url);
@@ -161,8 +174,8 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
       lowImage,
       highImage
     );
-    console.log(JSON.stringify(w,null,"\t"));
-    utilFunc.addToJson(w);
+    //console.log(JSON.stringify(w, null, "\t"));
+    //utilFunc.addToJson(w);
   }
 }
 
@@ -185,7 +198,10 @@ prepare = async (lowP, highP, link) => {
     highP,
     'span[class="current-price product-price__price"]'
   );
-
+  
+  brandLow = await utilFunc.getItem(lowP, "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > div.card-title.ng-binding")
+  brandHigh = await utilFunc.getItem(highP, "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > div.card-title.ng-binding")
+  console.log(brandLow, brandHigh)
   await lowP.click(
     "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
     { delay: 20 }
