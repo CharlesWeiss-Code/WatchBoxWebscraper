@@ -10,6 +10,8 @@ async function chrono24(lowP, highP, tPage) {
     highest = "-1";
     var childLow = 1;
     var childHigh = 1;
+    brandLow=""
+    brandHigh=""
 
     highTable = "";
     lowTable = "";
@@ -64,7 +66,15 @@ async function chrono24(lowP, highP, tPage) {
           "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1)"
         )
       );
-          
+      
+      index1BrandLow = lowTable.indexOf("Brand")+5
+      index2BrandLow = lowTable.indexOf("Model")
+      if (index2BrandLow === -1) {
+        index2BrandLow = lowTable.indexOf("Reference number")
+      }
+      brandLow=lowTable.substring(index1BrandLow,index2BrandLow).trim()
+      
+
       index1YearLow = lowTable.indexOf("Year of production") + 18;
       index2YearLow = lowTable.indexOf("Condition");
   
@@ -104,6 +114,14 @@ async function chrono24(lowP, highP, tPage) {
         )
       );
 
+      index1BrandHigh = highTable.indexOf("Brand")+5
+      index2BrandHigh = highTable.indexOf("Model")
+      if (index2BrandHigh === -1) {
+        index2BrandHigh = highTable.indexOf("Reference number")
+      }
+      brandHigh=highTable.substring(index1BrandHigh,index2BrandHigh).trim()
+      console.log(brandLow,brandHigh)
+
       index1YearHigh = highTable.indexOf("Year of production") + 18;
       index2YearHigh = highTable.indexOf("Condition");
       index1BPHigh = highTable.indexOf("Scope of delivery") + 17;
@@ -132,7 +150,7 @@ async function chrono24(lowP, highP, tPage) {
     );
     //utilFunc.CSV(w)
     //console.log(JSON.stringify(w, null, "\t"));
-    utilFunc.addToJson(w)
+    //utilFunc.addToJson(w)
   }
 }
 
