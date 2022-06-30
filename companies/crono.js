@@ -1,5 +1,6 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
+const mike = require("../highAndLow.js");
 
 async function chrono24(lowP, highP, tPage) {
   flag = true;
@@ -18,8 +19,8 @@ async function chrono24(lowP, highP, tPage) {
     console.log("REF: " + refNums[i] + "\n" + "GENERAL URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
     await tPage.waitForTimeout(1000);
-    await checkTop(tPage)
-    await tPage.waitForTimeout(9999999)
+    await checkTop(tPage);
+    await tPage.waitForTimeout(9999999);
     if (
       await utilFunc.noResults2(
         tPage,
@@ -129,16 +130,53 @@ async function chrono24(lowP, highP, tPage) {
   }
 }
 
-checkTop = async (page) => {
+checkTop = async (page, LH) => {
   for (var i = 1; i < 20; i++) {
-    var watch = await typeOf(page,"#wt-watches > div:nth-child("+i+")", i)
-    var isntTop = await noTop(page,"#wt-watches > div:nth-child("+i+")")
-    var price = await utilFunc.getItem(page, "#wt-watches > div:nth-child("+i+") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong")
-                                          //  
-    if (isntTop && watch && parseFloat(price.replace("$","").replace(",","")) > 14800) {
+    var watch = await typeOf(page, "#wt-watches > div:nth-child(" + i + ")", i);
+    var isntTop = await noTop(page, "#wt-watches > div:nth-child(" + i + ")");
+    var price = await utilFunc.getItem(
+      page,
+      "#wt-watches > div:nth-child(" +
+        i +
+        ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
+    );
+
+    // if (LH === "low") {
+    //   if (
+    //     isntTop &&
+    //     watch &&
+    //     parseFloat(price.replace("$", "").replace(",", "")) >
+    //       mike.getHighAndLow(refNums[i])[0]
+    //   ) {
+    //     //console.log("Good", i, price.trim())
+
+    //     return i;
+    //   } else {
+    //     //console.log("Top", !isntTop, "Watch", watch, i)
+    //   }
+    // } else {
+    //   if (
+    //     isntTop &&
+    //     watch &&
+    //     parseFloat(price.replace("$", "").replace(",", "")) >
+    //       mike.getHighAndLow(refNums[i])[1]
+    //   ) {
+    //     //console.log("Good", i, price.trim())
+
+    //     return i;
+    //   } else {
+    //     //console.log("Top", !isntTop, "Watch", watch, i)
+    //   }
+    // }
+
+    if (
+      isntTop &&
+      watch &&
+      parseFloat(price.replace("$", "").replace(",", "")) > 14800
+    ) {
       //console.log("Good", i, price.trim())
 
-      return i
+      return i;
     } else {
       //console.log("Top", !isntTop, "Watch", watch, i)
     }
@@ -146,27 +184,28 @@ checkTop = async (page) => {
 };
 
 typeOf = async (page, s, i) => {
-  let element = await page.$(s)
+  let element = await page.$(s);
   if (element === null) {
-    return false
-  } else {
-  let value = await page.evaluate(el => el.className, element)
-  if (String(value) ==="article-item-container wt-search-result") {
-    //console.log(value, i)
-    return true;
-  } else {
     return false;
-  }
+  } else {
+    let value = await page.evaluate((el) => el.className, element);
+    if (String(value) === "article-item-container wt-search-result") {
+      //console.log(value, i)
+      return true;
+    } else {
+      return false;
+    }
   }
 };
 
-noTop = async (page, s) => { // works
-  let element = await page.$(s)
+noTop = async (page, s) => {
+  // works
+  let element = await page.$(s);
   if (element === null) {
-    return false
+    return false;
   } else {
-  let value = await page.evaluate(el => el.textContent, element)
-  return (value.indexOf("Top") === -1)
+    let value = await page.evaluate((el) => el.textContent, element);
+    return value.indexOf("Top") === -1;
   }
 };
 
