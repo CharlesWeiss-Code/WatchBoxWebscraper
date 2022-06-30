@@ -80,7 +80,11 @@ CSV = (w) => {
   s = ""
   for (var propt in w) {
     if (typeof propt != "function") {
+      if (String(propt) != "website") {
       s+=w[propt]+","
+      } else {
+        s+=w[propt]
+      }
     }
   }
   return s;

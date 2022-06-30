@@ -19,7 +19,7 @@ var brandLow = "";
 var brandHigh = "";
 
 async function bobs(lowP, highP, tPage) {
-  for (var i = 1; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     lowest = "";
     highest = "";
     highTable = "";
@@ -113,7 +113,7 @@ async function bobs(lowP, highP, tPage) {
       brandHigh
     );
     //console.log(w);
-    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
    //console.log(lowTable)
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w);
@@ -190,7 +190,7 @@ async function getData(lowP, highP) {
   PLow = "";
   if (lowTable.indexOf("warranty card") != -1) {
     index1PLow = lowTable.indexOf("warranty card");
-    index2PLow = lowTable.indexOf("Warranty");
+    index2PLow = lowTable.indexOf("Warranty") -1;
     PLow = lowTable.substring(index1PLow, index2PLow);
   }
   lowBox = lowTable.substring(lowTable.indexOf("Box & Papers")+14,lowTable.indexOf("Warranty"))
@@ -211,7 +211,7 @@ async function getData(lowP, highP) {
   PHigh = "";
   if (highTable.indexOf("warranty card") != -1) {
     index1BPHigh = highTable.indexOf("warranty card");
-    index2BPHigh = highTable.indexOf("Warranty");
+    index2BPHigh = highTable.indexOf("Warranty") -1;
     PHigh = highTable.substring(index1BPHigh, index2BPHigh);
   }
 

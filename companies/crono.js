@@ -1,17 +1,17 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 const mike = require("../highAndLow.js");
-const fs = require('fs')
+const fs = require("fs");
 async function chrono24(lowP, highP, tPage) {
   flag = true;
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 7; i < refNums.length; i++) {
     console.log("");
     lowest = "-1";
     highest = "-1";
     var childLow = 1;
     var childHigh = 1;
-    brandLow=""
-    brandHigh=""
+    brandLow = "";
+    brandHigh = "";
 
     highTable = "";
     lowTable = "";
@@ -38,7 +38,7 @@ async function chrono24(lowP, highP, tPage) {
       // when gettin prices, the price of "TOP" comes up first
       await lowP.goto(newURL + "&sortorder=1");
       await lowP.waitForTimeout(500);
-      childLow = await checkTop(lowP, 'low');
+      childLow = await checkTop(lowP, "low");
       if (flag) {
         await lowP.click("#modal-content > div > a", { delay: 20 });
         flag = false;
@@ -67,21 +67,22 @@ async function chrono24(lowP, highP, tPage) {
         )
       );
       
-      index1BrandLow = lowTable.indexOf("Brand")+5
-      index2BrandLow = lowTable.indexOf("Model")
-      if (index2BrandLow === -1) {
-        index2BrandLow = lowTable.indexOf("Reference number")
+      index1BrandLow = lowTable.indexOf("Brand") + 5;
+      if (index1BrandLow != 4) {
+        index2BrandLow = lowTable.indexOf("Model");
+        if (index2BrandLow === -1) {
+          index2BrandLow = lowTable.indexOf("Reference number");
+        }
+        brandLow = lowTable.substring(index1BrandLow, index2BrandLow).trim();
       }
-      brandLow=lowTable.substring(index1BrandLow,index2BrandLow).trim()
-      console.log("lowTable\n\n\n",lowTable)
 
       index1YearLow = lowTable.indexOf("Year of production") + 18;
       index2YearLow = lowTable.indexOf("Condition");
-  
+
       index1BPLow = lowTable.indexOf("Scope of delivery") + 17;
       index2BPLow = lowTable.indexOf("Gender");
       if (index2BPLow === -1) {
-        index2BPLow = lowTable.indexOf("Location")
+        index2BPLow = lowTable.indexOf("Location");
       }
 
       await highP.goto(newURL + "&searchorder=11&sortorder=11");
@@ -114,19 +115,22 @@ async function chrono24(lowP, highP, tPage) {
         )
       );
 
-      index1BrandHigh = highTable.indexOf("Brand")+5
-      index2BrandHigh = highTable.indexOf("Model")
-      if (index2BrandHigh === -1) {
-        index2BrandHigh = highTable.indexOf("Reference number")
+      index1BrandHigh = highTable.indexOf("Brand") + 5;
+      if (index1BrandHigh != 4) {
+        index2BrandHigh = highTable.indexOf("Model");
+        if (index2BrandHigh === -1) {
+          index2BrandHigh = highTable.indexOf("Reference number");
+        }
+        brandHigh = highTable
+          .substring(index1BrandHigh, index2BrandHigh)
+          .trim();
       }
-      brandHigh=highTable.substring(index1BrandHigh,index2BrandHigh).trim()
-
       index1YearHigh = highTable.indexOf("Year of production") + 18;
       index2YearHigh = highTable.indexOf("Condition");
       index1BPHigh = highTable.indexOf("Scope of delivery") + 17;
       index2BPHigh = highTable.indexOf("Gender");
       if (index2BPHigh === -1) {
-        index2BPHigh = highTable.indexOf("Location")
+        index2BPHigh = highTable.indexOf("Location");
       }
     }
     w = new Watch(
@@ -154,7 +158,7 @@ async function chrono24(lowP, highP, tPage) {
     fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     //utilFunc.CSV(w)
-    console.log(JSON.stringify(w, null, "\t"));
+    //console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w)
   }
 }
@@ -198,9 +202,7 @@ checkTop = async (page, LH) => {
     //   }
     // }
 
-    if (
-      isntTop &&
-      watch ) {
+    if (isntTop && watch) {
       //console.log("Good", i, price.trim())
 
       return i;
