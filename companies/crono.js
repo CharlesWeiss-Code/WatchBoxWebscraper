@@ -120,7 +120,6 @@ async function chrono24(lowP, highP, tPage) {
         index2BrandHigh = highTable.indexOf("Reference number")
       }
       brandHigh=highTable.substring(index1BrandHigh,index2BrandHigh).trim()
-      console.log(brandLow,brandHigh)
 
       index1YearHigh = highTable.indexOf("Year of production") + 18;
       index2YearHigh = highTable.indexOf("Condition");
@@ -146,10 +145,14 @@ async function chrono24(lowP, highP, tPage) {
       highDealerStatus.replace(/\s+/g, ""),
       lowP.url(),
       highP.url(),
-      tPage.url()
+      tPage.url(),
+      "",
+      "",
+      brandLow,
+      brandHigh
     );
     //utilFunc.CSV(w)
-    //console.log(JSON.stringify(w, null, "\t"));
+    console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w)
   }
 }

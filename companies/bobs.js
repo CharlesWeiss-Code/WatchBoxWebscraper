@@ -11,8 +11,10 @@ PHigh = "";
 PLow = "";
 lowURL = "";
 highURL = "";
-brandLow = ""
-brandHigh = ""
+imageLow = "";
+imageHigh = "";
+var brandLow = "";
+var brandHigh = "";
 
 async function bobs(lowP, highP, tPage, scrape) {
   for (var i = 0; i < refNums.length; i++) {
@@ -28,8 +30,8 @@ async function bobs(lowP, highP, tPage, scrape) {
     highURL = "";
     imageLow = "";
     imageHigh = "";
-    brandLow = ""
-brandHigh = ""
+    brandLow = "";
+    brandHigh = "";
     console.log("");
 
     var newURL =
@@ -85,10 +87,11 @@ brandHigh = ""
         await getData(lowP, highP); // gets data tables and price
       }
     }
+
     w = new Watch(
       refNums[i],
-      lowYear,
-      highYear,
+      lowYear.trim(),
+      highYear.trim(),
       "",
       PLow,
       "",
@@ -103,9 +106,12 @@ brandHigh = ""
       highP.url(),
       tPage.url(),
       imageLow,
-      imageHigh
+      imageHigh,
+      brandLow,
+      brandHigh
     );
     //console.log(w);
+    console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w);
   }
 }
@@ -205,31 +211,15 @@ async function getData(lowP, highP) {
     lowYear = lowYear.substring(index);
   }
 
-
- 
- 
-  brandLow = await (await utilFunc.getItem(lowP, "tbody > tr:nth-child(1)")).replace("Brand:","").trim()
-  brandHigh = await (await utilFunc.getItem(highP, "tbody > tr:nth-child(1)")).replace("Brand:","").trim()
-  /**
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
-   */
-
+  brandLow = "";
+  brandHigh = "";
+  brandLow = await (await utilFunc.getItem(lowP, "tbody > tr:nth-child(1)"))
+    .replace("Brand:", "")
+    .trim();
+  brandHigh = await (await utilFunc.getItem(highP, "tbody > tr:nth-child(1)"))
+    .replace("Brand:", "")
+    .trim();
+  
   highYear = "";
   if (highTable.indexOf("/Year") !== -1) {
     highYear = highTable.substring(index1YearHigh, index2YearHigh);
@@ -240,7 +230,7 @@ async function getData(lowP, highP) {
   if (String(lowP.url()) != "about:blank") {
     lowURL = lowP.url();
   }
-  if (!String(highP.url()) != "about:blank") {
+  if (String(highP.url()) != "about:blank") {
     highURL = highP.url();
   }
 }

@@ -16,7 +16,7 @@ highImage = "";
 brandLow = "";
 brandHigh = "";
 
-async function crownAndCaliber(lowP, highP, tPage, scrape) {
+async function crownAndCaliber(lowP, highP, tPage) {
   for (var i = 0; i < refNums.length; i++) {
     url = "https://www.crownandcaliber.com/search?view=shop&q=" + refNums[i];
     console.log("CandC URL: ***  " + url);
@@ -172,9 +172,11 @@ async function crownAndCaliber(lowP, highP, tPage, scrape) {
       highP.url(),
       tPage.url(),
       lowImage,
-      highImage
+      highImage,
+      brandLow,
+      brandHigh
     );
-    //console.log(JSON.stringify(w, null, "\t"));
+    console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w);
   }
 }
@@ -201,7 +203,6 @@ prepare = async (lowP, highP, link) => {
   
   brandLow = await utilFunc.getItem(lowP, "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > div.card-title.ng-binding")
   brandHigh = await utilFunc.getItem(highP, "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > div.card-title.ng-binding")
-  console.log(brandLow, brandHigh)
   await lowP.click(
     "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
     { delay: 20 }

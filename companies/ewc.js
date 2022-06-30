@@ -33,7 +33,6 @@ async function EWC(lowP, highP, tPage) {
         brandHigh = await utilFunc.getItem(highP, "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3")
         brandLow = brandLow.substring(0,brandLow.indexOf(" "))
         brandHigh = brandHigh.substring(0,brandHigh.indexOf(" "))
-        console.log(brandLow,brandHigh)
 
         console.log("Lowest: " + lowest);
         console.log("Highest: " + highest);
@@ -74,10 +73,14 @@ async function EWC(lowP, highP, tPage) {
       "",
       "",
       "",
-      tPage.url()
+      tPage.url(),
+      "",
+      "",
+      brandLow,
+      brandHigh
     );
     //console.log(w);
-
+      console.log(JSON.stringify(w,null,"\t"))
     //utilFunc.addToJson(w);
   }
 }

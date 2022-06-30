@@ -2,7 +2,7 @@ const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 
 async function davidsw(lowP, highP, tPage, scrape) {
-  for (var i = 3; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowTables = "";
     highTables = "";
@@ -194,11 +194,15 @@ async function davidsw(lowP, highP, tPage, scrape) {
       "",
       lowP.url(),
       highP.url(),
-      tPage.url()
+      tPage.url(),
+      "",
+      "",
+      brandLow,
+      brandHigh
     );
     //console.log(w);
     //utilFunc.addToJson(w);
-    //#main > div > div.col.large-9 > div > div.products.row.row-small.large-columns-3.medium-columns-3.small-columns-2.has-equal-box-heights.equalize-box > div.product-small.col.has-hover.product.type-product.post-407249.status-publish.first.instock.product_cat-rolex.product_cat-cosmograph-daytona.has-post-thumbnail.sold-individually.taxable.shipping-taxable.purchasable.product-type-simple > div > div.product-small.box > div.box-text.box-text-products.text-center.grid-style-2 > div.title-wrapper > p.category.uppercase.is-smaller.no-text-overflow.product-cat.op-7
+    console.log(JSON.stringify(w,null,"\t"))
   }
 }
 
@@ -224,7 +228,6 @@ async function assignDataOneResult(lowP) {
   brandLow = await (await utilFunc.getItem(lowP,"h1[class='product-title product_title entry-title']"))
   brandLow = brandLow.substring(0,brandLow.indexOf(" ")).trim()
   brandHigh = brandLow
-  console.log(brandLow,brandHigh)    
 
   highest = lowest;
   highTables = lowTables;

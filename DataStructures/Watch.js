@@ -17,7 +17,9 @@ class Watch {
     highLink,
     generalLink,
     imageLow,
-    imageHigh
+    imageHigh,
+    brandLow,
+    brandHigh
   ) {
     this.refNum = refNum;
     this.lowBox = lowBox;
@@ -43,6 +45,8 @@ class Watch {
     this.imageLow = imageLow;
     this.imageHigh = imageHigh;
     this.website;
+    this.brandLow = brandLow
+    this.brandHigh = brandHigh
 
     if (this.generalLink.indexOf("www2.") != -1) {
       this.website = this.generalLink.substring(
