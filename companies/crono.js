@@ -136,11 +136,11 @@ checkTop = async (page) => {
     var price = await utilFunc.getItem(page, "#wt-watches > div:nth-child("+i+") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong")
                                           //  
     if (isntTop && watch && parseFloat(price.replace("$","").replace(",","")) > 14800) {
-      console.log("Good", i, price.trim())
+      //console.log("Good", i, price.trim())
 
-      //return i
+      return i
     } else {
-      console.log("Top", !isntTop, "Watch", watch, i)
+      //console.log("Top", !isntTop, "Watch", watch, i)
     }
   }
 };
