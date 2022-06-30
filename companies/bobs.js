@@ -11,6 +11,8 @@ PHigh = "";
 PLow = "";
 lowURL = "";
 highURL = "";
+brandLow = ""
+brandHigh = ""
 
 async function bobs(lowP, highP, tPage, scrape) {
   for (var i = 0; i < refNums.length; i++) {
@@ -26,6 +28,8 @@ async function bobs(lowP, highP, tPage, scrape) {
     highURL = "";
     imageLow = "";
     imageHigh = "";
+    brandLow = ""
+brandHigh = ""
     console.log("");
 
     var newURL =
@@ -101,8 +105,8 @@ async function bobs(lowP, highP, tPage, scrape) {
       imageLow,
       imageHigh
     );
-    console.log(w);
-    utilFunc.addToJson(w);
+    //console.log(w);
+    //utilFunc.addToJson(w);
   }
 }
 
@@ -200,6 +204,31 @@ async function getData(lowP, highP) {
     index = lowYear.indexOf("- ") + 2;
     lowYear = lowYear.substring(index);
   }
+
+
+ 
+ 
+  brandLow = await (await utilFunc.getItem(lowP, "tbody > tr:nth-child(1)")).replace("Brand:","").trim()
+  brandHigh = await (await utilFunc.getItem(highP, "tbody > tr:nth-child(1)")).replace("Brand:","").trim()
+  /**
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   */
 
   highYear = "";
   if (highTable.indexOf("/Year") !== -1) {
