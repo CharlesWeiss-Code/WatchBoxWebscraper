@@ -2,7 +2,5 @@
 NEED TO DO:
     - add promise catches to all functions that use them. This cannot crash. 
     upload to aws = https://www.youtube.com/watch?v=xtRYi8ud1sM
-    tableau data union https://help.tableau.com/current/pro/desktop/en-us/union.htm
-    tableau JSON https://hevodata.com/learn/tableau-json/
-    wildcard json files https://www.youtube.com/watch?v=zIDERcCaQQE&ab_channel=JellymanEducation
-    -add brand name
+
+    -BP vs Box and Paper
