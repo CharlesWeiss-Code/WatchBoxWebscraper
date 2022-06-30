@@ -18,6 +18,8 @@ async function chrono24(lowP, highP, tPage) {
     console.log("REF: " + refNums[i] + "\n" + "GENERAL URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
     await tPage.waitForTimeout(1000);
+    await checkTop(tPage)
+    await tPage.waitForTimeout(9999999)
     if (
       await utilFunc.noResults2(
         tPage,
@@ -131,8 +133,14 @@ checkTop = async (page) => {
   for (var i = 1; i < 20; i++) {
     var watch = await typeOf(page,"#wt-watches > div:nth-child("+i+")", i)
     var isntTop = await noTop(page,"#wt-watches > div:nth-child("+i+")")
-    if (isntTop && watch) {
-      return i
+    var price = await utilFunc.getItem(page, "#wt-watches > div:nth-child("+i+") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong")
+                                          //  
+    if (isntTop && watch && parseFloat(price.replace("$","").replace(",","")) > 14800) {
+      console.log("Good", i, price.trim())
+
+      //return i
+    } else {
+      console.log("Top", !isntTop, "Watch", watch, i)
     }
   }
 };
