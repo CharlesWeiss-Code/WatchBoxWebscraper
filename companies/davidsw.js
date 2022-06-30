@@ -2,16 +2,18 @@ const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 
 async function davidsw(lowP, highP, tPage, scrape) {
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 3; i < refNums.length; i++) {
     console.log("");
-    lowTables = null;
-    highTables = null;
-    lowBox = "null";
-    lowPaper = "null";
-    highBox = "null";
-    highPaper = "null";
-    lowYear = "null";
-    highYear = "null";
+    lowTables = "";
+    highTables = "";
+    lowBox = "";
+    lowPaper = "";
+    highBox = "";
+    highPaper = "";
+    lowYear = "";
+    highYear = "";
+    brandLow = ""
+    brandHigh = ""
 
     var newURL =
       "https://davidsw.com/?s=" +
@@ -194,8 +196,9 @@ async function davidsw(lowP, highP, tPage, scrape) {
       highP.url(),
       tPage.url()
     );
-    console.log(w);
-    utilFunc.addToJson(w);
+    //console.log(w);
+    //utilFunc.addToJson(w);
+    //#main > div > div.col.large-9 > div > div.products.row.row-small.large-columns-3.medium-columns-3.small-columns-2.has-equal-box-heights.equalize-box > div.product-small.col.has-hover.product.type-product.post-407249.status-publish.first.instock.product_cat-rolex.product_cat-cosmograph-daytona.has-post-thumbnail.sold-individually.taxable.shipping-taxable.purchasable.product-type-simple > div > div.product-small.box > div.box-text.box-text-products.text-center.grid-style-2 > div.title-wrapper > p.category.uppercase.is-smaller.no-text-overflow.product-cat.op-7
   }
 }
 
@@ -218,6 +221,10 @@ async function assignDataOneResult(lowP) {
     lowP,
     'span[class="woocommerce-Price-amount amount"]'
   );
+  brandLow = await (await utilFunc.getItem(lowP,"h1[class='product-title product_title entry-title']"))
+  brandLow = brandLow.substring(0,brandLow.indexOf(" ")).trim()
+  brandHigh = brandLow
+  console.log(brandLow,brandHigh)    
 
   highest = lowest;
   highTables = lowTables;
@@ -231,6 +238,10 @@ async function assignDataResults(lowP, highP) {
 
   await highP.waitForSelector('span[class="price"]');
   highest = await utilFunc.getItem(highP, 'span[class="price"]');
+
+  brandLow = await (await utilFunc.getItem(lowP,"p[class='category uppercase is-smaller no-text-overflow product-cat op-7']")).trim()
+  brandHigh = await (await utilFunc.getItem(highP, "p[class='category uppercase is-smaller no-text-overflow product-cat op-7']")).trim()
+  console.log(brandLow,brandHigh)         
 
   await lowP.waitForSelector('div[class="title-wrapper"]');
   await highP.waitForSelector('div[class="title-wrapper"]');
