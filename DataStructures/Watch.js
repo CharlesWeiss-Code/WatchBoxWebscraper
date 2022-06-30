@@ -26,9 +26,12 @@ class Watch {
     this.lowPaper = lowPaper;
     this.highBox = highBox;
     this.highPaper = highPaper;
-    this.lowPrice = lowPrice;
-    this.highPrice = highPrice;
+    this.lowPrice = lowPrice.replace("$", "");
+    this.lowPrice = this.lowPrice.replace(",", "");
+    this.highPrice = highPrice.replace("$", "");
+    this.highPrice = this.highPrice.replace(",", "");
     this.highLink = highLink;
+
     this.lowLink = lowLink;
     this.lowAge = lowAge;
     this.highAge = highAge;
@@ -41,12 +44,12 @@ class Watch {
      * possibly delete dateOfScrape field because the name of the json object in S3
      * will be the date
      */
-    this.dateOfScrape = new Date().toUTCString().replace(",","");
+    this.dateOfScrape = new Date().toUTCString().replace(",", "");
     this.imageLow = imageLow;
     this.imageHigh = imageHigh;
     this.website;
-    this.brandLow = brandLow
-    this.brandHigh = brandHigh
+    this.brandLow = brandLow;
+    this.brandHigh = brandHigh;
 
     if (this.generalLink.indexOf("www2.") != -1) {
       this.website = this.generalLink.substring(
@@ -66,9 +69,9 @@ class Watch {
     }
   }
 
-  setDate(m, d, y){
+  setDate(m, d, y) {
     this.dateOfScrape = new Date(m, d, y);
-  };
+  }
 
   getLowDealerStatus() {
     return this.lowDealerStatus;

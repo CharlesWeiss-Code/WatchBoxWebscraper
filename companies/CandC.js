@@ -1,5 +1,12 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
+var fs = require('fs');
+var json2csv = require('json2csv')
+
+
+var fields = ['refNum','lowBox','lowPaper','highBox','highPaper','lowPrice','highPrice','highLink','LowLink','lowAge','highAge','lowDealerStatus','highDealerStatus','lowBP','highBP','generalLink','dateOfScrape','imageLow','imageHigh','brandLow','brandHigh','website']
+
+
 
 lowYear = "";
 lowPaper = "";
@@ -176,7 +183,12 @@ async function crownAndCaliber(lowP, highP, tPage) {
       brandLow,
       brandHigh
     );
+
+    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+
     console.log(JSON.stringify(w, null, "\t"));
+    //utilFunc.TSV(w)
+    //await csvWriter.writeRecords(w)
     //utilFunc.addToJson(w);
   }
 }

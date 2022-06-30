@@ -68,18 +68,22 @@ addToJson = (watch) => {
   console.log(JSON.stringify(watch,null,'\t'))
 };
 
+addToTSV = (watch) => {
+  let data = fs.readFileSync("dataInTSV.json");
+  let parsed = JSON.parse(data);
+  
+  fs.writeFileSync("data.json", JSON.stringify(parsed, null, 3));
+  console.log(JSON.stringify(watch,null,'\t'))
+}
+
 CSV = (w) => {
-  s = "\n"
+  s = ""
   for (var propt in w) {
     if (typeof propt != "function") {
-      if (w[propt].indexOf(",") != -1) {
-        w[propt].replace(","," and ")
-      }
-      s+=propt+","+w[propt]+"\n"
-      //console.log(propt+","+w[propt])
+      s+=w[propt]+","
     }
   }
-  fs.writeFileSync("dataInCSV.csv", s)
+  return s;
   //console.log(s)
 }
 

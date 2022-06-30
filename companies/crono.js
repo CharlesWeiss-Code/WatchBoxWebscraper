@@ -1,7 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 const mike = require("../highAndLow.js");
-
+const fs = require('fs')
 async function chrono24(lowP, highP, tPage) {
   flag = true;
   for (var i = 0; i < refNums.length; i++) {
@@ -73,7 +73,7 @@ async function chrono24(lowP, highP, tPage) {
         index2BrandLow = lowTable.indexOf("Reference number")
       }
       brandLow=lowTable.substring(index1BrandLow,index2BrandLow).trim()
-      
+      console.log("lowTable\n\n\n",lowTable)
 
       index1YearLow = lowTable.indexOf("Year of production") + 18;
       index2YearLow = lowTable.indexOf("Condition");
@@ -151,6 +151,8 @@ async function chrono24(lowP, highP, tPage) {
       brandLow,
       brandHigh
     );
+    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+
     //utilFunc.CSV(w)
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w)

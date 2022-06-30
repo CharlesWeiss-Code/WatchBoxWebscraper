@@ -1,8 +1,8 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
-
+const fs = require('fs')
 async function bazaar(lowP, highP, tPage, scrape) {
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 3; i < refNums.length; i++) {
     console.log("");
     lowest = "-1";
     lowYear = "";
@@ -93,8 +93,10 @@ async function bazaar(lowP, highP, tPage, scrape) {
       brandHigh
     );
 
+    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+
     //console.log(w);
-      console.log(JSON.stringify(w,null,"\t"))
+    console.log(JSON.stringify(w,null,"\t"))
     //utilFunc.addToJson(w);
   }
 }

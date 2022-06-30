@@ -1,6 +1,6 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
-
+const fs = require('fs')
 async function EWC(lowP, highP, tPage) {
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
@@ -80,7 +80,9 @@ async function EWC(lowP, highP, tPage) {
       brandHigh
     );
     //console.log(w);
-      console.log(JSON.stringify(w,null,"\t"))
+    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+
+    console.log(JSON.stringify(w,null,"\t"))
     //utilFunc.addToJson(w);
   }
 }

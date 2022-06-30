@@ -1,6 +1,6 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
-
+const fs = require('fs')
 lowest = "";
 highest = "";
 highTable = "";
@@ -9,6 +9,8 @@ lowYear = "";
 highYear = "";
 PHigh = "";
 PLow = "";
+lowBox = ""
+highBox = ""
 lowURL = "";
 highURL = "";
 imageLow = "";
@@ -16,8 +18,8 @@ imageHigh = "";
 var brandLow = "";
 var brandHigh = "";
 
-async function bobs(lowP, highP, tPage, scrape) {
-  for (var i = 0; i < refNums.length; i++) {
+async function bobs(lowP, highP, tPage) {
+  for (var i = 1; i < refNums.length; i++) {
     lowest = "";
     highest = "";
     highTable = "";
@@ -92,10 +94,10 @@ async function bobs(lowP, highP, tPage, scrape) {
       refNums[i],
       lowYear.trim(),
       highYear.trim(),
-      "",
+      lowBox,
       PLow,
       "",
-      "",
+      highBox,
       PHigh,
       "",
       lowest,
@@ -111,6 +113,8 @@ async function bobs(lowP, highP, tPage, scrape) {
       brandHigh
     );
     //console.log(w);
+    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+   //console.log(lowTable)
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w);
   }
@@ -185,10 +189,17 @@ async function getData(lowP, highP) {
   index2YearLow = lowTable.indexOf("Gender:");
   PLow = "";
   if (lowTable.indexOf("warranty card") != -1) {
-    index1BPLow = lowTable.indexOf("warranty card");
-    index2BPLow = lowTable.indexOf("Warranty");
-    PLow = lowTable.substring(index1BPLow, index2BPLow);
+    index1PLow = lowTable.indexOf("warranty card");
+    index2PLow = lowTable.indexOf("Warranty");
+    PLow = lowTable.substring(index1PLow, index2PLow);
   }
+  lowBox = lowTable.substring(lowTable.indexOf("Box & Papers")+14,lowTable.indexOf("Warranty"))
+  lowBox = lowBox.substring(0,lowBox.indexOf(","))
+  
+
+  highBox = highTable.substring(highTable.indexOf("Box & Papers")+14,highTable.indexOf("Warranty"))
+  highBox = highBox.substring(0,highBox.indexOf(","))
+  
 
   index1YearHigh = -1;
   if (highTable.indexOf("Serial/Year:") != -1) {
