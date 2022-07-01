@@ -1,4 +1,5 @@
 
 NEED TO DO:
-    - add promise catches to all functions that use them. This cannot crash. 
+    - add promise catches to all functions that use them?
     upload to aws = https://www.youtube.com/watch?v=xtRYi8ud1sM
+    
