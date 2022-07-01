@@ -7,9 +7,9 @@ async function davidsw(lowP, highP, tPage, scrape) {
     lowTables = "";
     highTables = "";
     lowBox = "";
-    lowPaper = "";
+    lowPaper = "No";
     highBox = "";
-    highPaper = "";
+    highPaper = "No";
     lowYear = "";
     highYear = "";
     brandLow = ""
@@ -184,10 +184,8 @@ async function davidsw(lowP, highP, tPage, scrape) {
       highYear.trim(),
       lowBox.replace(/\s+/g, ""),
       lowPaper.replace(/\s+/g, ""),
-      "",
       highBox.replace(/\s+/g, ""),
       highPaper.replace(/\s+/g, ""),
-      "",
       lowest,
       highest,
       "",
@@ -201,7 +199,7 @@ async function davidsw(lowP, highP, tPage, scrape) {
       brandHigh
     );
     //console.log(w);
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     //utilFunc.addToJson(w);
     console.log(JSON.stringify(w,null,"\t"))

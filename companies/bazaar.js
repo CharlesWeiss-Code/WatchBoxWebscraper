@@ -4,12 +4,16 @@ const fs = require('fs')
 async function bazaar(lowP, highP, tPage, scrape) {
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
-    lowest = "-1";
+    lowest = "";
     lowYear = "";
     lowTable = "";
     lowBP = "";
-    highest = "-1";
+    highest = "";
     highYear = "";
+    lowPaper = "No"
+    lowBox = "No"
+    highBox = "No"
+    highPaper = "No"
     highTable = "";
     highBP = "";
     brandLow = ""
@@ -73,12 +77,10 @@ async function bazaar(lowP, highP, tPage, scrape) {
       refNums[i],
       lowYear.trim(),
       highYear.trim(),
-      "",
-      "",
-      lowBP.trim(),
-      "",
-      "",
-      highBP.trim(),
+      lowBox,
+      lowPaper,
+      highBox,
+      highPaper,
       lowest,
       highest,
       "",
@@ -92,7 +94,7 @@ async function bazaar(lowP, highP, tPage, scrape) {
       brandHigh
     );
 
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     //console.log(w);
     console.log(JSON.stringify(w,null,"\t"))
@@ -113,10 +115,23 @@ assignData = () => {
   highBPIndex2 = highTable.indexOf("Lug Material");
   lowYear = lowTable.substring(lowYearIndex1, lowYearIndex2).replace("\n", "");
   lowBP = lowTable.substring(lowBPIndex1, lowBPIndex2).replace("\n", "");
+  console.log(lowBP)
+  if (lowBP.trim() === "Manufacturer's Box and Papers") {
+    lowPaper = "Yes"
+    lowBox = "Yes"
+  }
+
+
   highYear = highTable
     .substring(highYearIndex1, highYearIndex2)
     .replace("\n", "");
   highBP = highTable.substring(highBPIndex1, highBPIndex2).replace("\n", "");
+
+  if (highBP.trim() === "Manufacturer's Box and Papers") {
+    highPaper = "Yes"
+    highBox = "Yes"
+  }
+
   index1BrandLow = lowTable.indexOf("Signatures")+10
   index2BrandLow = lowTable.indexOf("Strap Color")
 

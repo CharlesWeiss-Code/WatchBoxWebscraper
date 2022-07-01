@@ -5,10 +5,8 @@ class Watch {
     highAge,
     lowBox,
     lowPaper,
-    lowBP,
     highBox,
     highPaper,
-    highBP,
     lowPrice,
     highPrice,
     lowDealerStatus,
@@ -37,8 +35,6 @@ class Watch {
     this.highAge = highAge;
     this.lowDealerStatus = lowDealerStatus;
     this.highDealerStatus = highDealerStatus;
-    this.lowBP = lowBP;
-    this.highBP = highBP;
     this.generalLink = generalLink;
     /**
      * possibly delete dateOfScrape field because the name of the json object in S3
@@ -93,13 +89,6 @@ class Watch {
     return this.generalLink;
   }
 
-  getLowBP() {
-    return this.lowBP;
-  }
-
-  getHighBP() {
-    return this.highBP;
-  }
 
   getLowPrice() {
     return this.lowPrice;

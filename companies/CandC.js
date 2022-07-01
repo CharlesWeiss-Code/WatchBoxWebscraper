@@ -167,10 +167,8 @@ async function crownAndCaliber(lowP, highP, tPage) {
       highYear,
       lowBox,
       lowPaper,
-      "",
       highBox,
       highPaper,
-      "",
       lowest.replace(/\s+/g, ""),
       highest.replace(/\s+/g, ""),
       "",
@@ -184,7 +182,7 @@ async function crownAndCaliber(lowP, highP, tPage) {
       brandHigh
     );
 
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.TSV(w)

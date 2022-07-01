@@ -96,10 +96,8 @@ async function bobs(lowP, highP, tPage) {
       highYear.trim(),
       lowBox,
       PLow,
-      "",
       highBox,
       PHigh,
-      "",
       lowest,
       highest,
       "",
@@ -113,7 +111,7 @@ async function bobs(lowP, highP, tPage) {
       brandHigh
     );
     //console.log(w);
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
    //console.log(lowTable)
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w);
@@ -187,11 +185,9 @@ async function getData(lowP, highP) {
     index1YearLow = lowTable.indexOf("Serial") + 6;
   }
   index2YearLow = lowTable.indexOf("Gender:");
-  PLow = "";
+  PLow = "No";
   if (lowTable.indexOf("warranty card") != -1) {
-    index1PLow = lowTable.indexOf("warranty card");
-    index2PLow = lowTable.indexOf("Warranty") -1;
-    PLow = lowTable.substring(index1PLow, index2PLow);
+    PLow = "Yes"
   }
   lowBox = lowTable.substring(lowTable.indexOf("Box & Papers")+14,lowTable.indexOf("Warranty"))
   lowBox = lowBox.substring(0,lowBox.indexOf(","))
@@ -208,11 +204,9 @@ async function getData(lowP, highP) {
     index1YearHigh = highTable.indexOf("Serial") + 6;
   }
   index2YearHigh = highTable.indexOf("Gender:");
-  PHigh = "";
+  PHigh ="No";
   if (highTable.indexOf("warranty card") != -1) {
-    index1BPHigh = highTable.indexOf("warranty card");
-    index2BPHigh = highTable.indexOf("Warranty") -1;
-    PHigh = highTable.substring(index1BPHigh, index2BPHigh);
+    PHigh = "Yes"
   }
 
   lowYear = "";

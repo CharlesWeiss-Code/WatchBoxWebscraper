@@ -17,6 +17,10 @@ async function chrono24(lowP, highP, tPage) {
     yearLow =""
     yearHigh =''
     lowBP =""
+    lowBox = "No"
+    lowPaper = "No"
+    highBox = "No"
+    highPaper = "No"
     highBP =""
     var newURL =
       "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=" +
@@ -117,6 +121,7 @@ async function chrono24(lowP, highP, tPage) {
           "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1)"
         )
       );
+      //console.log(lowTable,"********",highTable)
       index1BrandHigh = highTable.indexOf("Brand") + 5;
       if (index1BrandHigh != 4 && (index1BrandLow != lowTable.indexOf("Brand new") +5)) {
         index2BrandHigh = highTable.indexOf("Model");
@@ -135,24 +140,36 @@ async function chrono24(lowP, highP, tPage) {
         index2BPHigh = highTable.indexOf("Location");
       }
     }
-    lowBP = lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, ""),
-    highBP = highTable.substring(index1YearHigh, index2YearHigh).replace(/\s+/g, ""),
-    yearLow = lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, ""),
-    yearHigh = highTable.substring(index1YearHigh, index2YearHigh).replace(/\s+/g, ""),
+   // lowBP = lowTable.substring(index1BPLow, index2BPLow).replace(/\s+/g, ""),
+    lowBP = lowTable.substring(index1BPLow, index2BPLow).trim().toLowerCase()
+    highBP = highTable.substring(index1BPHigh, index2BPHigh).trim().toLowerCase()
+
+    if (lowBP.indexOf("original box") != -1) {
+      lowBox = "Yes"
+    }
+    if (lowBP.indexOf("original papers") != -1) {
+      lowPaper = "Yes"
+    }
+    if (highBP.indexOf("original box") != -1) {
+      highBox = "Yes"
+    }
+    if (highBP.indexOf("original papers") != -1) {
+      highPaper = "Yes"
+    }
+    yearLow = lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, "")
+    yearHigh = highTable.substring(index1YearHigh, index2YearHigh).replace(/\s+/g, "")
     w = new Watch(
       refNums[i],
       yearLow,
       yearHigh,
-      "",
-      "",
-      lowBP,
-      "",
-      "",
-      highBP,
+      lowBox,
+      lowPaper,
+      highBox,
+      highPaper,
       lowest.trim(),
       highest.trim(),
-      lowDealerStatus.replace(/\s+/g, ""),
-      highDealerStatus.replace(/\s+/g, ""),
+      lowDealerStatus.trim(),
+      highDealerStatus.trim(),
       lowP.url(),
       highP.url(),
       tPage.url(),
@@ -161,9 +178,8 @@ async function chrono24(lowP, highP, tPage) {
       brandLow,
       brandHigh
     );
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
-
-    //console.log(JSON.stringify(w, null, "\t"));
+    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w)
   }
 }
