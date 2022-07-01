@@ -2,5 +2,3 @@
 NEED TO DO:
     - add promise catches to all functions that use them. This cannot crash. 
     upload to aws = https://www.youtube.com/watch?v=xtRYi8ud1sM
-
-    - add image src to all watches

@@ -1,3 +1,4 @@
-lowYear = "2011"
+const fs = require('fs')
+const data = parseInt(fs.readFileSync('./numWatchesScraped.txt', { encoding: 'utf8' }))
 
-console.log(lowYear.replace(" or newer",""))
+console.log(data+1)

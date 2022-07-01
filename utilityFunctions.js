@@ -88,6 +88,17 @@ CSV = (w) => {
       }
     }
   }
+  try {
+    const data = parseInt(fs.readFileSync('./numWatchesScraped.txt', { encoding: 'utf8' }))
+    try {
+      fs.writeFileSync("numWatchesScraped.txt", String(data+1))
+    }catch (err){
+      console.log(err)
+    }
+    console.log(data+1+" Watches scraped");
+  } catch (err) {
+    console.log(err);
+  }
   return s;
   //console.log(s)
 }

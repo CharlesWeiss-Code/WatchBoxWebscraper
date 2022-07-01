@@ -233,6 +233,7 @@ async function chrono24(lowP, highP, tPage) {
     );
 
     //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    utilFunc.CSV(w)
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w)
   }
