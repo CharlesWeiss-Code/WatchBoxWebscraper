@@ -107,7 +107,7 @@ async function bazaar(lowP, highP, tPage, scrape) {
       brandHigh
     );
 
-   // fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+   fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     //console.log(w);
     console.log(JSON.stringify(w,null,"\t"))

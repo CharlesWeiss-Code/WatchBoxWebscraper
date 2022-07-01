@@ -4,7 +4,7 @@ const mike = require("../highAndLow.js");
 const fs = require("fs");
 async function chrono24(lowP, highP, tPage) {
   flag = true;
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 8; i < refNums.length; i++) {
     console.log("");
     lowest = "";
     highest = "";
@@ -97,6 +97,9 @@ async function chrono24(lowP, highP, tPage) {
 
       index1YearLow = lowTable.indexOf("Year of production") + 18;
       index2YearLow = lowTable.indexOf("Condition");
+      if (index2YearLow === -1) {
+        index2YearLow = lowTable.indexOf("Scope of delivery")
+      }
 
       index1BPLow = lowTable.indexOf("Scope of delivery") + 17;
       index2BPLow = lowTable.indexOf("Gender");
@@ -156,6 +159,9 @@ async function chrono24(lowP, highP, tPage) {
       }
       index1YearHigh = highTable.indexOf("Year of production") + 18;
       index2YearHigh = highTable.indexOf("Condition");
+      if (index2YearHigh === -1) {
+        index2YearHigh = highTable.indexOf("Scope of delivery")
+      }
       index1BPHigh = highTable.indexOf("Scope of delivery") + 17;
       index2BPHigh = highTable.indexOf("Gender");
       if (index2BPHigh === -1) {
@@ -195,10 +201,12 @@ async function chrono24(lowP, highP, tPage) {
     if (highBP.indexOf("original papers") != -1) {
       highPaper = "Yes";
     }
+    
     yearLow = lowTable
       .substring(index1YearLow, index2YearLow)
       .replace(/\s+/g, "")
       .replace("Unknown", "");
+  //  console.log(index1YearLow, index2YearLow)
     yearHigh = highTable
       .substring(index1YearHigh, index2YearHigh)
       .replace(/\s+/g, "")
@@ -223,6 +231,7 @@ async function chrono24(lowP, highP, tPage) {
       brandLow,
       brandHigh
     );
+
     //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w)

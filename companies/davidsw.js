@@ -245,7 +245,7 @@ async function davidsw(lowP, highP, tPage, scrape) {
       brandHigh
     );
     //console.log(w);
-    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     //utilFunc.addToJson(w);
     console.log(JSON.stringify(w,null,"\t"))
