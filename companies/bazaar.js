@@ -16,6 +16,8 @@ async function bazaar(lowP, highP, tPage, scrape) {
     highPaper = "No"
     highTable = "";
     highBP = "";
+    imageLow = ""
+    imageHigh = ""
     brandLow = ""
     brandHigh =""
     //https://www.luxurybazaar.com/search-results?q=116500LN-0001
@@ -71,6 +73,17 @@ async function bazaar(lowP, highP, tPage, scrape) {
         'div[class="attributes-table-container"]'
       );
 
+      //"img[class='gallery-image visible']"
+      imageLow = await lowP.evaluate(() => {
+        const image = document.querySelector("img[class='gallery-image visible']");
+        return image.src;
+      });
+
+      imageHigh = await lowP.evaluate(() => {
+        const image = document.querySelector("img[class='gallery-image visible']");
+        return image.src;
+      });
+
       assignData();
     }
     w = new Watch(
@@ -88,13 +101,13 @@ async function bazaar(lowP, highP, tPage, scrape) {
       lowP.url(),
       highP.url(),
       tPage.url(),
-      "",
-      "",
+      imageLow,
+      imageHigh,
       brandLow,
       brandHigh
     );
 
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+   // fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     //console.log(w);
     console.log(JSON.stringify(w,null,"\t"))

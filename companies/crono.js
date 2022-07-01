@@ -14,14 +14,16 @@ async function chrono24(lowP, highP, tPage) {
     brandHigh = "";
     highTable = "";
     lowTable = "";
-    yearLow =""
-    yearHigh =''
-    lowBP =""
-    lowBox = "No"
-    lowPaper = "No"
-    highBox = "No"
-    highPaper = "No"
-    highBP =""
+    yearLow = "";
+    yearHigh = "";
+    lowBP = "";
+    lowBox = "No";
+    lowPaper = "No";
+    highBox = "No";
+    highPaper = "No";
+    lowImage = "";
+    highImage = "";
+    highBP = "";
     var newURL =
       "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=" +
       refNums[i];
@@ -62,13 +64,13 @@ async function chrono24(lowP, highP, tPage) {
         "#wt-watches > div:nth-child(" +
           childLow +
           ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
-      )
+      );
       if (lowDealerStatus.trim() === "Professional dealer") {
-        lowDealerStatus = "PD"
+        lowDealerStatus = "PD";
       } else if (lowDealerStatus.trim() === "Private Seller") {
-        lowDealerStatus = "PS"
+        lowDealerStatus = "PS";
       } else {
-        lowDealerStatus = ""
+        lowDealerStatus = "";
       }
       await lowP.click("#wt-watches > div:nth-child(" + childLow + ") > a", {
         delay: 20,
@@ -80,9 +82,12 @@ async function chrono24(lowP, highP, tPage) {
           "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1)"
         )
       );
-      
+
       index1BrandLow = lowTable.indexOf("Brand") + 5;
-      if ((index1BrandLow != 4) && (index1BrandLow != lowTable.indexOf("Brand new") +5)) {
+      if (
+        index1BrandLow != 4 &&
+        index1BrandLow != lowTable.indexOf("Brand new") + 5
+      ) {
         index2BrandLow = lowTable.indexOf("Model");
         if (index2BrandLow === -1) {
           index2BrandLow = lowTable.indexOf("Reference number");
@@ -92,7 +97,7 @@ async function chrono24(lowP, highP, tPage) {
 
       index1YearLow = lowTable.indexOf("Year of production") + 18;
       index2YearLow = lowTable.indexOf("Condition");
-      
+
       index1BPLow = lowTable.indexOf("Scope of delivery") + 17;
       index2BPLow = lowTable.indexOf("Gender");
       if (index2BPLow === -1) {
@@ -114,13 +119,13 @@ async function chrono24(lowP, highP, tPage) {
         "#wt-watches > div:nth-child(" +
           childHigh +
           ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
-      )
+      );
       if (highDealerStatus.trim() === "Professional dealer") {
-        highDealerStatus = "PD"
+        highDealerStatus = "PD";
       } else if (highDealerStatus.trim() === "Private Seller") {
-        highDealerStatus = "PS"
+        highDealerStatus = "PS";
       } else {
-        highDealerStatus = ""
+        highDealerStatus = "";
       }
 
       await highP.click("#wt-watches > div:nth-child(" + childHigh + ") > a", {
@@ -137,7 +142,10 @@ async function chrono24(lowP, highP, tPage) {
       );
       //console.log(lowTable,"********",highTable)
       index1BrandHigh = highTable.indexOf("Brand") + 5;
-      if (index1BrandHigh != 4 && (index1BrandLow != lowTable.indexOf("Brand new") +5)) {
+      if (
+        index1BrandHigh != 4 &&
+        index1BrandLow != lowTable.indexOf("Brand new") + 5
+      ) {
         index2BrandHigh = highTable.indexOf("Model");
         if (index2BrandHigh === -1) {
           index2BrandHigh = highTable.indexOf("Reference number");
@@ -153,25 +161,48 @@ async function chrono24(lowP, highP, tPage) {
       if (index2BPHigh === -1) {
         index2BPHigh = highTable.indexOf("Location");
       }
+
+      //
+      lowImage = await lowP.evaluate(() => {
+        const image = document.querySelector(
+          "img[class='img-responsive mh-100']"
+        );
+        return image.src;
+      });
+      highImage = await highP.evaluate(() => {
+        const image = document.querySelector(
+          "img[class='img-responsive mh-100']"
+        );
+        return image.src;
+      });
     }
-   // lowBP = lowTable.substring(index1BPLow, index2BPLow).replace(/\s+/g, ""),
-    lowBP = lowTable.substring(index1BPLow, index2BPLow).trim().toLowerCase()
-    highBP = highTable.substring(index1BPHigh, index2BPHigh).trim().toLowerCase()
+    // lowBP = lowTable.substring(index1BPLow, index2BPLow).replace(/\s+/g, ""),
+    lowBP = lowTable.substring(index1BPLow, index2BPLow).trim().toLowerCase();
+    highBP = highTable
+      .substring(index1BPHigh, index2BPHigh)
+      .trim()
+      .toLowerCase();
 
     if (lowBP.indexOf("original box") != -1) {
-      lowBox = "Yes"
+      lowBox = "Yes";
     }
     if (lowBP.indexOf("original papers") != -1) {
-      lowPaper = "Yes"
+      lowPaper = "Yes";
     }
     if (highBP.indexOf("original box") != -1) {
-      highBox = "Yes"
+      highBox = "Yes";
     }
     if (highBP.indexOf("original papers") != -1) {
-      highPaper = "Yes"
+      highPaper = "Yes";
     }
-    yearLow = lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, "").replace("Unknown","")
-    yearHigh = highTable.substring(index1YearHigh, index2YearHigh).replace(/\s+/g, "").replace("Unknown","")
+    yearLow = lowTable
+      .substring(index1YearLow, index2YearLow)
+      .replace(/\s+/g, "")
+      .replace("Unknown", "");
+    yearHigh = highTable
+      .substring(index1YearHigh, index2YearHigh)
+      .replace(/\s+/g, "")
+      .replace("Unknown", "");
     w = new Watch(
       refNums[i],
       yearLow,
@@ -187,12 +218,12 @@ async function chrono24(lowP, highP, tPage) {
       lowP.url(),
       highP.url(),
       tPage.url(),
-      "",
-      "",
+      lowImage,
+      highImage,
       brandLow,
       brandHigh
     );
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w)
   }

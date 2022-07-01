@@ -14,6 +14,8 @@ async function davidsw(lowP, highP, tPage, scrape) {
     highYear = "";
     brandLow = ""
     brandHigh = ""
+    imageLow = ""
+    imageHigh = ""
 
     var newURL =
       "https://davidsw.com/?s=" +
@@ -67,9 +69,23 @@ async function davidsw(lowP, highP, tPage, scrape) {
           )
         ) {
           await assignDataResults(lowP, highP);
+          imageLow = await lowP.evaluate(() => {
+            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
+            return image.src;
+          });
+  
+          imageHigh = await lowP.evaluate(() => {
+            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
+            return image.src;
+          });
         } else {
           console.log("here");
           await assignDataOneResult(lowP);
+          imageHigh = await lowP.evaluate(() => {
+            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
+            return image.src;
+          });
+          imageLow = imageHigh
         }
       }
     } else if (refNums[i] == "116500LN-0002") {
@@ -97,8 +113,23 @@ async function davidsw(lowP, highP, tPage, scrape) {
 
         if (await utilFunc.exists(tPage, 'div[class="shop-container"]')) {
           await assignDataResults(lowP, highP);
+          imageLow = await lowP.evaluate(() => {
+            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
+            return image.src;
+          });
+  
+          imageHigh = await lowP.evaluate(() => {
+            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
+            return image.src;
+          });
         } else {
           await assignDataOneResult(lowP);
+          imageLow = await lowP.evaluate(() => {
+            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
+            return image.src;
+          });
+  
+          imageHigh = imageLow
         }
       }
     } else {
@@ -140,8 +171,23 @@ async function davidsw(lowP, highP, tPage, scrape) {
           )
         ) {
           await assignDataResults(lowP, highP);
+          imageLow = await lowP.evaluate(() => {
+            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
+            return image.src;
+          });
+  
+          imageHigh = await lowP.evaluate(() => {
+            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
+            return image.src;
+          });
         } else {
           await assignDataOneResult(lowP);
+  
+          imageHigh = await lowP.evaluate(() => {
+            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
+            return image.src;
+          });
+          imageLow = imageHigh
         }
       }
     }
@@ -193,13 +239,13 @@ async function davidsw(lowP, highP, tPage, scrape) {
       lowP.url(),
       highP.url(),
       tPage.url(),
-      "",
-      "",
+      imageLow,
+      imageHigh,
       brandLow,
       brandHigh
     );
     //console.log(w);
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     //utilFunc.addToJson(w);
     console.log(JSON.stringify(w,null,"\t"))
