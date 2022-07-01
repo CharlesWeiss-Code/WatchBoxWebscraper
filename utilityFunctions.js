@@ -77,6 +77,7 @@ addToTSV = (watch) => {
 }
 
 CSV = (w) => {
+  const list = ["refNum","lowBox","lowPaper","highBox","highPaper","lowPrice","highPrice","highLink","LowLink","lowAge","highAge","lowDealerStatus","highDealerStatus","lowBP","highBP","generalLink","dateOfScrape","imageLow","imageHigh","brandLow","brandHigh","website"]
   s = ""
   for (var propt in w) {
     if (typeof propt != "function") {

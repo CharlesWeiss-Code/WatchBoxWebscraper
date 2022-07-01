@@ -4,17 +4,20 @@ const mike = require("../highAndLow.js");
 const fs = require("fs");
 async function chrono24(lowP, highP, tPage) {
   flag = true;
-  for (var i = 7; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
-    lowest = "-1";
-    highest = "-1";
+    lowest = "";
+    highest = "";
     var childLow = 1;
     var childHigh = 1;
     brandLow = "";
     brandHigh = "";
-
     highTable = "";
     lowTable = "";
+    yearLow =""
+    yearHigh =''
+    lowBP =""
+    highBP =""
     var newURL =
       "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=" +
       refNums[i];
@@ -68,7 +71,7 @@ async function chrono24(lowP, highP, tPage) {
       );
       
       index1BrandLow = lowTable.indexOf("Brand") + 5;
-      if (index1BrandLow != 4) {
+      if ((index1BrandLow != 4) && (index1BrandLow != lowTable.indexOf("Brand new") +5)) {
         index2BrandLow = lowTable.indexOf("Model");
         if (index2BrandLow === -1) {
           index2BrandLow = lowTable.indexOf("Reference number");
@@ -78,7 +81,7 @@ async function chrono24(lowP, highP, tPage) {
 
       index1YearLow = lowTable.indexOf("Year of production") + 18;
       index2YearLow = lowTable.indexOf("Condition");
-
+      
       index1BPLow = lowTable.indexOf("Scope of delivery") + 17;
       index2BPLow = lowTable.indexOf("Gender");
       if (index2BPLow === -1) {
@@ -114,9 +117,8 @@ async function chrono24(lowP, highP, tPage) {
           "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1)"
         )
       );
-
       index1BrandHigh = highTable.indexOf("Brand") + 5;
-      if (index1BrandHigh != 4) {
+      if (index1BrandHigh != 4 && (index1BrandLow != lowTable.indexOf("Brand new") +5)) {
         index2BrandHigh = highTable.indexOf("Model");
         if (index2BrandHigh === -1) {
           index2BrandHigh = highTable.indexOf("Reference number");
@@ -133,16 +135,20 @@ async function chrono24(lowP, highP, tPage) {
         index2BPHigh = highTable.indexOf("Location");
       }
     }
+    lowBP = lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, ""),
+    highBP = highTable.substring(index1YearHigh, index2YearHigh).replace(/\s+/g, ""),
+    yearLow = lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, ""),
+    yearHigh = highTable.substring(index1YearHigh, index2YearHigh).replace(/\s+/g, ""),
     w = new Watch(
       refNums[i],
-      lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, ""),
-      highTable.substring(index1YearHigh, index2YearHigh).replace(/\s+/g, ""),
+      yearLow,
+      yearHigh,
       "",
       "",
-      lowTable.substring(index1BPLow, index2BPLow).trim(),
+      lowBP,
       "",
       "",
-      highTable.substring(index1BPHigh, index2BPHigh).trim(),
+      highBP,
       lowest.trim(),
       highest.trim(),
       lowDealerStatus.replace(/\s+/g, ""),
@@ -157,7 +163,6 @@ async function chrono24(lowP, highP, tPage) {
     );
     fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
-    //utilFunc.CSV(w)
     //console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w)
   }

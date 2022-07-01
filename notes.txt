@@ -4,3 +4,7 @@ NEED TO DO:
     upload to aws = https://www.youtube.com/watch?v=xtRYi8ud1sM
 
     -BP vs Box and Paper
+        - replace box and paper string with yes or no
+    - get image src for all brands (like CandC)
+    - 126610LN low age chrono24
+    - clean up age for all watches (only include what year)

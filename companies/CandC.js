@@ -4,7 +4,7 @@ var fs = require('fs');
 var json2csv = require('json2csv')
 
 
-var fields = ['refNum','lowBox','lowPaper','highBox','highPaper','lowPrice','highPrice','highLink','LowLink','lowAge','highAge','lowDealerStatus','highDealerStatus','lowBP','highBP','generalLink','dateOfScrape','imageLow','imageHigh','brandLow','brandHigh','website']
+//var fields = ['refNum','lowBox','lowPaper','highBox','highPaper','lowPrice','highPrice','highLink','LowLink','lowAge','highAge','lowDealerStatus','highDealerStatus','lowBP','highBP','generalLink','dateOfScrape','imageLow','imageHigh','brandLow','brandHigh','website']
 
 
 

@@ -54,7 +54,6 @@ async function bazaar(lowP, highP, tPage, scrape) {
       await highP.click(
         "#searchspring-content > div.category-products.ng-scope > div > ul > li:nth-child(1) > a"
       );
-      console.log("LOWPAGE URL: " + lowP.url());
       await lowP.waitForSelector('div[class="attributes-table-container"]');
 
       lowTable = await utilFunc.getItem(
