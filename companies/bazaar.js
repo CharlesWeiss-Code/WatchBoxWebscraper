@@ -94,7 +94,7 @@ async function bazaar(lowP, highP, tPage, scrape) {
       brandHigh
     );
 
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     //console.log(w);
     console.log(JSON.stringify(w,null,"\t"))
@@ -113,7 +113,7 @@ assignData = () => {
 
   highBPIndex1 = highTable.indexOf("Included") + 8;
   highBPIndex2 = highTable.indexOf("Lug Material");
-  lowYear = lowTable.substring(lowYearIndex1, lowYearIndex2).replace("\n", "");
+  lowYear = lowTable.substring(lowYearIndex1, lowYearIndex2).replace("\n", "").replace("N/A","").replace("Unknown","");
   lowBP = lowTable.substring(lowBPIndex1, lowBPIndex2).replace("\n", "");
   console.log(lowBP)
   if (lowBP.trim() === "Manufacturer's Box and Papers") {
@@ -124,7 +124,9 @@ assignData = () => {
 
   highYear = highTable
     .substring(highYearIndex1, highYearIndex2)
-    .replace("\n", "");
+    .replace("\n", "")
+    .replace("N/A","")
+    .replace("Unknown", "")
   highBP = highTable.substring(highBPIndex1, highBPIndex2).replace("\n", "");
 
   if (highBP.trim() === "Manufacturer's Box and Papers") {

@@ -24,7 +24,7 @@ brandLow = "";
 brandHigh = "";
 
 async function crownAndCaliber(lowP, highP, tPage) {
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 3; i < refNums.length; i++) {
     url = "https://www.crownandcaliber.com/search?view=shop&q=" + refNums[i];
     console.log("CandC URL: ***  " + url);
 
@@ -141,9 +141,12 @@ async function crownAndCaliber(lowP, highP, tPage) {
     var highPaperIndex1 = highBoxIndex2 + 8;
     var highPaperIndex2 = highTable.indexOf("Manual -");
 
-    const lowYear = lowTable
+    var lowYear = lowTable
       .substring(lowYearIndex1, lowYearIndex2)
-      .replace(/\s+/g, "");
+      .replace(/\s+/g, "")
+    if (lowYear.length > 5) {
+      lowYear = lowYear.slice(-4)
+    }
 
     const lowPaper = lowTable
       .substring(lowBoxIndex1, lowBoxIndex2)
@@ -151,9 +154,13 @@ async function crownAndCaliber(lowP, highP, tPage) {
     const lowBox = lowTable
       .substring(lowPaperIndex1, lowPaperIndex2)
       .replace(/\s+/g, "");
-    const highYear = highTable
+    var highYear = highTable
       .substring(highYearIndex1, highYearIndex2)
-      .replace(/\s+/g, "");
+      .replace(/\s+/g, "")
+      if (highYear.length > 5) {
+        highYear = highYear.slice(-4)
+      }
+  
     const highPaper = highTable
       .substring(highBoxIndex1, highBoxIndex2)
       .replace(/\s+/g, "");
@@ -182,7 +189,7 @@ async function crownAndCaliber(lowP, highP, tPage) {
       brandHigh
     );
 
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.TSV(w)

@@ -62,7 +62,14 @@ async function chrono24(lowP, highP, tPage) {
         "#wt-watches > div:nth-child(" +
           childLow +
           ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
-      );
+      )
+      if (lowDealerStatus.trim() === "Professional dealer") {
+        lowDealerStatus = "PD"
+      } else if (lowDealerStatus.trim() === "Private Seller") {
+        lowDealerStatus = "PS"
+      } else {
+        lowDealerStatus = ""
+      }
       await lowP.click("#wt-watches > div:nth-child(" + childLow + ") > a", {
         delay: 20,
       });
@@ -107,7 +114,14 @@ async function chrono24(lowP, highP, tPage) {
         "#wt-watches > div:nth-child(" +
           childHigh +
           ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
-      );
+      )
+      if (highDealerStatus.trim() === "Professional dealer") {
+        highDealerStatus = "PD"
+      } else if (highDealerStatus.trim() === "Private Seller") {
+        highDealerStatus = "PS"
+      } else {
+        highDealerStatus = ""
+      }
 
       await highP.click("#wt-watches > div:nth-child(" + childHigh + ") > a", {
         delay: 20,
@@ -156,8 +170,8 @@ async function chrono24(lowP, highP, tPage) {
     if (highBP.indexOf("original papers") != -1) {
       highPaper = "Yes"
     }
-    yearLow = lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, "")
-    yearHigh = highTable.substring(index1YearHigh, index2YearHigh).replace(/\s+/g, "")
+    yearLow = lowTable.substring(index1YearLow, index2YearLow).replace(/\s+/g, "").replace("Unknown","")
+    yearHigh = highTable.substring(index1YearHigh, index2YearHigh).replace(/\s+/g, "").replace("Unknown","")
     w = new Watch(
       refNums[i],
       yearLow,
@@ -168,8 +182,8 @@ async function chrono24(lowP, highP, tPage) {
       highPaper,
       lowest.trim(),
       highest.trim(),
-      lowDealerStatus.trim(),
-      highDealerStatus.trim(),
+      lowDealerStatus,
+      highDealerStatus,
       lowP.url(),
       highP.url(),
       tPage.url(),
@@ -178,7 +192,7 @@ async function chrono24(lowP, highP, tPage) {
       brandLow,
       brandHigh
     );
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w)
   }

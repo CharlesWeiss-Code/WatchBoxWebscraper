@@ -219,7 +219,8 @@ async function getData(lowP, highP) {
   if (lowTable.indexOf("/Year") !== -1) {
     lowYear = lowTable.substring(index1YearLow, index2YearLow);
     index = lowYear.indexOf("- ") + 2;
-    lowYear = lowYear.substring(index);
+    lowYear = lowYear.substring(index)
+    lowYear = lowYear.replace(" or newer","+");
   }
 
   brandLow = "";
@@ -235,7 +236,8 @@ async function getData(lowP, highP) {
   if (highTable.indexOf("/Year") !== -1) {
     highYear = highTable.substring(index1YearHigh, index2YearHigh);
     index = highYear.indexOf("- ") + 2;
-    highYear = highYear.substring(index);
+    highYear = highYear.substring(index)
+    highYear = highYear.replace(" or newer","+");
   }
 
   if (String(lowP.url()) != "about:blank") {
