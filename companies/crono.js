@@ -178,7 +178,7 @@ async function chrono24(lowP, highP, tPage) {
       brandLow,
       brandHigh
     );
-    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w)
   }

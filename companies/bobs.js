@@ -90,6 +90,12 @@ async function bobs(lowP, highP, tPage) {
       }
     }
 
+    if (lowBox.indexOf(brandLow) != -1) {
+      lowBox = "Yes"
+    }
+    if (highBox.indexOf(brandHigh) != -1) {
+      highBox = "Yes"
+    }
     w = new Watch(
       refNums[i],
       lowYear.trim(),
@@ -111,7 +117,7 @@ async function bobs(lowP, highP, tPage) {
       brandHigh
     );
     //console.log(w);
-    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    // fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
    //console.log(lowTable)
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w);

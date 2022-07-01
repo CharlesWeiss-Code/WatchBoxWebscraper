@@ -78,7 +78,7 @@ async function EWC(lowP, highP, tPage) {
       brandHigh
     );
     //console.log(w);
-    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     console.log(JSON.stringify(w,null,"\t"))
     //utilFunc.addToJson(w);
