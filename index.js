@@ -72,6 +72,7 @@ async function start() {
   await chrono.chrono24(lowPage, highPage, testPage);
 
   await browser.close();
+  
   //await start();
 }
 

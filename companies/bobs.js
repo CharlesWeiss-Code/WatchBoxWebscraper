@@ -87,6 +87,15 @@ async function bobs(lowP, highP, tPage) {
       } else {
         await prepare(lowP, highP, newURL); // sorts page
         await getData(lowP, highP); // gets data tables and price
+        imageLow = await lowP.evaluate(() => {
+          const image = document.querySelector("#mainImage");
+          return image.src;
+        });
+
+        imageHigh = await lowP.evaluate(() => {
+          const image = document.querySelector("#mainImage");
+          return image.src;
+        });
       }
     }
 
@@ -117,7 +126,7 @@ async function bobs(lowP, highP, tPage) {
       brandHigh
     );
     //console.log(w);
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
    //console.log(lowTable)
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w);
