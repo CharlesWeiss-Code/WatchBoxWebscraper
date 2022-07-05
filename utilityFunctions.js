@@ -108,6 +108,7 @@ CSV = (w) => {
 
 uploadFileToS3 = async () => {
   date = new Date()
+
   const s3 = new AWS.S3({
     accessKeyId: awsInfo.getKeyID(),
     secretAccessKey: awsInfo.getSecret()
@@ -115,7 +116,7 @@ uploadFileToS3 = async () => {
   const content = fs.readFileSync("./dataInCSV.csv")
   const params = {
     Bucket: awsInfo.getBucketName(),
-    Key: "Uploads/"+date.toUTCString()+".csv",
+    Key: date.toUTCString()+".csv",
     Body: content,
     ContentType: "text/plain"
   }
@@ -123,7 +124,7 @@ uploadFileToS3 = async () => {
     if (err) {
       console.log(err)
     } else {
-      console.log("Successful", data)
+      console.log(data)
     }
   })
 }
