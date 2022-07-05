@@ -49,7 +49,7 @@ async function chrono24(lowP, highP, tPage) {
       await lowP.waitForTimeout(500);
       childLow = await checkTop(lowP, "low");
       if (flag) {
-        await lowP.click("#modal-content > div > a", { delay: 20 });
+        await lowP.click("#modal-content > div > button", { delay: 20 });
         flag = false;
       }
       await lowP.waitForTimeout(1000);
