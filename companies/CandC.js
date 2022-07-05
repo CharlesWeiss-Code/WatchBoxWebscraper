@@ -24,6 +24,7 @@ brandLow = "";
 brandHigh = "";
 
 async function crownAndCaliber(lowP, highP, tPage) {
+  result = []
   for (var i = 0; i < refNums.length; i++) {
     url = "https://www.crownandcaliber.com/search?view=shop&q=" + refNums[i];
     console.log("CandC URL: ***  " + url);
@@ -188,7 +189,7 @@ async function crownAndCaliber(lowP, highP, tPage) {
       brandLow,
       brandHigh
     );
-
+    result.push(w)
     fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     console.log(JSON.stringify(w, null, "\t"));
@@ -196,6 +197,7 @@ async function crownAndCaliber(lowP, highP, tPage) {
     //await csvWriter.writeRecords(w)
     //utilFunc.addToJson(w);
   }
+  return result
 }
 
 prepare = async (lowP, highP, link) => {

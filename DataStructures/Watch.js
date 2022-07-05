@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fs = require("fs");
 
 class Watch {
   constructor(
@@ -69,61 +69,6 @@ class Watch {
 
   setDate(m, d, y) {
     this.dateOfScrape = new Date(m, d, y);
-  }
-
-  getLowDealerStatus() {
-    return this.lowDealerStatus;
-  }
-
-  getHighDealerStatus() {
-    return this.highDealerStatus;
-  }
-
-  getWebsite() {
-    return this.website;
-  }
-
-  getRefNum() {
-    return this.refNum;
-  }
-
-  getGeneralLink() {
-    return this.generalLink;
-  }
-
-
-  getLowPrice() {
-    return this.lowPrice;
-  }
-
-  getHighPrice() {
-    return this.highPrice;
-  }
-  getLowLink() {
-    return this.lowLink;
-  }
-
-  getHighLink() {
-    return this.highLink;
-  }
-
-  getLowPaper() {
-    return this.lowPaper;
-  }
-
-  getHighPaper() {
-    return this.highPaper;
-  }
-  getDate() {
-    return this.dateOfScrape;
-  }
-
-  getLowBox() {
-    return this.lowBox;
-  }
-
-  getHighBox() {
-    return this.highBox;
   }
 }
 

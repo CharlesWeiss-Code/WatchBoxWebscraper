@@ -2,8 +2,10 @@ const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 const mike = require("../highAndLow.js");
 const fs = require("fs");
-const AWS = require("aws-sdk")
-async function chrono24(lowP, highP, tPage) {
+const AWS = require("aws-sdk");
+const { getWatches } = require("../DataStructures/AllScrapes.js");
+const { CloudWatchLogs } = require("aws-sdk");
+async function chrono24(lowP, highP, tPage, list) {
   flag = true;
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
@@ -48,10 +50,12 @@ async function chrono24(lowP, highP, tPage) {
       // when gettin prices, the price of "TOP" comes up first
       await lowP.goto(newURL + "&sortorder=1");
       await lowP.waitForTimeout(500);
-      childLow = await checkTop(lowP, "low");
+      childLow = await checkTop(lowP, "low", list);
       if (flag) {
-        await lowP.click("#modal-content > div > button", { delay: 20 });
-        flag = false;
+        if (await utilFunc.exists(lowP, "#modal-content > div > button")) {
+          await lowP.click("#modal-content > div > button", { delay: 20 });
+          flag = false;
+        }
       }
       await lowP.waitForTimeout(1000);
       lowest = await utilFunc.getItem(
@@ -99,7 +103,7 @@ async function chrono24(lowP, highP, tPage) {
       index1YearLow = lowTable.indexOf("Year of production") + 18;
       index2YearLow = lowTable.indexOf("Condition");
       if (index2YearLow === -1) {
-        index2YearLow = lowTable.indexOf("Scope of delivery")
+        index2YearLow = lowTable.indexOf("Scope of delivery");
       }
 
       index1BPLow = lowTable.indexOf("Scope of delivery") + 17;
@@ -111,7 +115,7 @@ async function chrono24(lowP, highP, tPage) {
       await highP.goto(newURL + "&searchorder=11&sortorder=11");
       await highP.waitForTimeout(500);
       //await highP.click("#modal-content > div > a", {delay: 20})
-      childHigh = await checkTop(highP, "high");
+      childHigh = await checkTop(highP, "high", list);
       highest = await utilFunc.getItem(
         highP,
         "#wt-watches > div:nth-child(" +
@@ -161,7 +165,7 @@ async function chrono24(lowP, highP, tPage) {
       index1YearHigh = highTable.indexOf("Year of production") + 18;
       index2YearHigh = highTable.indexOf("Condition");
       if (index2YearHigh === -1) {
-        index2YearHigh = highTable.indexOf("Scope of delivery")
+        index2YearHigh = highTable.indexOf("Scope of delivery");
       }
       index1BPHigh = highTable.indexOf("Scope of delivery") + 17;
       index2BPHigh = highTable.indexOf("Gender");
@@ -202,12 +206,12 @@ async function chrono24(lowP, highP, tPage) {
     if (highBP.indexOf("original papers") != -1) {
       highPaper = "Yes";
     }
-    
+
     yearLow = lowTable
       .substring(index1YearLow, index2YearLow)
       .replace(/\s+/g, "")
       .replace("Unknown", "");
-  //  console.log(index1YearLow, index2YearLow)
+    //  console.log(index1YearLow, index2YearLow)
     yearHigh = highTable
       .substring(index1YearHigh, index2YearHigh)
       .replace(/\s+/g, "")
@@ -233,13 +237,15 @@ async function chrono24(lowP, highP, tPage) {
       brandHigh
     );
 
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w)
   }
 }
 
-checkTop = async (page, LH) => {
+checkTop = async (page, LH, arr) => {
+  min = getBuffer(arr, 0.9, refNums[i]);
+  max = getBuffer(arr, 1.1, refNums[i]);
   for (var i = 1; i < 20; i++) {
     var watch = await typeOf(page, "#wt-watches > div:nth-child(" + i + ")", i);
     var isntTop = await noTop(page, "#wt-watches > div:nth-child(" + i + ")");
@@ -278,14 +284,34 @@ checkTop = async (page, LH) => {
     //   }
     // }
 
-    if (isntTop && watch) {
+    if (isntTop && watch && price > min && price < max) {
       //console.log("Good", i, price.trim())
-
       return i;
     } else {
       //console.log("Top", !isntTop, "Watch", watch, i)
     }
   }
+};
+
+getBuffer = (list, percent, refNum) => {
+  var price = 0;
+  var num = 0;
+  list.forEach((watch) => {
+    //console.log(watch, watch.lowPrice);
+    console.log(watch.refNum)
+    if (watch.refNum === refNum) {
+
+      if (percent === 0.9) {
+        price += parseFloat(watch.lowPrice);
+        num++;
+      } else {
+        price += parseFloat(watch.lowPrice);
+        num++;
+      }
+    }
+  });
+
+  return (price / num) * percent;
 };
 
 typeOf = async (page, s, i) => {

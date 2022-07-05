@@ -25,7 +25,7 @@ I HAVE MADE TIMEOUT: 0 ON SOME OF THE PAGE.GOTO(). just for testing. eventually 
 */
 
 async function start() {
-  if (repeat(15)) {
+  if (/**repeat(15) */  true) {
     currentScrape = new Scrape();
     refNums = REF.getRefNums();
 
@@ -64,20 +64,21 @@ async function start() {
         request.continue();
       }
     });
-
-    await CandC.crownAndCaliber(lowPage, highPage, testPage);
-    await Bobs.bobs(lowPage, highPage, testPage);
-    await david.davidsw(lowPage, highPage, testPage);
-    await Bazaar.bazaar(lowPage, highPage, testPage);
-    await ewc.EWC(lowPage, highPage, testPage);
-    await chrono.chrono24(lowPage, highPage, testPage);
+    var watches = [];
+    // watches.push(await CandC.crownAndCaliber(lowPage, highPage, testPage));
+    // watches.push(await ewc.EWC(lowPage, highPage, testPage));
+    // watches.push(await david.davidsw(lowPage, highPage, testPage));
+    // watches.push(await Bazaar.bazaar(lowPage, highPage, testPage));
+    watches.push(await Bobs.bobs(lowPage, highPage, testPage));
+    console.log(JSON.parse(JSON.stringify(watches[0])))
+    await chrono.chrono24(lowPage, highPage, testPage, watches);
 
     await browser.close();
   }
   // if (timeIsGood()) {
   //   utilFunc.uploadNewDataFile();
   // }
-  await start();
+  //await start();
 }
 
 repeat = (hour) => {

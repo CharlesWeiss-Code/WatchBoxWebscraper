@@ -1,7 +1,8 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
-const fs = require('fs')
+const fs = require("fs");
 async function bazaar(lowP, highP, tPage) {
+  result = [];
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = "";
@@ -10,16 +11,16 @@ async function bazaar(lowP, highP, tPage) {
     lowBP = "";
     highest = "";
     highYear = "";
-    lowPaper = "No"
-    lowBox = "No"
-    highBox = "No"
-    highPaper = "No"
+    lowPaper = "No";
+    lowBox = "No";
+    highBox = "No";
+    highPaper = "No";
     highTable = "";
     highBP = "";
-    imageLow = ""
-    imageHigh = ""
-    brandLow = ""
-    brandHigh =""
+    imageLow = "";
+    imageHigh = "";
+    brandLow = "";
+    brandHigh = "";
     //https://www.luxurybazaar.com/search-results?q=116500LN-0001
     var newURL = "https://www.luxurybazaar.com/search-results?q=" + refNums[i];
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
@@ -75,12 +76,16 @@ async function bazaar(lowP, highP, tPage) {
 
       //"img[class='gallery-image visible']"
       imageLow = await lowP.evaluate(() => {
-        const image = document.querySelector("img[class='gallery-image visible']");
+        const image = document.querySelector(
+          "img[class='gallery-image visible']"
+        );
         return image.src;
       });
 
       imageHigh = await lowP.evaluate(() => {
-        const image = document.querySelector("img[class='gallery-image visible']");
+        const image = document.querySelector(
+          "img[class='gallery-image visible']"
+        );
         return image.src;
       });
 
@@ -106,13 +111,14 @@ async function bazaar(lowP, highP, tPage) {
       brandLow,
       brandHigh
     );
-
-   fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    result.push(w);
+    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     //console.log(w);
-    console.log(JSON.stringify(w,null,"\t"))
+    console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w);
   }
+  return result;
 }
 
 assignData = () => {
@@ -126,37 +132,39 @@ assignData = () => {
 
   highBPIndex1 = highTable.indexOf("Included") + 8;
   highBPIndex2 = highTable.indexOf("Lug Material");
-  lowYear = lowTable.substring(lowYearIndex1, lowYearIndex2).replace("\n", "").replace("N/A","").replace("Unknown","");
+  lowYear = lowTable
+    .substring(lowYearIndex1, lowYearIndex2)
+    .replace("\n", "")
+    .replace("N/A", "")
+    .replace("Unknown", "");
   lowBP = lowTable.substring(lowBPIndex1, lowBPIndex2).replace("\n", "");
-  console.log(lowBP)
+  console.log(lowBP);
   if (lowBP.trim() === "Manufacturer's Box and Papers") {
-    lowPaper = "Yes"
-    lowBox = "Yes"
+    lowPaper = "Yes";
+    lowBox = "Yes";
   }
-
 
   highYear = highTable
     .substring(highYearIndex1, highYearIndex2)
     .replace("\n", "")
-    .replace("N/A","")
-    .replace("Unknown", "")
+    .replace("N/A", "")
+    .replace("Unknown", "");
   highBP = highTable.substring(highBPIndex1, highBPIndex2).replace("\n", "");
 
   if (highBP.trim() === "Manufacturer's Box and Papers") {
-    highPaper = "Yes"
-    highBox = "Yes"
+    highPaper = "Yes";
+    highBox = "Yes";
   }
 
-  index1BrandLow = lowTable.indexOf("Signatures")+10
-  index2BrandLow = lowTable.indexOf("Strap Color")
+  index1BrandLow = lowTable.indexOf("Signatures") + 10;
+  index2BrandLow = lowTable.indexOf("Strap Color");
 
-  index1BrandHigh = highTable.indexOf("Signatures")+10
-  index2BrandHigh = highTable.indexOf("Strap Color")
+  index1BrandHigh = highTable.indexOf("Signatures") + 10;
+  index2BrandHigh = highTable.indexOf("Strap Color");
 
-  brandHigh = highTable.substring(index1BrandHigh,index2BrandHigh).trim()
+  brandHigh = highTable.substring(index1BrandHigh, index2BrandHigh).trim();
 
-  brandLow = lowTable.substring(index1BrandLow,index2BrandLow).trim()
-
+  brandLow = lowTable.substring(index1BrandLow, index2BrandLow).trim();
 };
 
 module.exports = { bazaar };

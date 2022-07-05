@@ -1,13 +1,14 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
-const fs = require('fs')
+const fs = require("fs");
 async function EWC(lowP, highP, tPage) {
+  result = [];
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = -1;
     highest = -1;
-    brandLow = ""
-    brandHigh = ""
+    brandLow = "";
+    brandHigh = "";
 
     var newURL =
       "https://www2.europeanwatch.com/cgi-bin/search.pl?search=" + refNums[i];
@@ -28,11 +29,17 @@ async function EWC(lowP, highP, tPage) {
         //EWC Is weird and needs its own function.
         lowest = await findPriceEWC(lowP, url, "asc");
         highest = await findPriceEWC(highP, url, "desc");
-                
-        brandLow = await utilFunc.getItem(lowP, "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3")
-        brandHigh = await utilFunc.getItem(highP, "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3")
-        brandLow = brandLow.substring(0,brandLow.indexOf(" "))
-        brandHigh = brandHigh.substring(0,brandHigh.indexOf(" "))
+
+        brandLow = await utilFunc.getItem(
+          lowP,
+          "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3"
+        );
+        brandHigh = await utilFunc.getItem(
+          highP,
+          "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3"
+        );
+        brandLow = brandLow.substring(0, brandLow.indexOf(" "));
+        brandHigh = brandHigh.substring(0, brandHigh.indexOf(" "));
 
         console.log("Lowest: " + lowest);
         console.log("Highest: " + highest);
@@ -47,14 +54,18 @@ async function EWC(lowP, highP, tPage) {
         //EWC Is weird and needs its own function.
         lowest = await findPriceEWC(lowP, newURL, "asc");
         highest = await findPriceEWC(highP, newURL, "desc");
-        
-        brandLow = await utilFunc.getItem(lowP, "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3")
-        brandHigh = await utilFunc.getItem(highP, "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3")
-        brandLow = brandLow.substring(0,brandLow.indexOf(" "))
-        brandHigh = brandHigh.substring(0,brandHigh.indexOf(" "))
-        console.log(brandLow,brandHigh)
 
-
+        brandLow = await utilFunc.getItem(
+          lowP,
+          "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3"
+        );
+        brandHigh = await utilFunc.getItem(
+          highP,
+          "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3"
+        );
+        brandLow = brandLow.substring(0, brandLow.indexOf(" "));
+        brandHigh = brandHigh.substring(0, brandHigh.indexOf(" "));
+        console.log(brandLow, brandHigh);
       }
     }
     w = new Watch(
@@ -78,11 +89,13 @@ async function EWC(lowP, highP, tPage) {
       brandHigh
     );
     //console.log(w);
+    result.push(w);
     fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
-    console.log(JSON.stringify(w,null,"\t"))
+    console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w);
   }
+  return result;
 }
 
 async function findPriceEWC(page, url, type) {

@@ -19,7 +19,8 @@ var brandLow = "";
 var brandHigh = "";
 
 async function bobs(lowP, highP, tPage) {
-  for (var i = 0; i < refNums.length; i++) {
+  result = []
+  for (var i = 7; i < refNums.length; i++) {
     lowest = "";
     highest = "";
     highTable = "";
@@ -126,11 +127,13 @@ async function bobs(lowP, highP, tPage) {
       brandHigh
     );
     //console.log(w);
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    result.push(w)
+    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
    //console.log(lowTable)
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w);
   }
+  return result
 }
 
 async function select(page, sel, Text) {
@@ -277,7 +280,13 @@ async function prepare(lowP, highP, url) {
     highP,
     "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
     "Price - High to Low"
-  );
+  ).catch(async(err) => {
+    console.log(err)
+    await highP.reload()
+    await highP.waitForTimeout(1000)
+    await select(highP, "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
+    "Price - High to Low")
+  })
 }
 
 module.exports = { bobs };
