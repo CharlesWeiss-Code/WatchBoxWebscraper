@@ -2,6 +2,8 @@ const fs = require("fs");
 const { kill } = require("process");
 const request = require("request");
 const Watch = require("./DataStructures/Watch");
+const AWS = require("aws-sdk")
+const awsInfo = require('./aws-info')
 
 async function noResults(page, selector) {
   var noResultsVar = false;
@@ -49,6 +51,7 @@ async function exists(page, selector) {
   }
   return existsVar;
 }
+
 sameDate = (d1, d2) => {
   if (
     d1.getMonth() === d2.getMonth() &&
@@ -103,6 +106,28 @@ CSV = (w) => {
   //console.log(s)
 }
 
+uploadFileToS3 = async () => {
+  date = new Date()
+  const s3 = new AWS.S3({
+    accessKeyId: awsInfo.getKeyID(),
+    secretAccessKey: awsInfo.getSecret()
+  })
+  const content = fs.readFileSync("./dataInCSV.csv")
+  const params = {
+    Bucket: awsInfo.getBucketName(),
+    Key: "Uploads/"+date.toUTCString()+".csv",
+    Body: content,
+    ContentType: "text/plain"
+  }
+  s3.upload(params, (err,data) => {
+    if (err) {
+      console.log(err)
+    } else {
+      console.log("Successful", data)
+    }
+  })
+}
+
 module.exports = {
   noResults,
   noResults2,
@@ -111,5 +136,6 @@ module.exports = {
   exists,
   sameDate,
   addToJson,
-  CSV
+  CSV,
+  uploadFileToS3
 };

@@ -1,4 +1,3 @@
-const fs = require('fs')
-const data = parseInt(fs.readFileSync('./numWatchesScraped.txt', { encoding: 'utf8' }))
+const utilFunc = require("./utilityFunctions")
 
-
+console.log(utilFunc.uploadFileToS3())

@@ -68,12 +68,22 @@ async function start() {
   // await Bobs.bobs(lowPage, highPage, testPage);
   // await david.davidsw(lowPage, highPage, testPage);
   // await Bazaar.bazaar(lowPage, highPage, testPage);
- // await ewc.EWC(lowPage, highPage, testPage);
+  // await ewc.EWC(lowPage, highPage, testPage);
   await chrono.chrono24(lowPage, highPage, testPage);
 
   await browser.close();
-
-  //await start();
+  // if (timeIsGood()) {
+  //    await utilFunc.uploadNewDataFile()
+  // }
+  if (repeat(6)) {
+    await start();
+  }
 }
+
+repeat = (hour) => {
+  current = new Date();
+  console.log(current.toUTCString()); /**runs at 6AM every day */
+  return current.getUTCHours() === hour;
+};
 
 start();
