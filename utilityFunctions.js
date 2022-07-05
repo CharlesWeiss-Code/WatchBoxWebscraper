@@ -2,8 +2,8 @@ const fs = require("fs");
 const { kill } = require("process");
 const request = require("request");
 const Watch = require("./DataStructures/Watch");
-const AWS = require("aws-sdk")
-const awsInfo = require('./aws-info')
+const AWS = require("aws-sdk");
+const awsInfo = require("./aws-info");
 
 async function noResults(page, selector) {
   var noResultsVar = false;
@@ -68,66 +68,78 @@ addToJson = (watch) => {
   let parsed = JSON.parse(data);
   parsed[watch.getWebsite()][watch.getRefNum()].push(watch);
   fs.writeFileSync("data.json", JSON.stringify(parsed, null, 3));
-  console.log(JSON.stringify(watch,null,'\t'))
+  console.log(JSON.stringify(watch, null, "\t"));
 };
 
 addToTSV = (watch) => {
   let data = fs.readFileSync("dataInTSV.json");
   let parsed = JSON.parse(data);
-  
+
   fs.writeFileSync("data.json", JSON.stringify(parsed, null, 3));
-  console.log(JSON.stringify(watch,null,'\t'))
-}
+  console.log(JSON.stringify(watch, null, "\t"));
+};
 
 CSV = (w) => {
-  const list = ["refNum","lowBox","lowPaper","highBox","highPaper","lowPrice","highPrice","highLink","LowLink","lowAge","highAge","lowDealerStatus","highDealerStatus","lowBP","highBP","generalLink","dateOfScrape","imageLow","imageHigh","brandLow","brandHigh","website"]
-  s = ""
+  const list = [
+    "refNum",
+    "lowBox",
+    "lowPaper",
+    "highBox",
+    "highPaper",
+    "lowPrice",
+    "highPrice",
+    "highLink",
+    "LowLink",
+    "lowAge",
+    "highAge",
+    "lowDealerStatus",
+    "highDealerStatus",
+    "lowBP",
+    "highBP",
+    "generalLink",
+    "dateOfScrape",
+    "imageLow",
+    "imageHigh",
+    "brandLow",
+    "brandHigh",
+    "website",
+  ];
+  s = "";
   for (var propt in w) {
     if (typeof propt != "function") {
       if (String(propt) != "website") {
-      s+=w[propt]+","
+        s += w[propt] + ",";
       } else {
-        s+=w[propt]
+        s += w[propt];
       }
     }
   }
-  try {
-    const data = parseInt(fs.readFileSync('./numWatchesScraped.txt', { encoding: 'utf8' }))
-    try {
-      fs.writeFileSync("numWatchesScraped.txt", String(data+1))
-    }catch (err){
-      console.log(err)
-    }
-    console.log(data+1+" Watches scraped");
-  } catch (err) {
-    console.log(err);
-  }
   return s;
   //console.log(s)
-}
+};
 
 uploadFileToS3 = async () => {
-  date = new Date()
+  date = new Date();
 
   const s3 = new AWS.S3({
     accessKeyId: awsInfo.getKeyID(),
-    secretAccessKey: awsInfo.getSecret()
-  })
-  const content = fs.readFileSync("./dataInCSV.csv")
+    secretAccessKey: awsInfo.getSecret(),
+  });
+  const content = fs.readFileSync("./dataInCSV.csv");
   const params = {
     Bucket: awsInfo.getBucketName(),
-    Key: date.toUTCString()+".csv",
+    Key: date.toUTCString() + ".csv",
     Body: content,
-    ContentType: "text/plain"
-  }
-  s3.upload(params, (err,data) => {
+    ContentType: "text/plain",
+  };
+  s3.upload(params, (err, data) => {
     if (err) {
-      console.log(err)
+      console.log(err);
     } else {
-      console.log(data)
+      console.log(data);
     }
-  })
-}
+  });
+};
 
 module.exports = {
   noResults,
@@ -138,5 +150,5 @@ module.exports = {
   sameDate,
   addToJson,
   CSV,
-  uploadFileToS3
+  uploadFileToS3,
 };

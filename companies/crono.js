@@ -5,7 +5,7 @@ const fs = require("fs");
 const AWS = require("aws-sdk")
 async function chrono24(lowP, highP, tPage) {
   flag = true;
-  for (var i = 8; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = "";
     highest = "";
@@ -233,7 +233,7 @@ async function chrono24(lowP, highP, tPage) {
       brandHigh
     );
 
-   // fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w)
   }

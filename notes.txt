@@ -3,3 +3,5 @@ NEED TO DO:
     - add promise catches to all functions that use them?
     upload to aws = https://www.youtube.com/watch?v=xtRYi8ud1sM
     
+    - bobs 16610 has error but found work around
+    - bazaar 116610LN
