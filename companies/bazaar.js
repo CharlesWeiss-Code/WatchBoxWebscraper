@@ -1,7 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 const fs = require("fs");
-async function bazaar(lowP, highP, tPage) {
+async function bazaar(lowP, highP, tPage, list) {
   result = [];
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
@@ -111,14 +111,13 @@ async function bazaar(lowP, highP, tPage) {
       brandLow,
       brandHigh
     );
-    result.push(w);
+    list.push(w);
     fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     //console.log(w);
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w);
   }
-  return result;
 }
 
 assignData = () => {

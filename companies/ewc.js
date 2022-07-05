@@ -1,8 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 const fs = require("fs");
-async function EWC(lowP, highP, tPage) {
-  result = [];
+async function EWC(lowP, highP, tPage, list) {
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = -1;
@@ -89,13 +88,12 @@ async function EWC(lowP, highP, tPage) {
       brandHigh
     );
     //console.log(w);
-    result.push(w);
+    list.push(w);
     fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w);
   }
-  return result;
 }
 
 async function findPriceEWC(page, url, type) {

@@ -5,9 +5,11 @@ const fs = require("fs");
 const AWS = require("aws-sdk");
 const { getWatches } = require("../DataStructures/AllScrapes.js");
 const { CloudWatchLogs } = require("aws-sdk");
+const refN = require("../refNums");
+const refNums = refN.getRefNums();
 async function chrono24(lowP, highP, tPage, list) {
   flag = true;
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 7; i < refNums.length; i++) {
     console.log("");
     lowest = "";
     highest = "";
@@ -33,8 +35,7 @@ async function chrono24(lowP, highP, tPage, list) {
     console.log("REF: " + refNums[i] + "\n" + "GENERAL URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
     await tPage.waitForTimeout(1000);
-    //await checkTop(tPage);
-    //await tPage.waitForTimeout(9999999);
+
     if (
       await utilFunc.noResults2(
         tPage,
@@ -50,7 +51,7 @@ async function chrono24(lowP, highP, tPage, list) {
       // when gettin prices, the price of "TOP" comes up first
       await lowP.goto(newURL + "&sortorder=1");
       await lowP.waitForTimeout(500);
-      childLow = await checkTop(lowP, "low", list);
+      childLow = await checkTop(lowP, "low", list, refNums[i]);
       if (flag) {
         if (await utilFunc.exists(lowP, "#modal-content > div > button")) {
           await lowP.click("#modal-content > div > button", { delay: 20 });
@@ -115,7 +116,7 @@ async function chrono24(lowP, highP, tPage, list) {
       await highP.goto(newURL + "&searchorder=11&sortorder=11");
       await highP.waitForTimeout(500);
       //await highP.click("#modal-content > div > a", {delay: 20})
-      childHigh = await checkTop(highP, "high", list);
+      childHigh = await checkTop(highP, "high", list, refNums[i]);
       highest = await utilFunc.getItem(
         highP,
         "#wt-watches > div:nth-child(" +
@@ -243,75 +244,84 @@ async function chrono24(lowP, highP, tPage, list) {
   }
 }
 
-checkTop = async (page, LH, arr) => {
-  min = getBuffer(arr, 0.9, refNums[i]);
-  max = getBuffer(arr, 1.1, refNums[i]);
-  for (var i = 1; i < 20; i++) {
-    var watch = await typeOf(page, "#wt-watches > div:nth-child(" + i + ")", i);
-    var isntTop = await noTop(page, "#wt-watches > div:nth-child(" + i + ")");
-    var price = await utilFunc.getItem(
-      page,
-      "#wt-watches > div:nth-child(" +
-        i +
-        ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
-    );
+checkTop = async (page, LH, arr, rn) => {
+  min = getBuffer(arr, 0.9, rn);
+  max = getBuffer(arr, 1.1, rn);
+  console.log(rn, min, max)
+  thing = await page.$("#wt-watches")
+  top = await page.evaluate(e => e.children.length, thing)
+  for (var i = 1; i <= top; i++) {
+      var watch = await typeOf(
+        page,
+        "#wt-watches > div:nth-child(" + i + ")",
+        i
+      );
+      var isntTop = await noTop(page, "#wt-watches > div:nth-child(" + i + ")");
+      var price = (await utilFunc.getItem(
+        page,
+        "#wt-watches > div:nth-child(" +
+          i +
+          ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
+      )).replace(",","")
+      price = price.replace("$","").trim()
+      price = parseFloat(price)
 
-    // if (LH === "low") {
-    //   if (
-    //     isntTop &&
-    //     watch &&
-    //     parseFloat(price.replace("$", "").replace(",", "")) >
-    //       mike.getHighAndLow(refNums[i])[0]
-    //   ) {
-    //     //console.log("Good", i, price.trim())
+      // if (LH === "low") {
+      //   if (
+      //     isntTop &&
+      //     watch &&
+      //     parseFloat(price.replace("$", "").replace(",", "")) >
+      //       mike.getHighAndLow(refNums[i])[0]
+      //   ) {
+      //     //console.log("Good", i, price.trim())
 
-    //     return i;
-    //   } else {
-    //     //console.log("Top", !isntTop, "Watch", watch, i)
-    //   }
-    // } else {
-    //   if (
-    //     isntTop &&
-    //     watch &&
-    //     parseFloat(price.replace("$", "").replace(",", "")) >
-    //       mike.getHighAndLow(refNums[i])[1]
-    //   ) {
-    //     //console.log("Good", i, price.trim())
+      //     return i;
+      //   } else {
+      //     //console.log("Top", !isntTop, "Watch", watch, i)
+      //   }
+      // } else {
+      //   if (
+      //     isntTop &&
+      //     watch &&
+      //     parseFloat(price.replace("$", "").replace(",", "")) >
+      //       mike.getHighAndLow(refNums[i])[1]
+      //   ) {
+      //     //console.log("Good", i, price.trim())
 
-    //     return i;
-    //   } else {
-    //     //console.log("Top", !isntTop, "Watch", watch, i)
-    //   }
-    // }
-
-    if (isntTop && watch && price > min && price < max) {
-      //console.log("Good", i, price.trim())
-      return i;
-    } else {
-      //console.log("Top", !isntTop, "Watch", watch, i)
-    }
+      //     return i;
+      //   } else {
+      //     //console.log("Top", !isntTop, "Watch", watch, i)
+      //   }
+      // }
+      //console.log("Watch: ", watch, "IsntTop", isntTop, "price > min", price > min, "price < max",price < max, "P", price, "Ma", max,"Mi",min,i)
+      if (watch && isntTop && price > min && price < max) {
+        console.log("Good", i, price);
+        return i;
+      } else {
+        //console.log("Top", !isntTop, "Watch", watch, i)
+      }
   }
+  return 1
 };
 
 getBuffer = (list, percent, refNum) => {
   var price = 0;
   var num = 0;
   list.forEach((watch) => {
-    //console.log(watch, watch.lowPrice);
-    console.log(watch.refNum)
-    if (watch.refNum === refNum) {
-
+    if (watch.refNum.trim() === refNum.trim()) {
       if (percent === 0.9) {
-        price += parseFloat(watch.lowPrice);
+        price += parseFloat(watch.lowPrice.trim());
         num++;
       } else {
-        price += parseFloat(watch.lowPrice);
+        price += parseFloat(watch.highPrice.trim());
         num++;
       }
     }
   });
 
-  return (price / num) * percent;
+  result = (price / num) * percent;
+  //console.log(price, result);
+  return result;
 };
 
 typeOf = async (page, s, i) => {

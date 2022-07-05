@@ -65,12 +65,11 @@ async function start() {
       }
     });
     var watches = [];
-    // watches.push(await CandC.crownAndCaliber(lowPage, highPage, testPage));
-    // watches.push(await ewc.EWC(lowPage, highPage, testPage));
-    // watches.push(await david.davidsw(lowPage, highPage, testPage));
-    // watches.push(await Bazaar.bazaar(lowPage, highPage, testPage));
-    watches.push(await Bobs.bobs(lowPage, highPage, testPage));
-    console.log(JSON.parse(JSON.stringify(watches[0])))
+    await CandC.crownAndCaliber(lowPage, highPage, testPage, watches)
+    await ewc.EWC(lowPage, highPage, testPage, watches)
+    await david.davidsw(lowPage, highPage, testPage, watches)
+    await Bazaar.bazaar(lowPage, highPage, testPage, watches)
+     await Bobs.bobs(lowPage, highPage, testPage, watches)
     await chrono.chrono24(lowPage, highPage, testPage, watches);
 
     await browser.close();

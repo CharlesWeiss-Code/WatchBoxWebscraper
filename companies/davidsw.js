@@ -1,8 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 const fs = require('fs')
-async function davidsw(lowP, highP, tPage, scrape) {
-  result = []
+async function davidsw(lowP, highP, tPage, list) {
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowTables = "";
@@ -246,13 +245,12 @@ async function davidsw(lowP, highP, tPage, scrape) {
       brandHigh
     );
     //console.log(w);
-    result.push(w)
+    list.push(w)
     fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     //utilFunc.addToJson(w);
     console.log(JSON.stringify(w,null,"\t"))
   }
-  return result
 }
 
 module.exports = { davidsw };
