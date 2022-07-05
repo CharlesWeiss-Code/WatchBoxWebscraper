@@ -9,7 +9,7 @@ const refN = require("../refNums");
 const refNums = refN.getRefNums();
 async function chrono24(lowP, highP, tPage, list) {
   flag = true;
-  for (var i = 7; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = "";
     highest = "";

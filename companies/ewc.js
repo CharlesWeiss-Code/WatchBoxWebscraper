@@ -11,8 +11,11 @@ async function EWC(lowP, highP, tPage, list) {
 
     var newURL =
       "https://www2.europeanwatch.com/cgi-bin/search.pl?search=" + refNums[i];
+
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
+
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
+    
     await tPage.waitForTimeout(1000);
     if (refNums[i] === "116500LN-0001" || refNums[i] === "116500LN-0002") {
       var url =
