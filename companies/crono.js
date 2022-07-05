@@ -9,7 +9,7 @@ const refN = require("../refNums");
 const refNums = refN.getRefNums();
 async function chrono24(lowP, highP, tPage, list) {
   flag = true;
-  for (var i = 7; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = "";
     highest = "";
@@ -238,7 +238,7 @@ async function chrono24(lowP, highP, tPage, list) {
       brandHigh
     );
 
-    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w)
   }
@@ -253,8 +253,7 @@ checkTop = async (page, LH, arr, rn) => {
   for (var i = 1; i <= top; i++) {
       var watch = await typeOf(
         page,
-        "#wt-watches > div:nth-child(" + i + ")",
-        i
+        "#wt-watches > div:nth-child(" + i + ")"
       );
       var isntTop = await noTop(page, "#wt-watches > div:nth-child(" + i + ")");
       var price = (await utilFunc.getItem(
@@ -295,7 +294,7 @@ checkTop = async (page, LH, arr, rn) => {
       // }
       //console.log("Watch: ", watch, "IsntTop", isntTop, "price > min", price > min, "price < max",price < max, "P", price, "Ma", max,"Mi",min,i)
       if (watch && isntTop && price > min && price < max) {
-        console.log("Good", i, price);
+        //console.log("Good", i, price);
         return i;
       } else {
         //console.log("Top", !isntTop, "Watch", watch, i)
@@ -324,7 +323,7 @@ getBuffer = (list, percent, refNum) => {
   return result;
 };
 
-typeOf = async (page, s, i) => {
+typeOf = async (page, s) => {
   let element = await page.$(s);
   if (element === null) {
     return false;
