@@ -9,7 +9,7 @@ const refN = require("../refNums");
 const refNums = refN.getRefNums();
 async function chrono24(lowP, highP, tPage, list) {
   flag = true;
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 7; i < refNums.length; i++) {
     console.log("");
     lowest = "";
     highest = "";
@@ -265,33 +265,6 @@ checkTop = async (page, LH, arr, rn) => {
       price = price.replace("$","").trim()
       price = parseFloat(price)
 
-      // if (LH === "low") {
-      //   if (
-      //     isntTop &&
-      //     watch &&
-      //     parseFloat(price.replace("$", "").replace(",", "")) >
-      //       mike.getHighAndLow(refNums[i])[0]
-      //   ) {
-      //     //console.log("Good", i, price.trim())
-
-      //     return i;
-      //   } else {
-      //     //console.log("Top", !isntTop, "Watch", watch, i)
-      //   }
-      // } else {
-      //   if (
-      //     isntTop &&
-      //     watch &&
-      //     parseFloat(price.replace("$", "").replace(",", "")) >
-      //       mike.getHighAndLow(refNums[i])[1]
-      //   ) {
-      //     //console.log("Good", i, price.trim())
-
-      //     return i;
-      //   } else {
-      //     //console.log("Top", !isntTop, "Watch", watch, i)
-      //   }
-      // }
       //console.log("Watch: ", watch, "IsntTop", isntTop, "price > min", price > min, "price < max",price < max, "P", price, "Ma", max,"Mi",min,i)
       if (watch && isntTop && price > min && price < max) {
         //console.log("Good", i, price);
