@@ -1,12 +1,9 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
-var fs = require('fs');
-var json2csv = require('json2csv')
-
+var fs = require("fs");
+var json2csv = require("json2csv");
 
 //var fields = ['refNum','lowBox','lowPaper','highBox','highPaper','lowPrice','highPrice','highLink','LowLink','lowAge','highAge','lowDealerStatus','highDealerStatus','lowBP','highBP','generalLink','dateOfScrape','imageLow','imageHigh','brandLow','brandHigh','website']
-
-
 
 lowYear = "";
 lowPaper = "";
@@ -22,9 +19,13 @@ lowImage = "";
 highImage = "";
 brandLow = "";
 brandHigh = "";
+lowSku = "";
+highSku = "";
 
 async function crownAndCaliber(lowP, highP, tPage, list) {
   for (var i = 0; i < refNums.length; i++) {
+
+
     url = "https://www.crownandcaliber.com/search?view=shop&q=" + refNums[i];
     console.log("CandC URL: ***  " + url);
 
@@ -43,7 +44,11 @@ async function crownAndCaliber(lowP, highP, tPage, list) {
           highP,
           "https://www.crownandcaliber.com/search?view=shop&q=116500LN#/filter:mfield_global_dial_color:White"
         );
-
+        await lowP.waitForTimeout(500)
+        await highP.waitForTimeout(500)
+        lowSku = await (await utilFunc.getItem(lowP, "p[class='itemNo']")).replace("Item No. ", "")
+        highSku = await (await utilFunc.getItem(highP, "p[class='itemNo']")).replace("Item No. ", "")
+        
         await highP.waitForTimeout(500);
         lowTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
         highTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
@@ -74,10 +79,13 @@ async function crownAndCaliber(lowP, highP, tPage, list) {
           highP,
           "https://www.crownandcaliber.com/search?view=shop&q=116500LN#/filter:mfield_global_dial_color:Black"
         );
-
+        await lowP.waitForTimeout(500)
+        await highP.waitForTimeout(500)
+        lowSku = await (await utilFunc.getItem(lowP, "p[class='itemNo']")).replace("Item No. ", "")
+        highSku = await (await utilFunc.getItem(highP, "p[class='itemNo']")).replace("Item No. ", "")
         lowTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
         highTable = await utilFunc.getItem(highP, 'div[class="prod-specs"]');
-        
+
         brandLow = await (
           await utilFunc.getItem(lowP, "tbody > tr:nth-child(1)")
         )
@@ -110,6 +118,11 @@ async function crownAndCaliber(lowP, highP, tPage, list) {
         continue;
       } else {
         await prepare(lowP, highP, url);
+        await lowP.waitForTimeout(500)
+        await highP.waitForTimeout(500)
+        lowSku = await (await utilFunc.getItem(lowP, "p[class='itemNo']")).replace("Item No. ", "")
+        highSku = await (await utilFunc.getItem(highP, "p[class='itemNo']")).replace("Item No. ", "")
+        console.log(lowSku, highSku)                  //#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-6.large-offset-1.medium-12.small-12.product-right-block > p
         await lowP.waitForSelector('div[class="prod-specs"]');
         lowTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
         await highP.waitForSelector('div[class="prod-specs"]');
@@ -143,9 +156,9 @@ async function crownAndCaliber(lowP, highP, tPage, list) {
 
     var lowYear = lowTable
       .substring(lowYearIndex1, lowYearIndex2)
-      .replace(/\s+/g, "")
+      .replace(/\s+/g, "");
     if (lowYear.length > 5) {
-      lowYear = lowYear.slice(-4)
+      lowYear = lowYear.slice(-4);
     }
 
     const lowPaper = lowTable
@@ -156,11 +169,11 @@ async function crownAndCaliber(lowP, highP, tPage, list) {
       .replace(/\s+/g, "");
     var highYear = highTable
       .substring(highYearIndex1, highYearIndex2)
-      .replace(/\s+/g, "")
-      if (highYear.length > 5) {
-        highYear = highYear.slice(-4)
-      }
-  
+      .replace(/\s+/g, "");
+    if (highYear.length > 5) {
+      highYear = highYear.slice(-4);
+    }
+
     const highPaper = highTable
       .substring(highBoxIndex1, highBoxIndex2)
       .replace(/\s+/g, "");
@@ -188,7 +201,7 @@ async function crownAndCaliber(lowP, highP, tPage, list) {
       brandLow,
       brandHigh
     );
-    list.push(w)
+    list.push(w);
     fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     console.log(JSON.stringify(w, null, "\t"));
@@ -217,13 +230,25 @@ prepare = async (lowP, highP, link) => {
     highP,
     'span[class="current-price product-price__price"]'
   );
+
+  lowSku = await lowP.$eval("div[class='card-barcode ng-binding']", (el) => el.textContent)
+  highSku = await highP.$eval("div[class='card-barcode ng-binding']", (el) => el.textContent)
   
-  brandLow = await utilFunc.getItem(lowP, "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > div.card-title.ng-binding")
-  brandHigh = await utilFunc.getItem(highP, "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > div.card-title.ng-binding")
+  console.log(lowSku, highSku)
+  brandLow = await utilFunc.getItem(
+    lowP,
+    "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > div.card-title.ng-binding"
+  );
+  brandHigh = await utilFunc.getItem(
+    highP,
+    "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > div.card-title.ng-binding"
+  );
   await lowP.click(
     "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
     { delay: 20 }
   );
+
+
 
   await lowP.waitForTimeout(500);
 
@@ -231,6 +256,7 @@ prepare = async (lowP, highP, link) => {
     "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
     { delay: 20 }
   );
+
 };
 
 module.exports = { crownAndCaliber };

@@ -25,7 +25,7 @@ I HAVE MADE TIMEOUT: 0 ON SOME OF THE PAGE.GOTO(). just for testing. eventually 
 */
 
 async function start() {
-  if (/**repeat(15) */  true) {
+  if (/**repeat(15) */ true) {
     currentScrape = new Scrape();
     refNums = REF.getRefNums();
 
@@ -64,15 +64,20 @@ async function start() {
         request.continue();
       }
     });
-    var watches = [];
-    // await CandC.crownAndCaliber(lowPage, highPage, testPage, watches) // can get sku but not daytona????
-    // await ewc.EWC(lowPage, highPage, testPage, watches)
-    // await david.davidsw(lowPage, highPage, testPage, watches) // can get sku
-    // await Bazaar.bazaar(lowPage, highPage, testPage, watches) // can get sku
-    await Bobs.bobs(lowPage, highPage, testPage, watches) // can get sku
-    await chrono.chrono24(lowPage, highPage, testPage, watches); // can get sku
 
-
+      await lowPage.goto(
+        "https://www.chrono24.com/rolex/rolex-submariner-no-date-40mm-114060-2019-unworn-discontinued--id12647629.htm"
+      );
+      lowTable = String(
+        await utilFunc.getItem(
+          lowPage,
+          "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1)"
+        )
+      );
+      lowSkuIndex1 = lowTable.indexOf("Listing code")+12
+      lowSkuIndex2 = lowTable.indexOf("Brand")
+      lowSku = lowTable.substring(lowSkuIndex1,lowSkuIndex2).trim()
+      console.log(lowSku)
     await browser.close();
   }
   // if (timeIsGood()) {

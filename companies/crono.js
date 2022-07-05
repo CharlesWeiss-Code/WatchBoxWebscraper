@@ -9,7 +9,7 @@ const refN = require("../refNums");
 const refNums = refN.getRefNums();
 async function chrono24(lowP, highP, tPage, list) {
   flag = true;
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 7; i < refNums.length; i++) {
     console.log("");
     lowest = "";
     highest = "";
@@ -29,6 +29,8 @@ async function chrono24(lowP, highP, tPage, list) {
     lowImage = "";
     highImage = "";
     highBP = "";
+    lowSku = ""
+    highSku = ""
     var newURL =
       "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=" +
       refNums[i];
@@ -88,7 +90,10 @@ async function chrono24(lowP, highP, tPage, list) {
           "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1)"
         )
       );
-
+      lowSkuIndex1 = lowTable.indexOf("Listing code")+12
+      lowSkuIndex2 = lowTable.indexOf("Brand")
+      lowSku = lowTable.substring(lowSkuIndex1,lowSkuIndex2).trim()
+      
       index1BrandLow = lowTable.indexOf("Brand") + 5;
       if (
         index1BrandLow != 4 &&
@@ -149,7 +154,12 @@ async function chrono24(lowP, highP, tPage, list) {
           "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1)"
         )
       );
-      //console.log(lowTable,"********",highTable)
+      
+      highSkuIndex1 = highTable.indexOf("Listing code")+12
+      highSkuIndex2 = highTable.indexOf("Brand")
+
+      highSku = highTable.substring(highSkuIndex1,highSkuIndex2).trim()
+      console.log(lowSku, highSku)
       index1BrandHigh = highTable.indexOf("Brand") + 5;
       if (
         index1BrandHigh != 4 &&
@@ -174,13 +184,16 @@ async function chrono24(lowP, highP, tPage, list) {
         index2BPHigh = highTable.indexOf("Location");
       }
 
-      //
-      lowImage = await lowP.evaluate(() => {
-        const image = document.querySelector(
-          "img[class='img-responsive mh-100']"
-        );
-        return image.src;
-      });
+      await lowP.waitForTimeout(1000)
+      lowImage = await lowP.$eval("img[class='img-responsive mh-100']", (el) => el.src).catch((err) => {
+        return ""
+      })
+      // lowImage = await lowP.evaluate(() => {
+      //   const image = document.querySelector(
+      //     "img[class='img-responsive mh-100']"
+      //   );
+      //   return image.src;
+      // });
       highImage = await highP.evaluate(() => {
         const image = document.querySelector(
           "img[class='img-responsive mh-100']"

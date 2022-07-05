@@ -16,6 +16,8 @@ async function davidsw(lowP, highP, tPage, list) {
     brandHigh = ""
     imageLow = ""
     imageHigh = ""
+    lowSku = ""
+    highSku = ""
 
     var newURL =
       "https://davidsw.com/?s=" +
@@ -265,6 +267,9 @@ async function assignDataOneResult(lowP) {
   lowTables = await lowP.$$eval("tbody", (options) =>
     options.map((option) => option.textContent)
   );
+  lowSku = await utilFunc.getItem(lowP, "span[class='sku']")
+  highSku = lowSku
+  console.log(lowSku, highSku)
 
   // only one watch therefore highData = lowData
   // already on the specific watch page. no need to click anything
@@ -308,4 +313,8 @@ async function assignDataResults(lowP, highP) {
   highTables = await highP.$$eval("tbody", (options) =>
     options.map((option) => option.textContent)
   );
+
+  lowSku = await utilFunc.getItem(lowP, "span[class='sku']")
+  highSku = await utilFunc.getItem(highP,"span[class='sku']")
+  console.log(lowSku, highSku)
 }

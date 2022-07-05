@@ -21,6 +21,8 @@ async function bazaar(lowP, highP, tPage, list) {
     imageHigh = "";
     brandLow = "";
     brandHigh = "";
+    lowSku = ""
+    highSku =""
     //https://www.luxurybazaar.com/search-results?q=116500LN-0001
     var newURL = "https://www.luxurybazaar.com/search-results?q=" + refNums[i];
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
@@ -89,6 +91,10 @@ async function bazaar(lowP, highP, tPage, list) {
         return image.src;
       });
 
+      lowSku = await utilFunc.getItem(lowP, "div[class='web-id']")
+      highSku = await utilFunc.getItem(highP, "div[class='web-id']")
+      console.log(lowSku, highSku)
+
       assignData();
     }
     w = new Watch(
@@ -137,7 +143,6 @@ assignData = () => {
     .replace("N/A", "")
     .replace("Unknown", "");
   lowBP = lowTable.substring(lowBPIndex1, lowBPIndex2).replace("\n", "");
-  console.log(lowBP);
   if (lowBP.trim() === "Manufacturer's Box and Papers") {
     lowPaper = "Yes";
     lowBox = "Yes";

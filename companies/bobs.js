@@ -15,12 +15,14 @@ lowURL = "";
 highURL = "";
 imageLow = "";
 imageHigh = "";
+lowSku= ""
+highSku=""
 var brandLow = "";
 var brandHigh = "";
 
 async function bobs(lowP, highP, tPage, list) {
 
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 7; i < refNums.length; i++) {
     lowest = "";
     highest = "";
     highTable = "";
@@ -34,6 +36,8 @@ async function bobs(lowP, highP, tPage, list) {
     imageLow = "";
     imageHigh = "";
     brandLow = "";
+    lowSku = ""
+    highSku = ""
     brandHigh = "";
     console.log("");
 
@@ -179,6 +183,12 @@ async function getData(lowP, highP) {
     "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding"
   );
 
+  lowSku = await lowP.$eval("meta[itemprop='sku']", (el) => el.content)
+
+  highSku = await highP.$eval("meta[itemprop='sku']",(el) => el.content)
+
+  console.log("LowSKU", lowSku, "HighSKU", highSku)
+
   await lowP.click(
     "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a",
     { delay: 20 }
@@ -282,7 +292,6 @@ async function prepare(lowP, highP, url) {
     "Price - High to Low"
   ).catch(async(err) => {
     console.log(err)
-    await highP.reload()
     await highP.waitForTimeout(1000)
     await select(highP, "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
     "Price - High to Low")
