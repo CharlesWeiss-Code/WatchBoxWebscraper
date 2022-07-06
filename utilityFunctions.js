@@ -110,9 +110,9 @@ uploadFileToS3 = async () => {
   const content = fs.readFileSync("./dataInCSV.csv");
   const params = {
     Bucket: awsInfo.getBucketName(),
-    Key: key,
+    Key: key+".csv",
     Body: content,
-    ContentType: "text/plain",
+    ContentType: "text/csv",
   };
   s3.upload(params, (err, data) => {
     if (err) {
