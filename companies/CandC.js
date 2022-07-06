@@ -23,7 +23,7 @@ lowSku = "";
 highSku = "";
 
 async function crownAndCaliber(lowP, highP, tPage, list) {
-  for (var i = 6; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
 
 
     url = "https://www.crownandcaliber.com/search?view=shop&q=" + refNums[i];

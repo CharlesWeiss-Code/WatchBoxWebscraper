@@ -3,7 +3,7 @@ const Watch = require("../DataStructures/Watch");
 const fs = require("fs");
 async function bazaar(lowP, highP, tPage, list) {
   result = [];
-  for (var i = 12; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = "";
     lowYear = "";

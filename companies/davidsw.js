@@ -2,7 +2,7 @@ const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 const fs = require('fs')
 async function davidsw(lowP, highP, tPage, list) {
-  for (var i = 12; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowTables = "";
     highTables = "";

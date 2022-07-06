@@ -65,11 +65,11 @@ async function start() {
       }
     });
     var watches = [];
-    // await CandC.crownAndCaliber(lowPage, highPage, testPage, watches) // can get sku but not daytona????
-    // await ewc.EWC(lowPage, highPage, testPage, watches)
-    // await david.davidsw(lowPage, highPage, testPage, watches) // can get sku
-    // await Bazaar.bazaar(lowPage, highPage, testPage, watches) // can get sku
-    // await Bobs.bobs(lowPage, highPage, testPage, watches) // can get sku
+    await CandC.crownAndCaliber(lowPage, highPage, testPage, watches) // can get sku but not daytona????
+    await ewc.EWC(lowPage, highPage, testPage, watches)
+    await david.davidsw(lowPage, highPage, testPage, watches) // can get sku
+    await Bazaar.bazaar(lowPage, highPage, testPage, watches) // can get sku
+    await Bobs.bobs(lowPage, highPage, testPage, watches) // can get sku
     await chrono.chrono24(lowPage, highPage, testPage, watches); // can get sku
 
 
