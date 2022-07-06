@@ -1,6 +1,6 @@
 const fs = require("fs")
 const Watch = require("./DataStructures/Watch")
-w = new Watch("","","","","","","","","","","","","","","","","","")
+w = new Watch("","","","","","","","","","","","","","","","","","","","")
 s = ""
 for (var propt in w) {
     if (propt != "website") {
@@ -9,5 +9,5 @@ for (var propt in w) {
     s+=propt
     }
 }
-fs.writeFileSync("blankCSV.csv",s+"\n")
+fs.writeFileSync("dataInCSV.csv",s+"\n")
 

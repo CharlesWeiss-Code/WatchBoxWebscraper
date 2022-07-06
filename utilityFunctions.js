@@ -83,7 +83,7 @@ CSV = (w) => {
   s = "";
   for (var propt in w) {
     if (typeof propt != "function") {
-        s += w[propt] + ",";
+      s += w[propt] + ",";
     }
   }
   return s;
@@ -91,17 +91,17 @@ CSV = (w) => {
 };
 
 uploadFileToS3 = async () => {
-  var date = new Date()
-  var key = date.getFullYear()+"_"
-  if (parseInt(date.getMonth())+1 < 10) {
-    key+="0"+parseInt(date.getMonth()+1)+"_"
+  var date = new Date();
+  var key = date.getFullYear() + "_";
+  if (parseInt(date.getMonth()) + 1 < 10) {
+    key += "0" + parseInt(date.getMonth() + 1) + "_";
   } else {
-    key+=date.getMonth()+1+"_"
+    key += date.getMonth() + 1 + "_";
   }
   if (parseInt(date.getDate()) < 10) {
-    key+="0"+date.getDate()
+    key += "0" + date.getDate();
   } else {
-    key+=date.getDate()
+    key += date.getDate();
   }
   const s3 = new AWS.S3({
     accessKeyId: awsInfo.getKeyID(),
@@ -110,7 +110,7 @@ uploadFileToS3 = async () => {
   const content = fs.readFileSync("./dataInCSV.csv");
   const params = {
     Bucket: awsInfo.getBucketName(),
-    Key: key+".csv",
+    Key: key + ".csv",
     Body: content,
     ContentType: "text/csv",
   };
@@ -123,6 +123,57 @@ uploadFileToS3 = async () => {
   });
 };
 
+checkNewDay = () => {
+  const stats = fs.statSync("dataInCSV.csv");
+  date = new Date();
+  const indexNow = date.toLocaleString().indexOf(",");
+  const indexData = stats.mtime.toLocaleString().indexOf(",");
+  if (
+    !(
+      date.toLocaleString().substring(0, indexNow) ===
+      stats.mtime.toLocaleString().substring(0, indexData)
+    )
+  ) {
+    console.log("New day --> deleting old scrape and creating new one")
+    await this.uploadFileToS3()
+    fs.renameSync("dataInCSV.csv", "oldDataInCSV.csv");
+    w = new Watch(
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    );
+    s = "";
+    for (var propt in w) {
+      if (propt != "website") {
+        s += propt + ",";
+      } else {
+        s += propt;
+      }
+    }
+    fs.writeFileSync("dataInCSV.csv", s + "\n");
+    if (fs.existsSync("oldDataInCSV.csv")) {
+      fs.unlinkSync("oldDataInCSV.csv")
+    }
+  }
+};
+
 module.exports = {
   noResults,
   noResults2,
@@ -133,4 +184,5 @@ module.exports = {
   addToJson,
   CSV,
   uploadFileToS3,
+  checkNewDay,
 };
