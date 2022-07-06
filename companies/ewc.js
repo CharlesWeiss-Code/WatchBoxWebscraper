@@ -88,7 +88,9 @@ async function EWC(lowP, highP, tPage, list) {
       "",
       "",
       brandLow,
-      brandHigh
+      brandHigh,
+      "",
+      ""
     );
     //console.log(w);
     list.push(w);

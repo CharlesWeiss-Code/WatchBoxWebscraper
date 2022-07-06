@@ -115,7 +115,9 @@ async function bazaar(lowP, highP, tPage, list) {
       imageLow,
       imageHigh,
       brandLow,
-      brandHigh
+      brandHigh,
+      lowSku,
+      highSku
     );
     list.push(w);
     fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");

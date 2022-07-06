@@ -19,7 +19,9 @@ class Watch {
     imageLow,
     imageHigh,
     brandLow,
-    brandHigh
+    brandHigh,
+    lowSku,
+    highSku
   ) {
     this.refNum = refNum;
     this.lowBox = lowBox;
@@ -31,7 +33,6 @@ class Watch {
     this.highPrice = highPrice.replace("$", "");
     this.highPrice = this.highPrice.replace(",", "");
     this.highLink = highLink;
-
     this.lowLink = lowLink;
     this.lowAge = lowAge;
     this.highAge = highAge;
@@ -65,6 +66,8 @@ class Watch {
         this.generalLink.indexOf(".com")
       );
     }
+    this.lowSku = lowSku
+    this.highSku = highSku
   }
 
   setDate(m, d, y) {

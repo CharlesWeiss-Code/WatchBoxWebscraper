@@ -22,7 +22,7 @@ var brandHigh = "";
 
 async function bobs(lowP, highP, tPage, list) {
 
-  for (var i = 7; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     lowest = "";
     highest = "";
     highTable = "";
@@ -128,7 +128,9 @@ async function bobs(lowP, highP, tPage, list) {
       imageLow,
       imageHigh,
       brandLow,
-      brandHigh
+      brandHigh,
+      lowSku,
+      highSku
     );
     list.push(w)
 

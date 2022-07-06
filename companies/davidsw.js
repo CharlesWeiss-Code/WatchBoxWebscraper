@@ -244,7 +244,9 @@ async function davidsw(lowP, highP, tPage, list) {
       imageLow,
       imageHigh,
       brandLow,
-      brandHigh
+      brandHigh,
+      lowSku,
+      highSku
     );
     //console.log(w);
     list.push(w)

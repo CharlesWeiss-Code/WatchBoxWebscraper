@@ -23,7 +23,7 @@ lowSku = "";
 highSku = "";
 
 async function crownAndCaliber(lowP, highP, tPage, list) {
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 6; i < refNums.length; i++) {
 
 
     url = "https://www.crownandcaliber.com/search?view=shop&q=" + refNums[i];
@@ -199,7 +199,9 @@ async function crownAndCaliber(lowP, highP, tPage, list) {
       lowImage,
       highImage,
       brandLow,
-      brandHigh
+      brandHigh,
+      lowSku,
+      highSku
     );
     list.push(w);
     fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
