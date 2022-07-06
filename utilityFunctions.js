@@ -91,7 +91,7 @@ CSV = (w) => {
 };
 
 uploadFileToS3 = async () => {
-  key = getKey()
+  key = getKey();
   const s3 = new AWS.S3({
     accessKeyId: awsInfo.getKeyID(),
     secretAccessKey: awsInfo.getSecret(),
@@ -114,34 +114,33 @@ uploadFileToS3 = async () => {
 
 getKey = () => {
   var date = new Date();
-  var key = date.getFullYear() + "_";
-  if (parseInt(date.getMonth()) + 1 < 10) {
-    key += "0" + parseInt(date.getMonth() + 1) + "_";
-  } else {
-    key += date.getMonth() + 1 + "_";
-  }
-  if (parseInt(date.getDate()) < 10) {
-    key += "0" + date.getDate();
-  } else {
-    key += date.getDate();
-  }
-  return key+".csv"
-}
+  var key =
+    date.getFullYear() + "_" + parseInt(date.getMonth() + 1) + "_" + date.getDate();
+  return key + ".csv";
+};
 
 deleteObj = async () => {
+  date = new Date();
   const s3 = new AWS.S3({
     accessKeyId: awsInfo.getKeyID(),
     secretAccessKey: awsInfo.getSecret(),
   });
   var params = {
-    Bucket: awsInfo.getBucketName(), 
-    Key: "2022_07_0.csv"
-   };
-   s3.deleteObject(params, function(err, data) {
-     if (err) console.log(err, err.stack); // an error occurred
-     else     console.log(data);           // successful response
-   });
-}
+    Bucket: awsInfo.getBucketName(),
+    Key: yesterday(date),
+  };
+  s3.deleteObject(params, function (err, data) {
+    if (err) console.log(err, err.stack); // an error occurred
+    else console.log(data); // successful response
+  });
+};
+
+yesterday = (date) => {
+  console.log("KJSDHJKSHDFSDHKF", date);
+  d = new Date();
+  d.setDate(date.getDate() - 1);
+  return getKey(d)
+};
 
 checkNewDay = async () => {
   const stats = fs.statSync("dataInCSV.csv");
@@ -154,8 +153,8 @@ checkNewDay = async () => {
       stats.mtime.toLocaleString().substring(0, indexData)
     )
   ) {
-    console.log("New day --> deleting old scrape and creating new one")
-    await this.uploadFileToS3()
+    console.log("New day --> deleting old scrape and creating new one");
+    await this.uploadFileToS3();
     fs.renameSync("dataInCSV.csv", "oldDataInCSV.csv");
     w = new Watch(
       "",
@@ -189,12 +188,12 @@ checkNewDay = async () => {
     }
     fs.writeFileSync("dataInCSV.csv", s + "\n");
     if (fs.existsSync("oldDataInCSV.csv")) {
-      fs.unlinkSync("oldDataInCSV.csv")
+      fs.unlinkSync("oldDataInCSV.csv");
     }
   }
 };
 
-deleteObj()
+deleteObj();
 
 module.exports = {
   noResults,
@@ -207,5 +206,5 @@ module.exports = {
   CSV,
   uploadFileToS3,
   checkNewDay,
-  deleteObj
+  deleteObj,
 };

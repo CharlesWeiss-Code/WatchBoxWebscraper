@@ -1,3 +1,3 @@
-const utilFunc = require("./utilityFunctions") 
+utilFunc = require("./utilityFunctions")
 
 utilFunc.deleteObj()
