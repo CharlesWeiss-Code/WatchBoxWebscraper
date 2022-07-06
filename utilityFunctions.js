@@ -91,18 +91,7 @@ CSV = (w) => {
 };
 
 uploadFileToS3 = async () => {
-  var date = new Date();
-  var key = date.getFullYear() + "_";
-  if (parseInt(date.getMonth()) + 1 < 10) {
-    key += "0" + parseInt(date.getMonth() + 1) + "_";
-  } else {
-    key += date.getMonth() + 1 + "_";
-  }
-  if (parseInt(date.getDate()) < 10) {
-    key += "0" + date.getDate();
-  } else {
-    key += date.getDate();
-  }
+  key = getKey()
   const s3 = new AWS.S3({
     accessKeyId: awsInfo.getKeyID(),
     secretAccessKey: awsInfo.getSecret(),
@@ -110,7 +99,7 @@ uploadFileToS3 = async () => {
   const content = fs.readFileSync("./dataInCSV.csv");
   const params = {
     Bucket: awsInfo.getBucketName(),
-    Key: key + ".csv",
+    Key: key,
     Body: content,
     ContentType: "text/csv",
   };
@@ -123,7 +112,38 @@ uploadFileToS3 = async () => {
   });
 };
 
-checkNewDay = () => {
+getKey = () => {
+  var date = new Date();
+  var key = date.getFullYear() + "_";
+  if (parseInt(date.getMonth()) + 1 < 10) {
+    key += "0" + parseInt(date.getMonth() + 1) + "_";
+  } else {
+    key += date.getMonth() + 1 + "_";
+  }
+  if (parseInt(date.getDate()) < 10) {
+    key += "0" + date.getDate();
+  } else {
+    key += date.getDate();
+  }
+  return key+".csv"
+}
+
+deleteObj = async () => {
+  const s3 = new AWS.S3({
+    accessKeyId: awsInfo.getKeyID(),
+    secretAccessKey: awsInfo.getSecret(),
+  });
+  var params = {
+    Bucket: awsInfo.getBucketName(), 
+    Key: "2022_07_0.csv"
+   };
+   s3.deleteObject(params, function(err, data) {
+     if (err) console.log(err, err.stack); // an error occurred
+     else     console.log(data);           // successful response
+   });
+}
+
+checkNewDay = async () => {
   const stats = fs.statSync("dataInCSV.csv");
   date = new Date();
   const indexNow = date.toLocaleString().indexOf(",");
@@ -174,6 +194,8 @@ checkNewDay = () => {
   }
 };
 
+deleteObj()
+
 module.exports = {
   noResults,
   noResults2,
@@ -185,4 +207,5 @@ module.exports = {
   CSV,
   uploadFileToS3,
   checkNewDay,
+  deleteObj
 };
