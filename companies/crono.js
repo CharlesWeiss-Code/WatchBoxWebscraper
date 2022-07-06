@@ -307,6 +307,11 @@ getBuffer = (list, percent, refNum) => {
   });
 
   result = (price / num) * percent;
+  if (num === 0 && percent < 1.0) {
+    return 0
+  } else if (num === 0 && percent > 1.0) {
+    return Number.MAX_SAFE_INTEGER
+  }
   //console.log(price, result);
   return result;
 };
