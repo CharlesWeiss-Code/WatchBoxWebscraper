@@ -2,7 +2,7 @@ const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 const fs = require('fs')
 async function davidsw(lowP, highP, tPage, list) {
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 12; i < refNums.length; i++) {
     console.log("");
     lowTables = "";
     highTables = "";
@@ -71,15 +71,12 @@ async function davidsw(lowP, highP, tPage, list) {
           )
         ) {
           await assignDataResults(lowP, highP);
-          imageLow = await lowP.evaluate(() => {
-            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
-            return image.src;
-          });
-  
-          imageHigh = await lowP.evaluate(() => {
-            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
-            return image.src;
-          });
+          lowImage = await lowP.$eval("img[class='wp-post-image skip-lazy lazy-load-active']", (el) => el.src).catch((err) => {
+            return ""
+          })
+          highImage = await highP.$eval("img[class='wp-post-image skip-lazy lazy-load-active']", (el) => el.src).catch((err) => {
+            return ""
+          })
         } else {
           console.log("here");
           await assignDataOneResult(lowP);

@@ -91,8 +91,18 @@ CSV = (w) => {
 };
 
 uploadFileToS3 = async () => {
-  date = new Date();
-
+  var date = new Date()
+  var key = date.getFullYear()+"_"
+  if (parseInt(date.getMonth())+1 < 10) {
+    key+="0"+parseInt(date.getMonth()+1)+"_"
+  } else {
+    key+=date.getMonth()+1+"_"
+  }
+  if (parseInt(date.getDate()) < 10) {
+    key+="0"+date.getDate()
+  } else {
+    key+=date.getDate()
+  }
   const s3 = new AWS.S3({
     accessKeyId: awsInfo.getKeyID(),
     secretAccessKey: awsInfo.getSecret(),
@@ -100,7 +110,7 @@ uploadFileToS3 = async () => {
   const content = fs.readFileSync("./dataInCSV.csv");
   const params = {
     Bucket: awsInfo.getBucketName(),
-    Key: date.toUTCString() + ".csv",
+    Key: key,
     Body: content,
     ContentType: "text/plain",
   };

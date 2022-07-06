@@ -9,7 +9,7 @@ const refN = require("../refNums");
 const refNums = refN.getRefNums();
 async function chrono24(lowP, highP, tPage, list) {
   flag = true;
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 5; i < refNums.length; i++) {
     console.log("");
     lowest = "";
     highest = "";
@@ -92,6 +92,9 @@ async function chrono24(lowP, highP, tPage, list) {
       );
       lowSkuIndex1 = lowTable.indexOf("Listing code")+12
       lowSkuIndex2 = lowTable.indexOf("Brand")
+      if (lowSkuIndex2 > lowTable.indexOf("Dealer product code") && lowTable.indexOf("Dealer product code") != -1) {
+        lowSkuIndex2 = lowTable.indexOf("Dealer product code")
+      }
       lowSku = lowTable.substring(lowSkuIndex1,lowSkuIndex2).trim()
       
       index1BrandLow = lowTable.indexOf("Brand") + 5;
@@ -157,6 +160,9 @@ async function chrono24(lowP, highP, tPage, list) {
       
       highSkuIndex1 = highTable.indexOf("Listing code")+12
       highSkuIndex2 = highTable.indexOf("Brand")
+      if (highSkuIndex2 > highTable.indexOf("Dealer product code") && highTable.indexOf("Dealer product code") != -1) {
+        highSkuIndex2 = highTable.indexOf("Dealer product code")
+      }
 
       highSku = highTable.substring(highSkuIndex1,highSkuIndex2).trim()
       console.log(lowSku, highSku)
@@ -188,18 +194,10 @@ async function chrono24(lowP, highP, tPage, list) {
       lowImage = await lowP.$eval("img[class='img-responsive mh-100']", (el) => el.src).catch((err) => {
         return ""
       })
-      // lowImage = await lowP.evaluate(() => {
-      //   const image = document.querySelector(
-      //     "img[class='img-responsive mh-100']"
-      //   );
-      //   return image.src;
-      // });
-      highImage = await highP.evaluate(() => {
-        const image = document.querySelector(
-          "img[class='img-responsive mh-100']"
-        );
-        return image.src;
-      });
+      highImage = await highP.$eval("img[class='img-responsive mh-100']", (el) => el.src).catch((err) => {
+        return ""
+      })
+
     }
     // lowBP = lowTable.substring(index1BPLow, index2BPLow).replace(/\s+/g, ""),
     lowBP = lowTable.substring(index1BPLow, index2BPLow).trim().toLowerCase();

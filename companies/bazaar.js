@@ -3,7 +3,7 @@ const Watch = require("../DataStructures/Watch");
 const fs = require("fs");
 async function bazaar(lowP, highP, tPage, list) {
   result = [];
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 12; i < refNums.length; i++) {
     console.log("");
     lowest = "";
     lowYear = "";
@@ -63,7 +63,7 @@ async function bazaar(lowP, highP, tPage, list) {
       await highP.click(
         "#searchspring-content > div.category-products.ng-scope > div > ul > li:nth-child(1) > a"
       );
-      await lowP.waitForSelector('div[class="attributes-table-container"]');
+      //await lowP.waitForSelector('div[class="attributes-table-container"]');
 
       lowTable = await utilFunc.getItem(
         lowP,
@@ -76,20 +76,12 @@ async function bazaar(lowP, highP, tPage, list) {
         'div[class="attributes-table-container"]'
       );
 
-      //"img[class='gallery-image visible']"
-      imageLow = await lowP.evaluate(() => {
-        const image = document.querySelector(
-          "img[class='gallery-image visible']"
-        );
-        return image.src;
-      });
-
-      imageHigh = await lowP.evaluate(() => {
-        const image = document.querySelector(
-          "img[class='gallery-image visible']"
-        );
-        return image.src;
-      });
+      lowImage = await lowP.$eval("img[class='gallery-image visible']", (el) => el.src).catch((err) => {
+        return ""
+      })
+      highImage = await highP.$eval("img[class='gallery-image visible']", (el) => el.src).catch((err) => {
+        return ""
+      })
 
       lowSku = await utilFunc.getItem(lowP, "div[class='web-id']")
       highSku = await utilFunc.getItem(highP, "div[class='web-id']")

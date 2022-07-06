@@ -22,15 +22,15 @@ var brandHigh = "";
 
 async function bobs(lowP, highP, tPage, list) {
 
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 9; i < refNums.length; i++) {
     lowest = "";
     highest = "";
     highTable = "";
     lowTable = "";
     lowYear = "";
     highYear = "";
-    PHigh = "";
-    PLow = "";
+    PHigh = "No";
+    PLow = "No";
     lowURL = "";
     highURL = "";
     imageLow = "";
@@ -39,6 +39,8 @@ async function bobs(lowP, highP, tPage, list) {
     lowSku = ""
     highSku = ""
     brandHigh = "";
+    highBox = "No"
+    lowBox = "No"
     console.log("");
 
     var newURL =
@@ -67,15 +69,12 @@ async function bobs(lowP, highP, tPage, list) {
         await getData(lowP, highP); // gets data tables and price
         // take screenshot
 
-        imageLow = await lowP.evaluate(() => {
-          const image = document.querySelector("#mainImage");
-          return image.src;
-        });
-
-        imageHigh = await lowP.evaluate(() => {
-          const image = document.querySelector("#mainImage");
-          return image.src;
-        });
+        lowImage = await lowP.$eval("#mainImage", (el) => el.src).catch((err) => {
+          return ""
+        })
+        highImage = await highP.$eval("#mainImage", (el) => el.src).catch((err) => {
+          return ""
+        })
       }
     } else {
       if (
@@ -84,8 +83,19 @@ async function bobs(lowP, highP, tPage, list) {
             tPage,
             "#searchspring-content > div > div > div > div > div > div.no-results"
           )
-          .catch((e) => {
+          .catch(async (e) => {
             console.log(e);
+            await tPage.reload()
+            await tPage.waitForTimeout(500)
+            if (await utilFunc
+              .noResults(
+                tPage,
+                "#searchspring-content > div > div > div > div > div > div.no-results"
+              )) {
+              return true
+            } else {
+              return false
+            }
           })
       ) {
         continue;
@@ -106,9 +116,13 @@ async function bobs(lowP, highP, tPage, list) {
 
     if (lowBox.indexOf(brandLow) != -1) {
       lowBox = "Yes"
+    } else {
+      lowBox = "No"
     }
     if (highBox.indexOf(brandHigh) != -1) {
       highBox = "Yes"
+    } else {
+      highBox = "No"
     }
     w = new Watch(
       refNums[i],
@@ -168,12 +182,6 @@ async function getData(lowP, highP) {
   await highP.click(
     "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
     "2"
-  );
-  await lowP.waitForSelector(
-    "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding"
-  );
-  await highP.waitForSelector(
-    "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding"
   );
 
   lowest = await utilFunc.getItem(

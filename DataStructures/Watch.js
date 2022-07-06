@@ -43,7 +43,19 @@ class Watch {
      * possibly delete dateOfScrape field because the name of the json object in S3
      * will be the date
      */
-    this.dateOfScrape = new Date().toUTCString().replace(",", "");
+    var date = new Date()
+    this.dateOfScrape = date.getFullYear()+"_"
+    if (parseInt(date.getMonth())+1 < 10) {
+      this.dateOfScrape+="0"+parseInt(date.getMonth()+1)+"_"
+    } else {
+      this.dateOfScrape+=date.getMonth()+1+"_"
+    }
+    if (parseInt(date.getDate()) < 10) {
+      this.dateOfScrape+="0"+date.getDate()
+    } else {
+      this.dateOfScrape+=date.getDate()
+    }
+
     this.imageLow = imageLow;
     this.imageHigh = imageHigh;
     this.website;

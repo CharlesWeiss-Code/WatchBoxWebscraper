@@ -52,18 +52,12 @@ async function crownAndCaliber(lowP, highP, tPage, list) {
         await highP.waitForTimeout(500);
         lowTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
         highTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
-        lowImage = await lowP.evaluate(() => {
-          const image = document.querySelector(
-            "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-5.medium-12.small-12 > div > div > div > div.slider.slick-initialized.slick-slider > div.slick-list.draggable > div > div.slick-slide.slick-current.slick-active > div > div > img:nth-child(1)"
-          );
-          return image.src;
-        });
-        highImage = await highP.evaluate(() => {
-          const image = document.querySelector(
-            "#shopify-section-product-template > div > div.grid-x.grid-container.product-container > div.cell.large-5.medium-12.small-12 > div > div > div > div.slider.slick-initialized.slick-slider > div.slick-list.draggable > div > div.slick-slide.slick-current.slick-active > div > div > img:nth-child(1)"
-          );
-          return image.src;
-        });
+        lowImage = await lowP.$eval("img[class='zoomImg']", (el) => el.src).catch((err) => {
+          return ""
+        })
+        highImage = await highP.$eval("img[class='zoomImg']", (el) => el.src).catch((err) => {
+          return ""
+        })
       }
     } else if (refNums[i] == "116500LN-0002") {
       //SPECIAL BLACK DAYTONA

@@ -5,3 +5,5 @@ NEED TO DO:
     
     - bobs 16610 has error but found work around
     - bazaar 116610LN
+
+    - Chrono: 116610LN, 116710LN
