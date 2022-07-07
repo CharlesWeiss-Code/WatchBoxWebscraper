@@ -71,9 +71,9 @@ async function start() {
 
   // await ewc.EWC(lowPage, highPage, testPage, watches);
   // await david.davidsw(lowPage, highPage, testPage, watches);
-  // await Bobs.bobs(lowPage, highPage, testPage, watches);
+   //await Bobs.bobs(lowPage, highPage, testPage, watches);
 
-  // await chrono.chrono24(lowPage, highPage, testPage, watches);
+   await chrono.chrono24(lowPage, highPage, testPage, watches);
 
   await browser.close();
   // }
