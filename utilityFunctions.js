@@ -115,13 +115,16 @@ uploadFileToS3 = async () => {
 getKey = () => {
   var date = new Date();
   var key =
-    date.getFullYear() + "_" + parseInt(date.getMonth() + 1) + "_" + date.getDate();
-    console.log(key+".csv")
+    date.getFullYear() +
+    "_" +
+    parseInt(date.getMonth() + 1) +
+    "_" +
+    date.getDate();
+  console.log(key + ".csv");
   return key + ".csv";
-
 };
 
-deleteObj = async () => {
+deleteObj = async (key) => {
   date = new Date();
   const s3 = new AWS.S3({
     accessKeyId: awsInfo.getKeyID(),
@@ -129,7 +132,8 @@ deleteObj = async () => {
   });
   var params = {
     Bucket: awsInfo.getBucketName(),
-    Key: yesterday(date),
+    //Key: yesterday(date),
+    Key: key
   };
 
   s3.deleteObject(params, function (err, data) {
@@ -141,7 +145,7 @@ deleteObj = async () => {
 yesterday = (date) => {
   d = new Date();
   d.setDate(date.getDate() - 1);
-  return getKey(d)
+  return getKey(d);
 };
 
 checkNewDay = async () => {
@@ -150,16 +154,19 @@ checkNewDay = async () => {
 
   const indexNow = date.toLocaleString().indexOf(",");
   const indexData = stats.mtime.toLocaleString().indexOf(",");
-  console.log(stats.mtime)
   if (
-    (
+    !(
       date.toLocaleString().substring(0, indexNow) ===
       stats.mtime.toLocaleString().substring(0, indexData)
     )
   ) {
+    /**
+     * last time editing file was over a day ago
+     *
+     */
     console.log("New day --> deleting old scrape and creating new one");
-    await uploadFileToS3();
     await deleteObj();
+    await uploadFileToS3();
     fs.renameSync("dataInCSV.csv", "oldDataInCSV.csv");
     w = new Watch(
       "",
@@ -183,22 +190,50 @@ checkNewDay = async () => {
       "",
       ""
     );
-    s = "";
-    for (var propt in w) {
-      if (propt != "website") {
-        s += propt + ",";
-      } else {
-        s += propt;
-      }
-    }
-    fs.writeFileSync("dataInCSV.csv", s + "\n");
+    fs.writeFileSync("dataInCSV.csv", getText() + "\n");
     if (fs.existsSync("oldDataInCSV.csv")) {
       fs.unlinkSync("oldDataInCSV.csv");
     }
   } else {
-    console.log("Same Day")
+    console.log("Same Day");
   }
 };
+
+getText = () => {
+  var s = "";
+  for (var propt in w) {
+    if (propt != "website") {
+      s += propt + ",";
+    } else {
+      s += propt;
+    }
+  }
+  return s;
+};
+
+getName = async (_callback) => {
+  result = null;
+  const s3 = new AWS.S3({
+    accessKeyId: awsInfo.getKeyID(),
+    secretAccessKey: awsInfo.getSecret(),
+  });
+  var params = {
+    Bucket: awsInfo.getBucketName(),
+    MaxKeys: 1,
+  };
+
+  s3.listObjectsV2(params, (err, data) => {
+    if (err) {
+      throw err;
+    } else {
+      _callback(data.Contents[0].Key);
+    }
+  });
+};
+
+// getName((result) => {
+
+// });
 
 module.exports = {
   noResults,
@@ -212,4 +247,5 @@ module.exports = {
   uploadFileToS3,
   checkNewDay,
   deleteObj,
+  getName
 };

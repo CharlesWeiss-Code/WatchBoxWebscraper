@@ -20,7 +20,7 @@ var lowSku = "";
 var highSku = "";
 
 async function crownAndCaliber(lowP, highP, tPage, list) {
-  for (var i = 16; i < refNums.length; i++) {
+  for (var i = 22; i < refNums.length; i++) {
     lowYear = "";
     lowPaper = "No";
     lowBox = "No";
@@ -78,6 +78,7 @@ async function crownAndCaliber(lowP, highP, tPage, list) {
         lowSku,
         highSku
       );
+      //console.log(lowTable, lowTable.charCodeAt(lowTable.indexOf("2010s")+5))
       list.push(w);
       fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
       console.log(JSON.stringify(w, null, "\t"));
@@ -152,9 +153,12 @@ prepare = async (lowP, highP, link) => {
 assignData = () => {
   var lowYearIndex1 = lowTable.indexOf("Approximate Age - ") + 18;
   var lowYearIndex2 = lowTable.indexOf("Case Material - ");
-  if (lowYearIndex1 === -1) {
+  if (lowYearIndex1 === 17) {
     lowYearIndex1 = lowTable.indexOf("Year - ") + 7;
   }
+  lowYear = lowTable.substring(lowYearIndex1).trim()
+  lowYear = lowYear.substring(0,lowYear.indexOf("\n"))
+
 
   var lowBoxIndex1 = lowTable.indexOf("Box - ") + 6;
   var lowBoxIndex2 = lowTable.indexOf("Papers - ");
@@ -163,9 +167,12 @@ assignData = () => {
 
   var highYearIndex1 = highTable.indexOf("Approximate Age - ") + 18;
   var highYearIndex2 = highTable.indexOf("Case Material - ");
-  if (highYearIndex1 === -1) {
+  if (highYearIndex1 === 17) {
     highYearIndex1 = highTable.indexOf("Year - ") + 7;
   }
+  highYear = highTable.substring(highYearIndex1).trim()
+  highYear = highYear.substring(0,highYear.indexOf("\n"))
+
 
   var highBoxIndex1 = highTable.indexOf("Box - ") + 6;
   var highBoxIndex2 = highTable.indexOf("Papers - ");
@@ -173,9 +180,8 @@ assignData = () => {
   var highPaperIndex2 = highTable.indexOf("Manual -");
   
   
-  
-  lowYear = lowTable
-    .substring(lowYearIndex1, lowYearIndex2)
+  console.log("LOWYEAR",lowYear)
+  lowYear = lowYear
     .replace(/\s+/g, "");
     if (lowYear.length > 5 && lowYear.indexOf("-Present") === -1) {
       lowYear = lowYear.slice(-4);
