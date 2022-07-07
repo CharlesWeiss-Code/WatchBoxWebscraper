@@ -1,6 +1,6 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
-const fs = require('fs')
+const fs = require("fs");
 lowest = "";
 highest = "";
 highTable = "";
@@ -9,20 +9,19 @@ lowYear = "";
 highYear = "";
 PHigh = "";
 PLow = "";
-lowBox = ""
-highBox = ""
+lowBox = "";
+highBox = "";
 lowURL = "";
 highURL = "";
 imageLow = "";
 imageHigh = "";
-lowSku= ""
-highSku=""
+lowSku = "";
+highSku = "";
 var brandLow = "";
 var brandHigh = "";
 
 async function bobs(lowP, highP, tPage, list) {
-
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 1; i < refNums.length; i++) {
     lowest = "";
     highest = "";
     highTable = "";
@@ -36,93 +35,60 @@ async function bobs(lowP, highP, tPage, list) {
     imageLow = "";
     imageHigh = "";
     brandLow = "";
-    lowSku = ""
-    highSku = ""
+    lowSku = "";
+    highSku = "";
     brandHigh = "";
-    highBox = "No"
-    lowBox = "No"
+    highBox = "No";
+    lowBox = "No";
     console.log("");
 
     var newURL =
       "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=" +
       refNums[i];
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
-    await tPage
-      .goto(newURL, { waitUntil: "networkidle0", timeout: 0 })
-      .catch(async () => {
-        await tPage.goto(newURL, { waitUntil: "networkidle0" });
-      });
-    if (refNums[i] === "116500LN-0001" || refNums[i] === "116500LN-0002") {
-      specialURL =
-        "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=116500LN";
 
-      await tPage.goto(specialURL, { waitUntil: "networkidle0" });
-      if (
-        await utilFunc.noResults(
+    await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 0 })
+
+    if (refNums[i] === "116500LN-0001" || refNums[i] === "116500LN-0002") {
+      newURL = 
+        "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=116500LN";
+        await tPage.goto(newURL, { waitUntil: "networkidle0" });
+
+
+    }
+    await tPage.waitForTimeout(500)
+    if ((
+      await utilFunc
+        .noResults(
           tPage,
           "#searchspring-content > div > div > div > div > div > div.no-results"
         )
-      ) {
-        continue;
-      } else {
-        await prepare(lowP, highP, specialURL); // sorts page
-        await getData(lowP, highP); // gets data tables and price
-        // take screenshot
-
-        lowImage = await lowP.$eval("#mainImage", (el) => el.src).catch((err) => {
-          return ""
-        })
-        highImage = await highP.$eval("#mainImage", (el) => el.src).catch((err) => {
-          return ""
-        })
-      }
+    )) {
+      continue;
     } else {
-      if (
-        await utilFunc
-          .noResults(
-            tPage,
-            "#searchspring-content > div > div > div > div > div > div.no-results"
-          )
-          .catch(async (e) => {
-            console.log(e);
-            await tPage.reload()
-            await tPage.waitForTimeout(500)
-            if (await utilFunc
-              .noResults(
-                tPage,
-                "#searchspring-content > div > div > div > div > div > div.no-results"
-              )) {
-              return true
-            } else {
-              return false
-            }
-          })
-      ) {
-        continue;
-      } else {
-        await prepare(lowP, highP, newURL); // sorts page
-        await getData(lowP, highP); // gets data tables and price
-        imageLow = await lowP.evaluate(() => {
-          const image = document.querySelector("#mainImage");
-          return image.src;
-        });
 
-        imageHigh = await lowP.evaluate(() => {
-          const image = document.querySelector("#mainImage");
-          return image.src;
-        });
-      }
+      await prepare(lowP, highP, newURL); // sorts page
+      await getData(lowP, highP); // gets data tables and price
+      imageLow = await lowP.evaluate(() => {
+        const image = document.querySelector("#mainImage");
+        return image.src;
+      });
+
+      imageHigh = await lowP.evaluate(() => {
+        const image = document.querySelector("#mainImage");
+        return image.src;
+      });
     }
 
     if (lowBox.indexOf(brandLow) != -1) {
-      lowBox = "Yes"
+      lowBox = "Yes";
     } else {
-      lowBox = "No"
+      lowBox = "No";
     }
     if (highBox.indexOf(brandHigh) != -1) {
-      highBox = "Yes"
+      highBox = "Yes";
     } else {
-      highBox = "No"
+      highBox = "No";
     }
     w = new Watch(
       refNums[i],
@@ -146,11 +112,11 @@ async function bobs(lowP, highP, tPage, list) {
       lowSku,
       highSku
     );
-    list.push(w)
+    list.push(w);
 
     //console.log(w);
     fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
-   //console.log(lowTable)
+    //console.log(lowTable)
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w);
   }
@@ -193,11 +159,11 @@ async function getData(lowP, highP) {
     "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding"
   );
 
-  lowSku = await lowP.$eval("meta[itemprop='sku']", (el) => el.content)
+  lowSku = await lowP.$eval("meta[itemprop='sku']", (el) => el.content);
 
-  highSku = await highP.$eval("meta[itemprop='sku']",(el) => el.content)
+  highSku = await highP.$eval("meta[itemprop='sku']", (el) => el.content);
 
-  console.log("LowSKU", lowSku, "HighSKU", highSku)
+  console.log("LowSKU", lowSku, "HighSKU", highSku);
 
   await lowP.click(
     "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a",
@@ -225,15 +191,23 @@ async function getData(lowP, highP) {
   index2YearLow = lowTable.indexOf("Gender:");
   PLow = "No";
   if (lowTable.indexOf("warranty card") != -1) {
-    PLow = "Yes"
+    PLow = "Yes";
   }
-  lowBox = lowTable.substring(lowTable.indexOf("Box & Papers")+12,lowTable.indexOf("Warranty")).trim()
-  lowBox = lowBox.substring(0,lowBox.indexOf(","))
-  
+  lowBox = lowTable
+    .substring(
+      lowTable.indexOf("Box & Papers") + 12,
+      lowTable.indexOf("Warranty")
+    )
+    .trim();
+  lowBox = lowBox.substring(0, lowBox.indexOf(","));
 
-  highBox = highTable.substring(highTable.indexOf("Box & Papers")+12,highTable.indexOf("Warranty")).trim()
-  highBox = highBox.substring(0,highBox.indexOf(","))
-  
+  highBox = highTable
+    .substring(
+      highTable.indexOf("Box & Papers") + 12,
+      highTable.indexOf("Warranty")
+    )
+    .trim();
+  highBox = highBox.substring(0, highBox.indexOf(","));
 
   index1YearHigh = -1;
   if (highTable.indexOf("Serial/Year:") != -1) {
@@ -242,17 +216,17 @@ async function getData(lowP, highP) {
     index1YearHigh = highTable.indexOf("Serial") + 6;
   }
   index2YearHigh = highTable.indexOf("Gender:");
-  PHigh ="No";
+  PHigh = "No";
   if (highTable.indexOf("warranty card") != -1) {
-    PHigh = "Yes"
+    PHigh = "Yes";
   }
 
   lowYear = "";
   if (lowTable.indexOf("/Year") !== -1) {
     lowYear = lowTable.substring(index1YearLow, index2YearLow);
     index = lowYear.indexOf("- ") + 2;
-    lowYear = lowYear.substring(index)
-    lowYear = lowYear.replace(" or newer","+");
+    lowYear = lowYear.substring(index);
+    lowYear = lowYear.replace(" or newer", "+");
   }
 
   brandLow = "";
@@ -263,13 +237,13 @@ async function getData(lowP, highP) {
   brandHigh = await (await utilFunc.getItem(highP, "tbody > tr:nth-child(1)"))
     .replace("Brand:", "")
     .trim();
-  
+
   highYear = "";
   if (highTable.indexOf("/Year") !== -1) {
     highYear = highTable.substring(index1YearHigh, index2YearHigh);
     index = highYear.indexOf("- ") + 2;
-    highYear = highYear.substring(index)
-    highYear = highYear.replace(" or newer","+");
+    highYear = highYear.substring(index);
+    highYear = highYear.replace(" or newer", "+");
   }
 
   if (String(lowP.url()) != "about:blank") {
@@ -284,28 +258,29 @@ async function prepare(lowP, highP, url) {
   await lowP.goto(url + "#/sort:price:asc", {
     waitUntil: "networkidle0",
   });
-
   await lowP.waitForTimeout(1000);
-  await select(
-    lowP,
-    "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
-    "Price - Low to High"
-  );
-
+  // await select(
+  //   lowP,
+  //   "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
+  //   "Price - Low to High"
+  // );
   await highP.goto(url + "#/sort:price:desc", {
     waitUntil: "networkidle0",
   });
 
-  await select(
-    highP,
-    "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
-    "Price - High to Low"
-  ).catch(async(err) => {
-    console.log(err)
-    await highP.waitForTimeout(1000)
-    await select(highP, "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
-    "Price - High to Low")
-  })
+  // await select(
+  //   highP,
+  //   "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
+  //   "Price - High to Low"
+  // ).catch(async (err) => {
+  //   console.log(err);
+  //   await highP.waitForTimeout(1000);
+  //   await select(
+  //     highP,
+  //     "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
+  //     "Price - High to Low"
+  //   );
+  // });
 }
 
 module.exports = { bobs };
