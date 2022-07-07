@@ -1,3 +1,8 @@
-utilFunc = require("./utilityFunctions")
+const utilFunc = require('./utilityFunctions')
 
-utilFunc.deleteObj()
+
+start = async () => {
+    await utilFunc.checkNewDay()
+}
+
+start()

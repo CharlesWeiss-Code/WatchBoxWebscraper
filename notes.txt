@@ -3,4 +3,4 @@
     - add promise catches to all functions that use them?
     upload to aws = https://www.youtube.com/watch?v=xtRYi8ud1sM
 
-    - ages, Boxes, and papers in CandC
+    - special watches should be handled in if statements now that setup is better

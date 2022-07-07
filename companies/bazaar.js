@@ -92,14 +92,14 @@ async function bazaar(lowP, highP, tPage, list) {
         await utilFunc.getItem(highP, 'div[class="attributes-table-container"]')
       );
 
-      lowImage = String(
+      imageLow = String(
         await lowP
           .$eval("img[class='gallery-image visible']", (el) => el.src)
           .catch((err) => {
             return "";
           })
       );
-      highImage = String(
+      imageHigh = String(
         await highP
           .$eval("img[class='gallery-image visible']", (el) => el.src)
           .catch((err) => {

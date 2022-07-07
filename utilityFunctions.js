@@ -116,7 +116,9 @@ getKey = () => {
   var date = new Date();
   var key =
     date.getFullYear() + "_" + parseInt(date.getMonth() + 1) + "_" + date.getDate();
+    console.log(key+".csv")
   return key + ".csv";
+
 };
 
 deleteObj = async () => {
@@ -129,6 +131,7 @@ deleteObj = async () => {
     Bucket: awsInfo.getBucketName(),
     Key: yesterday(date),
   };
+
   s3.deleteObject(params, function (err, data) {
     if (err) console.log(err, err.stack); // an error occurred
     else console.log(data); // successful response
@@ -144,16 +147,19 @@ yesterday = (date) => {
 checkNewDay = async () => {
   const stats = fs.statSync("dataInCSV.csv");
   date = new Date();
+
   const indexNow = date.toLocaleString().indexOf(",");
   const indexData = stats.mtime.toLocaleString().indexOf(",");
+  console.log(stats.mtime)
   if (
-    !(
+    (
       date.toLocaleString().substring(0, indexNow) ===
       stats.mtime.toLocaleString().substring(0, indexData)
     )
   ) {
     console.log("New day --> deleting old scrape and creating new one");
-    await this.uploadFileToS3();
+    await uploadFileToS3();
+    await deleteObj();
     fs.renameSync("dataInCSV.csv", "oldDataInCSV.csv");
     w = new Watch(
       "",
@@ -189,6 +195,8 @@ checkNewDay = async () => {
     if (fs.existsSync("oldDataInCSV.csv")) {
       fs.unlinkSync("oldDataInCSV.csv");
     }
+  } else {
+    console.log("Same Day")
   }
 };
 

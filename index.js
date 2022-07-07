@@ -66,8 +66,8 @@ async function start() {
   //console.log(utilFunc.newDay());
 
   var watches = [];
-  await Bazaar.bazaar(lowPage, highPage, testPage, watches);
-  await CandC.crownAndCaliber(lowPage, highPage, testPage, watches)
+  // await Bazaar.bazaar(lowPage, highPage, testPage, watches);
+   await CandC.crownAndCaliber(lowPage, highPage, testPage, watches)
 
   await ewc.EWC(lowPage, highPage, testPage, watches);
   await david.davidsw(lowPage, highPage, testPage, watches);

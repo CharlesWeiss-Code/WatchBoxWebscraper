@@ -97,7 +97,7 @@ async function chrono24(lowP, highP, tPage, list) {
         lowSku,
         highSku
       );
-
+        
       //console.log("lowSku", lowSku);
       fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
       console.log(JSON.stringify(w, null, "\t"));

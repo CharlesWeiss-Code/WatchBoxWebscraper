@@ -20,7 +20,7 @@ var lowSku = "";
 var highSku = "";
 
 async function crownAndCaliber(lowP, highP, tPage, list) {
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 16; i < refNums.length; i++) {
     lowYear = "";
     lowPaper = "No";
     lowBox = "No";
@@ -177,9 +177,12 @@ assignData = () => {
   lowYear = lowTable
     .substring(lowYearIndex1, lowYearIndex2)
     .replace(/\s+/g, "");
-  if (lowYear.length > 5) {
-    lowYear = lowYear.slice(-4);
-  }
+    if (lowYear.length > 5 && lowYear.indexOf("-Present") === -1) {
+      lowYear = lowYear.slice(-4);
+    } else {
+        lowYear = lowYear.substring(0,4)+"+"
+    }
+    
 
   lowPaper = lowTable.substring(lowBoxIndex1, lowBoxIndex2).replace(/\s+/g, "");
   lowBox = lowTable
@@ -188,9 +191,11 @@ assignData = () => {
   highYear = highTable
     .substring(highYearIndex1, highYearIndex2)
     .replace(/\s+/g, "");
-  if (highYear.length > 5) {
+    if (highYear.length > 5 && highYear.indexOf("-Present") === -1) {
     highYear = highYear.slice(-4);
-  }
+    } else {
+        highYear = highYear.substring(0,4)+"+"
+    }
 
   highPaper = highTable
     .substring(highBoxIndex1, highBoxIndex2)
@@ -198,6 +203,8 @@ assignData = () => {
   highBox = highTable
     .substring(highPaperIndex1, highPaperIndex2)
     .replace(/\s+/g, "");
+
+
 
 };
 
