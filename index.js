@@ -6,13 +6,12 @@ const editJsonFile = require("edit-json-file");
 
 const request = require("request");
 
-const CandC = require("./companies/CandC.js");
 const chrono = require("./companies/crono.js");
 const ewc = require("./companies/ewc.js");
 const Bazaar = require("./companies/bazaar.js");
 const david = require("./companies/davidsw.js");
 const Bobs = require("./companies/bobs.js");
-
+const CandC = require("./companies/CandC")
 const REF = require("./refNums.js");
 const minArgs = require("./minimalArgs");
 
@@ -68,10 +67,12 @@ async function start() {
 
   var watches = [];
   //await Bazaar.bazaar(lowPage, highPage, testPage, watches);
-  // await CandC.crownAndCaliber(lowPage, highPage, testPage, watches);
+  //await CandC.crownAndCaliber(lowPage, highPage, testPage, watches)
+
   // await ewc.EWC(lowPage, highPage, testPage, watches);
   // await david.davidsw(lowPage, highPage, testPage, watches);
-   await Bobs.bobs(lowPage, highPage, testPage, watches);
+  // await Bobs.bobs(lowPage, highPage, testPage, watches);
+
   // await chrono.chrono24(lowPage, highPage, testPage, watches);
 
   await browser.close();
