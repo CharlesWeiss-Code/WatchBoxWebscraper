@@ -20,7 +20,7 @@ var lowSku = "";
 var highSku = "";
 
 async function crownAndCaliber(lowP, highP, tPage, list) {
-  for (var i = 22; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     lowYear = "";
     lowPaper = "No";
     lowBox = "No";

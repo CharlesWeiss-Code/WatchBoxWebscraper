@@ -66,7 +66,7 @@ async function start() {
   //console.log(utilFunc.newDay());
 
   var watches = [];
-  //  await Bazaar.bazaar(lowPage, highPage, testPage, watches);
+   await Bazaar.bazaar(lowPage, highPage, testPage, watches);
    await CandC.crownAndCaliber(lowPage, highPage, testPage, watches)
 
   await ewc.EWC(lowPage, highPage, testPage, watches);
@@ -74,7 +74,7 @@ async function start() {
    await Bobs.bobs(lowPage, highPage, testPage, watches);
 
   await chrono.chrono24(lowPage, highPage, testPage, watches);
-
+  
   await browser.close();
   // }
 

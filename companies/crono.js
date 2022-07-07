@@ -24,9 +24,9 @@ var highImage = "";
 var highBP = "";
 var lowSku = "";
 var highSku = "";
-var test = 3
-var lowDealerStatus = ""
-var highDealerStatus = ""
+var test = 3;
+var lowDealerStatus = "";
+var highDealerStatus = "";
 
 async function chrono24(lowP, highP, tPage, list) {
   flag = true;
@@ -64,7 +64,8 @@ async function chrono24(lowP, highP, tPage, list) {
         tPage,
         "div[class='h1 m-b-0 text-center']",
         "We've found no results"
-      )
+      ) /** ||
+      noWatchesInList(list, refNums[i]*/
     ) {
       //no results
       continue;
@@ -97,7 +98,7 @@ async function chrono24(lowP, highP, tPage, list) {
         lowSku,
         highSku
       );
-        
+
       //console.log("lowSku", lowSku);
       fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
       console.log(JSON.stringify(w, null, "\t"));
@@ -107,7 +108,7 @@ async function chrono24(lowP, highP, tPage, list) {
 }
 
 prepareStuff = async (lowP, highP, url, list, rn) => {
-  test = 54
+  test = 54;
   await lowP.goto(url + "&sortorder=1");
   childLow = await checkTop(lowP, "low", list, rn);
   lowest = await utilFunc.getItem(
@@ -124,12 +125,14 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
     }
   }
 
-  lowDealerStatus = String(await utilFunc.getItem(
-    lowP,
-    "#wt-watches > div:nth-child(" +
-      childLow +
-      ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
-  ))
+  lowDealerStatus = String(
+    await utilFunc.getItem(
+      lowP,
+      "#wt-watches > div:nth-child(" +
+        childLow +
+        ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
+    )
+  );
   if (lowDealerStatus.trim() === "Professional dealer") {
     lowDealerStatus = "PD";
   } else if (lowDealerStatus.trim() === "Private Seller") {
@@ -142,7 +145,7 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
     delay: 20,
   });
   await lowP.reload();
-  await lowP.waitForTimeout(500)
+  await lowP.waitForTimeout(500);
   lowTable = String(
     await utilFunc.getItem(
       lowP,
@@ -178,8 +181,8 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
     delay: 20,
   });
 
-  await highP.reload()
-  await highP.waitForTimeout(500)
+  await highP.reload();
+  await highP.waitForTimeout(500);
 
   highTable = String(
     await utilFunc.getItem(
@@ -188,130 +191,129 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
     )
   );
 
-  lowImage = String(await lowP
-    .$eval("img[class='img-responsive mh-100']", (el) => el.src)
-    .catch((err) => {
-      return "";
-    }))
-  highImage = String(await highP
-    .$eval("img[class='img-responsive mh-100']", (el) => el.src)
-    .catch((err) => {
-      return "";
-    }))
+  lowImage = String(
+    await lowP
+      .$eval("img[class='img-responsive mh-100']", (el) => el.src)
+      .catch((err) => {
+        return "";
+      })
+  );
+  highImage = String(
+    await highP
+      .$eval("img[class='img-responsive mh-100']", (el) => el.src)
+      .catch((err) => {
+        return "";
+      })
+  );
 
+  /***************** */
+  lowSkuIndex1 = lowTable.indexOf("Listing code") + 12;
+  lowSkuIndex2 = lowTable.indexOf("Brand");
+  if (
+    lowSkuIndex2 > lowTable.indexOf("Dealer product code") &&
+    lowTable.indexOf("Dealer product code") != -1
+  ) {
+    lowSkuIndex2 = lowTable.indexOf("Dealer product code");
+  }
 
+  /***************** */
 
-    /***************** */
-    lowSkuIndex1 = lowTable.indexOf("Listing code") + 12;
-    lowSkuIndex2 = lowTable.indexOf("Brand");
-    if (
-      lowSkuIndex2 > lowTable.indexOf("Dealer product code") &&
-      lowTable.indexOf("Dealer product code") != -1
-    ) {
-      lowSkuIndex2 = lowTable.indexOf("Dealer product code");
-    }
-  
-    /***************** */
-  
-    highSkuIndex1 = highTable.indexOf("Listing code") + 12;
-    highSkuIndex2 = highTable.indexOf("Brand");
-    if (
-      highSkuIndex2 > highTable.indexOf("Dealer product code") &&
-      highTable.indexOf("Dealer product code") != -1
-    ) {
-      highSkuIndex2 = highTable.indexOf("Dealer product code");
-    }
-    /***************** */
-  
-    index1BrandLow = lowTable.indexOf("Brand") + 5;
-    index2BrandLow = lowTable.indexOf("Model");
+  highSkuIndex1 = highTable.indexOf("Listing code") + 12;
+  highSkuIndex2 = highTable.indexOf("Brand");
+  if (
+    highSkuIndex2 > highTable.indexOf("Dealer product code") &&
+    highTable.indexOf("Dealer product code") != -1
+  ) {
+    highSkuIndex2 = highTable.indexOf("Dealer product code");
+  }
+  /***************** */
 
-    if (
-      index1BrandLow != 4 &&
-      index1BrandLow != lowTable.indexOf("Brand new") + 5
-    ) {
-      if (index2BrandLow === -1) {
-        index2BrandLow = lowTable.indexOf("Reference number");
-      }
-    }
-    /***************** */
-  
-    index1BrandHigh = highTable.indexOf("Brand") + 5;
-    index2BrandHigh = highTable.indexOf("Model");
+  index1BrandLow = lowTable.indexOf("Brand") + 5;
+  index2BrandLow = lowTable.indexOf("Model");
 
-    if (
-      index1BrandHigh != 4 &&
-      index1BrandLow != lowTable.indexOf("Brand new") + 5
-    ) {
-      if (index2BrandHigh === -1) {
-        index2BrandHigh = highTable.indexOf("Reference number");
-      }
+  if (
+    index1BrandLow != 4 &&
+    index1BrandLow != lowTable.indexOf("Brand new") + 5
+  ) {
+    if (index2BrandLow === -1) {
+      index2BrandLow = lowTable.indexOf("Reference number");
     }
-    /***************** */
-  
-    index1YearLow = lowTable.indexOf("Year of production") + 18;
-    index2YearLow = lowTable.indexOf("Condition");
-    if (index2YearLow === -1) {
-      index2YearLow = lowTable.indexOf("Scope of delivery");
-    }
-    /***************** */
-    index1YearHigh = highTable.indexOf("Year of production") + 18;
-    index2YearHigh = highTable.indexOf("Condition");
-    if (index2YearHigh === -1) {
-      index2YearHigh = highTable.indexOf("Scope of delivery");
-    }
-    /***************** */
-  
-    index1BPLow = lowTable.indexOf("Scope of delivery") + 17;
-    index2BPLow = lowTable.indexOf("Gender");
-    if (index2BPLow === -1) {
-      index2BPLow = lowTable.indexOf("Location");
-    }
-    /***************** */
-  
-    index1BPHigh = highTable.indexOf("Scope of delivery") + 17;
-    index2BPHigh = highTable.indexOf("Gender");
-    if (index2BPHigh === -1) {
-      index2BPHigh = highTable.indexOf("Location");
-    }
-    /***************** */
-  
-    lowSku = lowTable.substring(lowSkuIndex1, lowSkuIndex2).trim();
-    highSku = highTable.substring(highSkuIndex1, highSkuIndex2).trim();
-    brandLow = lowTable.substring(index1BrandLow, index2BrandLow).trim();
-    if (brandLow.length > 50) {
-      brandLow = ""
-    }
-    if (brandHigh.length > 50) {
-      brandHigh = ""
-    }
-    brandHigh = highTable.substring(index1BrandHigh, index2BrandHigh).trim();
-    yearLow = lowTable
-      .substring(index1YearLow, index2YearLow)
-      .replace(/\s+/g, "")
-      .replace("Unknown", "");
-    yearHigh = highTable
-      .substring(index1YearHigh, index2YearHigh)
-      .replace(/\s+/g, "")
-      .replace("Unknown", "");
-    lowBP = lowTable.substring(index1BPLow, index2BPLow).trim().toLowerCase();
-    if (lowBP.indexOf("original box") != -1) {
-      lowBox = "Yes";
-    }
-    if (lowBP.indexOf("original papers") != -1) {
-      lowPaper = "Yes";
-    }
-    highBP = highTable.substring(index1BPHigh, index2BPHigh).trim().toLowerCase();
-    if (highBP.indexOf("original box") != -1) {
-      highBox = "Yes";
-    }
-    if (highBP.indexOf("original papers") != -1) {
-      highPaper = "Yes";
-    }
-  
+  }
+  /***************** */
 
+  index1BrandHigh = highTable.indexOf("Brand") + 5;
+  index2BrandHigh = highTable.indexOf("Model");
+
+  if (
+    index1BrandHigh != 4 &&
+    index1BrandLow != lowTable.indexOf("Brand new") + 5
+  ) {
+    if (index2BrandHigh === -1) {
+      index2BrandHigh = highTable.indexOf("Reference number");
+    }
+  }
+  /***************** */
+
+  index1YearLow = lowTable.indexOf("Year of production") + 18;
+  index2YearLow = lowTable.indexOf("Condition");
+  if (index2YearLow === -1) {
+    index2YearLow = lowTable.indexOf("Scope of delivery");
+  }
+  /***************** */
+  index1YearHigh = highTable.indexOf("Year of production") + 18;
+  index2YearHigh = highTable.indexOf("Condition");
+  if (index2YearHigh === -1) {
+    index2YearHigh = highTable.indexOf("Scope of delivery");
+  }
+  /***************** */
+
+  index1BPLow = lowTable.indexOf("Scope of delivery") + 17;
+  index2BPLow = lowTable.indexOf("Gender");
+  if (index2BPLow === -1) {
+    index2BPLow = lowTable.indexOf("Location");
+  }
+  /***************** */
+
+  index1BPHigh = highTable.indexOf("Scope of delivery") + 17;
+  index2BPHigh = highTable.indexOf("Gender");
+  if (index2BPHigh === -1) {
+    index2BPHigh = highTable.indexOf("Location");
+  }
+  /***************** */
+
+  lowSku = lowTable.substring(lowSkuIndex1, lowSkuIndex2).trim();
+  highSku = highTable.substring(highSkuIndex1, highSkuIndex2).trim();
+  brandLow = lowTable.substring(index1BrandLow, index2BrandLow).trim();
+  if (brandLow.length > 50) {
+    brandLow = "";
+  }
+  if (brandHigh.length > 50) {
+    brandHigh = "";
+  }
+  brandHigh = highTable.substring(index1BrandHigh, index2BrandHigh).trim();
+  yearLow = lowTable
+    .substring(index1YearLow, index2YearLow)
+    .replace(/\s+/g, "")
+    .replace("Unknown", "");
+  yearHigh = highTable
+    .substring(index1YearHigh, index2YearHigh)
+    .replace(/\s+/g, "")
+    .replace("Unknown", "");
+  lowBP = lowTable.substring(index1BPLow, index2BPLow).trim().toLowerCase();
+  if (lowBP.indexOf("original box") != -1) {
+    lowBox = "Yes";
+  }
+  if (lowBP.indexOf("original papers") != -1) {
+    lowPaper = "Yes";
+  }
+  highBP = highTable.substring(index1BPHigh, index2BPHigh).trim().toLowerCase();
+  if (highBP.indexOf("original box") != -1) {
+    highBox = "Yes";
+  }
+  if (highBP.indexOf("original papers") != -1) {
+    highPaper = "Yes";
+  }
 };
-
 
 checkTop = async (page, LH, arr, rn) => {
   min = getBuffer(arr, 0.9, rn);
@@ -393,6 +395,15 @@ noTop = async (page, s) => {
     let value = await page.evaluate((el) => el.textContent, element);
     return value.indexOf("Top") === -1;
   }
+};
+
+noWatchesInList = (list, rn) => {
+  list.forEach((watch) => {
+    if (watch.refNum === rn) {
+      return false;
+    }
+  });
+  return true;
 };
 
 module.exports = { chrono24 };

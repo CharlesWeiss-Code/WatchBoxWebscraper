@@ -4,3 +4,8 @@
     upload to aws = https://www.youtube.com/watch?v=xtRYi8ud1sM
 
     - special watches should be handled in if statements now that setup is better
+
+WSSA0030,Box,Yes,Box,Yes,7475.00,7475.00,https://davidsw.com/shop/watch/cartier/cartier-wssa0030-santos-de-cartier-large-with-blue-dial-14/,https://davidsw.com/shop/watch/cartier/cartier-wssa0030-santos-de-cartier-large-with-blue-dial-14/,2021,2021,,,https://davidsw.com/shop/watch/cartier/cartier-wssa0030-santos-de-cartier-large-with-blue-dial-14/,2022_07_07,https://3gjx4b3452bb1chpkbd5xa4j-wpengine.netdna-ssl.com/wp-content/uploads/2022/06/IMG_5663.jpg,https://3gjx4b3452bb1chpkbd5xa4j-wpengine.netdna-ssl.com/wp-content/uploads/2022/06/IMG_5663.jpg,Cartier,Cartier,davidsw,42304,42304,
+- says box instead of yes
+
+make chrono noWatchesInList work.
