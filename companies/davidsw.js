@@ -1,6 +1,6 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
-const fs = require('fs')
+const fs = require("fs");
 async function davidsw(lowP, highP, tPage, list) {
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
@@ -12,184 +12,87 @@ async function davidsw(lowP, highP, tPage, list) {
     highPaper = "No";
     lowYear = "";
     highYear = "";
-    brandLow = ""
-    brandHigh = ""
-    imageLow = ""
-    imageHigh = ""
-    lowSku = ""
-    highSku = ""
+    brandLow = "";
+    brandHigh = "";
+    imageLow = "";
+    imageHigh = "";
+    lowSku = "";
+    highSku = "";
 
     var newURL =
       "https://davidsw.com/?s=" +
       refNums[i] +
       "&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
-    console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
     lowest = -1;
     highest = -1;
     if (refNums[i] == "116500LN-0001") {
       // special white daytona
-      await tPage.goto(
-        "https://davidsw.com/?filter_dial-color=white&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1",
-        { waitUntil: "networkidle0", timeout: 60000 }
-      );
-      if (
-        await utilFunc.noResults(
-          tPage,
-          "#main > div > div.col.large-9 > div > p"
-        )
-      ) {
-        // no results
-        continue;
-      } else {
-        await tPage.waitForTimeout(1000);
-        await lowP
-          .goto(
-            "https://davidsw.com/?orderby=price&paged=1&filter_dial-color=white&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1",
-            { waitUntil: "networkidle0" }
-          )
-          .catch(async (error) => {
-            await lowP.waitForTimeout(1000);
-            await lowP.reload();
-            await lowP.waitForTimeout(1000);
-          });
-        await highP
-          .goto(
-            "https://davidsw.com/?orderby=price-desc&paged=1&filter_dial-color=white&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1",
-            { waitUntil: "networkidle0" }
-          )
-          .catch(async (error) => {
-            await highP.waitForTimeout(1000);
-            await highP.reload();
-            await highP.waitForTimeout(1000);
-          });
+      newURL =
+        "https://davidsw.com/?filter_dial-color=white&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
 
-        //checkign to see if lowP is the list of watches or if it went straight to one watch.
-        if (
-          await utilFunc.exists(
-            tPage,
-            "#wrapper > div > div.page-title-inner.flex-row.container.medium-flex-wrap.flex-has-center > div.flex-col.flex-center.text-center > h1"
-          )
-        ) {
-          await assignDataResults(lowP, highP);
-          lowImage = await lowP.$eval("img[class='wp-post-image skip-lazy lazy-load-active']", (el) => el.src).catch((err) => {
-            return ""
-          })
-          highImage = await highP.$eval("img[class='wp-post-image skip-lazy lazy-load-active']", (el) => el.src).catch((err) => {
-            return ""
-          })
-        } else {
-          console.log("here");
-          await assignDataOneResult(lowP);
-          imageHigh = await lowP.evaluate(() => {
-            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
-            return image.src;
-          });
-          imageLow = imageHigh
-        }
-      }
     } else if (refNums[i] == "116500LN-0002") {
-      // special black daytona
-      await tPage.goto(
-        "https://davidsw.com/?filter_dial-color=black&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1",
-        { waitUntil: "networkidle0", timeout: 60000 }
-      );
-
+      newURL =
+        "https://davidsw.com/?filter_dial-color=black&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+    }
+    await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
+    if (
+      await utilFunc.exists(tPage, "#main > div > div.col.large-9 > div > p")
+    ) {
+      // no results
+      continue;
+    } else {
+      console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
+      //https://davidsw.com/?s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1
+      //https://davidsw.com/?orderby=price&paged=1&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1
+      //https://davidsw.com/?orderby=price&paged=1&=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1
+      
+      await lowP
+        .goto(getUrl(newURL, "orderby=price&paged=1&"),
+          { waitUntil: "networkidle0" }
+        )
+        .catch(async () => {
+          await lowP.waitForTimeout(1000);
+          await lowP.reload();
+          await lowP.waitForTimeout(1000);
+        });
+      await highP
+        .goto(getUrl(newURL, "orderby=price-desc&"),
+          { waitUntil: "networkidle0" }
+        )
+        .catch(async () => {
+          await highP.waitForTimeout(1000);
+          await highP.reload();
+          await highP.waitForTimeout(1000);
+        });
       if (
-        await utilFunc.noResults(
+        await utilFunc.exists(
           tPage,
-          "#main > div > div.col.large-9 > div > p"
+          "#wrapper > div > div.page-title-inner.flex-row.container.medium-flex-wrap.flex-has-center > div.flex-col.flex-center.text-center > h1"
         )
       ) {
-        // no results
-        continue;
+        await assignDataResults(lowP, highP);
+        imageLow = String(await lowP
+          .$eval("img[class='wp-post-image skip-lazy lazy-load-active']", (el) => el.src)
+          .catch((err) => {
+            return "";
+          }))
+         imageHigh= String(await highP
+          .$eval("img[class='wp-post-image skip-lazy lazy-load-active']", (el) => el.src)
+          .catch((err) => {
+            return "";
+          }))
       } else {
-        await lowP.goto(
-          "https://davidsw.com/?orderby=price&paged=1&filter_dial-color=black&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1"
-        );
-        await highP.goto(
-          "https://davidsw.com/?orderby=price-desc&paged=1&filter_dial-color=black&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1"
-        );
+        await assignDataOneResult(lowP);
 
-        if (await utilFunc.exists(tPage, 'div[class="shop-container"]')) {
-          await assignDataResults(lowP, highP);
-          imageLow = await lowP.evaluate(() => {
-            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
-            return image.src;
-          });
-  
-          imageHigh = await lowP.evaluate(() => {
-            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
-            return image.src;
-          });
-        } else {
-          await assignDataOneResult(lowP);
-          imageLow = await lowP.evaluate(() => {
-            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
-            return image.src;
-          });
-  
-          imageHigh = imageLow
-        }
-      }
-    } else {
-      await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
-      if (
-        await utilFunc.exists(tPage, "#main > div > div.col.large-9 > div > p")
-      ) {
-        // no results
-        continue;
-      } else {
-        await lowP
-          .goto(
-            "https://davidsw.com/?orderby=price&paged=1&s=" +
-              refNums[i] +
-              "&post_type=product&type_aws=true&aws_id=1&aws_filter=1",
-            { waitUntil: "networkidle0" }
-          )
-          .catch(async () => {
-            await lowP.waitForTimeout(1000);
-            await lowP.reload();
-            await lowP.waitForTimeout(1000);
-          });
-        await highP
-          .goto(
-            "https://davidsw.com/?orderby=price-desc&paged=1&s=" +
-              refNums[i] +
-              "&post_type=product&type_aws=true&aws_id=1&aws_filter=1",
-            { waitUntil: "networkidle0" }
-          )
-          .catch(async () => {
-            await highP.waitForTimeout(1000);
-            await highP.reload();
-            await highP.waitForTimeout(1000);
-          });
-        if (
-          await utilFunc.exists(
-            tPage,
-            "#wrapper > div > div.page-title-inner.flex-row.container.medium-flex-wrap.flex-has-center > div.flex-col.flex-center.text-center > h1"
-          )
-        ) {
-          await assignDataResults(lowP, highP);
-          imageLow = await lowP.evaluate(() => {
-            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
-            return image.src;
-          });
-  
-          imageHigh = await lowP.evaluate(() => {
-            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
-            return image.src;
-          });
-        } else {
-          await assignDataOneResult(lowP);
-  
-          imageHigh = await lowP.evaluate(() => {
-            const image = document.querySelector("img[class='wp-post-image skip-lazy lazy-load-active']");
-            return image.src;
-          });
-          imageLow = imageHigh
-        }
+        imageHigh = String(await highP
+          .$eval("img[class='wp-post-image skip-lazy lazy-load-active']", (el) => el.src)
+          .catch((err) => {
+            return "";
+          }))
+        imageLow = imageHigh;
       }
     }
+
     //console.log("LOW TABLES: " + lowTables + "\n");
     lowTableBoxAndPaper = lowTables[6];
     lowTableGeneral = lowTables[0];
@@ -246,11 +149,11 @@ async function davidsw(lowP, highP, tPage, list) {
       highSku
     );
     //console.log(w);
-    list.push(w)
+    list.push(w);
     fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     //utilFunc.addToJson(w);
-    console.log(JSON.stringify(w,null,"\t"))
+    console.log(JSON.stringify(w, null, "\t"));
   }
 }
 
@@ -266,9 +169,9 @@ async function assignDataOneResult(lowP) {
   lowTables = await lowP.$$eval("tbody", (options) =>
     options.map((option) => option.textContent)
   );
-  lowSku = await utilFunc.getItem(lowP, "span[class='sku']")
-  highSku = lowSku
-  console.log(lowSku, highSku)
+  lowSku = await utilFunc.getItem(lowP, "span[class='sku']");
+  highSku = lowSku;
+  console.log(lowSku, highSku);
 
   // only one watch therefore highData = lowData
   // already on the specific watch page. no need to click anything
@@ -276,9 +179,12 @@ async function assignDataOneResult(lowP) {
     lowP,
     'span[class="woocommerce-Price-amount amount"]'
   );
-  brandLow = await (await utilFunc.getItem(lowP,"h1[class='product-title product_title entry-title']"))
-  brandLow = brandLow.substring(0,brandLow.indexOf(" ")).trim()
-  brandHigh = brandLow
+  brandLow = await await utilFunc.getItem(
+    lowP,
+    "h1[class='product-title product_title entry-title']"
+  );
+  brandLow = brandLow.substring(0, brandLow.indexOf(" ")).trim();
+  brandHigh = brandLow;
 
   highest = lowest;
   highTables = lowTables;
@@ -293,9 +199,19 @@ async function assignDataResults(lowP, highP) {
   await highP.waitForSelector('span[class="price"]');
   highest = await utilFunc.getItem(highP, 'span[class="price"]');
 
-  brandLow = await (await utilFunc.getItem(lowP,"p[class='category uppercase is-smaller no-text-overflow product-cat op-7']")).trim()
-  brandHigh = await (await utilFunc.getItem(highP, "p[class='category uppercase is-smaller no-text-overflow product-cat op-7']")).trim()
-  console.log(brandLow,brandHigh)         
+  brandLow = await (
+    await utilFunc.getItem(
+      lowP,
+      "p[class='category uppercase is-smaller no-text-overflow product-cat op-7']"
+    )
+  ).trim();
+  brandHigh = await (
+    await utilFunc.getItem(
+      highP,
+      "p[class='category uppercase is-smaller no-text-overflow product-cat op-7']"
+    )
+  ).trim();
+  console.log(brandLow, brandHigh);
 
   await lowP.waitForSelector('div[class="title-wrapper"]');
   await highP.waitForSelector('div[class="title-wrapper"]');
@@ -313,7 +229,9 @@ async function assignDataResults(lowP, highP) {
     options.map((option) => option.textContent)
   );
 
-  lowSku = await utilFunc.getItem(lowP, "span[class='sku']")
-  highSku = await utilFunc.getItem(highP,"span[class='sku']")
-  console.log(lowSku, highSku)
+  lowSku = await utilFunc.getItem(lowP, "span[class='sku']");
+  highSku = await utilFunc.getItem(highP, "span[class='sku']");
+  console.log(lowSku, highSku);
 }
+
+getUrl = (url, filter) => url.substring(0,url.indexOf("&")+1)+filter+url.substring(url.indexOf("&s")+1)
