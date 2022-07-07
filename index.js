@@ -26,7 +26,6 @@ I HAVE MADE TIMEOUT: 0 ON SOME OF THE PAGE.GOTO(). just for testing. eventually 
 
 async function start() {
   // if (repeat(15)) {
-  currentScrape = new Scrape();
   refNums = REF.getRefNums();
 
   const browser = await puppeteer.launch({
@@ -68,12 +67,13 @@ async function start() {
   //console.log(utilFunc.newDay());
 
   var watches = [];
-  await CandC.crownAndCaliber(lowPage, highPage, testPage, watches);
-  await ewc.EWC(lowPage, highPage, testPage, watches);
-  await david.davidsw(lowPage, highPage, testPage, watches);
   await Bazaar.bazaar(lowPage, highPage, testPage, watches);
-  await Bobs.bobs(lowPage, highPage, testPage, watches);
-  await chrono.chrono24(lowPage, highPage, testPage, watches);
+
+  // await CandC.crownAndCaliber(lowPage, highPage, testPage, watches);
+  // await ewc.EWC(lowPage, highPage, testPage, watches);
+  // await david.davidsw(lowPage, highPage, testPage, watches);
+  // await Bobs.bobs(lowPage, highPage, testPage, watches);
+  // await chrono.chrono24(lowPage, highPage, testPage, watches);
 
   await browser.close();
   // }

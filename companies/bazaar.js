@@ -21,9 +21,9 @@ async function bazaar(lowP, highP, tPage, list) {
     imageHigh = "";
     brandLow = "";
     brandHigh = "";
-    lowSku = ""
-    highSku =""
-    //https://www.luxurybazaar.com/search-results?q=116500LN-0001
+    lowSku = "";
+    highSku = "";
+
     var newURL = "https://www.luxurybazaar.com/search-results?q=" + refNums[i];
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
@@ -48,44 +48,49 @@ async function bazaar(lowP, highP, tPage, list) {
           "#/sort:ss_sort_price_desc:desc",
         { waitUntil: "networkidle0" }
       );
-      if (await utilFunc.exists(lowP, 'span[class="price ng-binding"]')) {
+
+        await lowP.waitForTimeout(500)
+        await highP.waitForTimeout(500)
         lowest = await utilFunc.getItem(lowP, 'span[class="price ng-binding"]');
-      }
-      if (await utilFunc.exists(highP, 'span[class="price ng-binding"]')) {
+
         highest = await utilFunc.getItem(
           highP,
           'span[class="price ng-binding"]'
         );
-      }
+
       await lowP.click(
         "#searchspring-content > div.category-products.ng-scope > div > ul > li:nth-child(1) > a"
       );
       await highP.click(
         "#searchspring-content > div.category-products.ng-scope > div > ul > li:nth-child(1) > a"
       );
-      //await lowP.waitForSelector('div[class="attributes-table-container"]');
+      
+      await lowP.waitForTimeout(500)
+      await highP.waitForTimeout(500)
 
       lowTable = await utilFunc.getItem(
         lowP,
         'div[class="attributes-table-container"]'
       );
 
-      await highP.waitForSelector('div[class="attributes-table-container"]');
       highTable = await utilFunc.getItem(
         highP,
         'div[class="attributes-table-container"]'
       );
 
-      lowImage = await lowP.$eval("img[class='gallery-image visible']", (el) => el.src).catch((err) => {
-        return ""
-      })
-      highImage = await highP.$eval("img[class='gallery-image visible']", (el) => el.src).catch((err) => {
-        return ""
-      })
+      lowImage = await lowP
+        .$eval("img[class='gallery-image visible']", (el) => el.src)
+        .catch((err) => {
+          return "";
+        });
+      highImage = await highP
+        .$eval("img[class='gallery-image visible']", (el) => el.src)
+        .catch((err) => {
+          return "";
+        });
 
-      lowSku = await utilFunc.getItem(lowP, "div[class='web-id']")
-      highSku = await utilFunc.getItem(highP, "div[class='web-id']")
-      console.log(lowSku, highSku)
+      lowSku = await utilFunc.getItem(lowP, "div[class='web-id']");
+      highSku = await utilFunc.getItem(highP, "div[class='web-id']");
 
       assignData();
     }

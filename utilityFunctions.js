@@ -136,7 +136,6 @@ deleteObj = async () => {
 };
 
 yesterday = (date) => {
-  console.log("KJSDHJKSHDFSDHKF", date);
   d = new Date();
   d.setDate(date.getDate() - 1);
   return getKey(d)
@@ -192,8 +191,6 @@ checkNewDay = async () => {
     }
   }
 };
-
-deleteObj();
 
 module.exports = {
   noResults,
