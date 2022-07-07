@@ -1,6 +1,25 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 const fs = require("fs");
+
+var lowest = "";
+var lowYear = "";
+var lowTable = "";
+var lowBP = "";
+var highest = "";
+var highYear = "";
+var lowPaper = "No";
+var lowBox = "No";
+var highBox = "No";
+var highPaper = "No";
+var highTable = "";
+var highBP = "";
+var imageLow = "";
+var imageHigh = "";
+var brandLow = "";
+var brandHigh = "";
+var lowSku = "";
+var highSku = "";
 async function bazaar(lowP, highP, tPage, list) {
   result = [];
   for (var i = 0; i < refNums.length; i++) {
@@ -49,14 +68,11 @@ async function bazaar(lowP, highP, tPage, list) {
         { waitUntil: "networkidle0" }
       );
 
-        await lowP.waitForTimeout(500)
-        await highP.waitForTimeout(500)
-        lowest = await utilFunc.getItem(lowP, 'span[class="price ng-binding"]');
+      await lowP.waitForTimeout(500);
+      await highP.waitForTimeout(500);
+      lowest = await utilFunc.getItem(lowP, 'span[class="price ng-binding"]');
 
-        highest = await utilFunc.getItem(
-          highP,
-          'span[class="price ng-binding"]'
-        );
+      highest = await utilFunc.getItem(highP, 'span[class="price ng-binding"]');
 
       await lowP.click(
         "#searchspring-content > div.category-products.ng-scope > div > ul > li:nth-child(1) > a"
@@ -64,36 +80,81 @@ async function bazaar(lowP, highP, tPage, list) {
       await highP.click(
         "#searchspring-content > div.category-products.ng-scope > div > ul > li:nth-child(1) > a"
       );
-      
-      await lowP.waitForTimeout(500)
-      await highP.waitForTimeout(500)
 
-      lowTable = await utilFunc.getItem(
-        lowP,
-        'div[class="attributes-table-container"]'
+      await lowP.waitForTimeout(500);
+      await highP.waitForTimeout(500);
+
+      lowTable = String(
+        await utilFunc.getItem(lowP, 'div[class="attributes-table-container"]')
+      );
+      // console.log(lowTable) gets it
+      highTable = String(
+        await utilFunc.getItem(highP, 'div[class="attributes-table-container"]')
       );
 
-      highTable = await utilFunc.getItem(
-        highP,
-        'div[class="attributes-table-container"]'
+      lowImage = String(
+        await lowP
+          .$eval("img[class='gallery-image visible']", (el) => el.src)
+          .catch((err) => {
+            return "";
+          })
       );
-
-      lowImage = await lowP
-        .$eval("img[class='gallery-image visible']", (el) => el.src)
-        .catch((err) => {
-          return "";
-        });
-      highImage = await highP
-        .$eval("img[class='gallery-image visible']", (el) => el.src)
-        .catch((err) => {
-          return "";
-        });
+      highImage = String(
+        await highP
+          .$eval("img[class='gallery-image visible']", (el) => el.src)
+          .catch((err) => {
+            return "";
+          })
+      );
 
       lowSku = await utilFunc.getItem(lowP, "div[class='web-id']");
       highSku = await utilFunc.getItem(highP, "div[class='web-id']");
 
-      assignData();
+      lowYearIndex1 = lowTable.indexOf("Year of Manufacture") + 19;
+      lowYearIndex2 = lowYearIndex1 + 5;
+
+      lowBPIndex1 = lowTable.indexOf("Included") + 8;
+      lowBPIndex2 = lowTable.indexOf("Lug Material");
+      highYearIndex1 = highTable.indexOf("Year of Manufacture") + 19;
+      highYearIndex2 = highYearIndex1 + 5;
+
+      highBPIndex1 = highTable.indexOf("Included") + 8;
+      highBPIndex2 = highTable.indexOf("Lug Material");
+      lowYear = lowTable
+        .substring(lowYearIndex1, lowYearIndex2)
+        .replace("\n", "")
+        .replace("N/A", "")
+        .replace("Unknown", "");
+      lowBP = lowTable.substring(lowBPIndex1, lowBPIndex2).replace("\n", "");
+      if (lowBP.replace(/[^a-zA-Z ]/g, "") === "Manufacturers Box and Papers") {
+        lowPaper = "Yes";
+        lowBox = "Yes";
+      }
+
+      highYear = highTable
+        .substring(highYearIndex1, highYearIndex2)
+        .replace("\n", "")
+        .replace("N/A", "")
+        .replace("Unknown", "");
+      highBP = highTable
+        .substring(highBPIndex1, highBPIndex2)
+        .replace("\n", "");
+        if (highBP.replace(/[^a-zA-Z ]/g, "") === "Manufacturers Box and Papers") {
+        highPaper = "Yes";
+        highBox = "Yes";
+      }
+
+      index1BrandLow = lowTable.indexOf("Signatures") + 10;
+      index2BrandLow = lowTable.indexOf("Strap Color");
+
+      index1BrandHigh = highTable.indexOf("Signatures") + 10;
+      index2BrandHigh = highTable.indexOf("Strap Color");
+
+      brandHigh = highTable.substring(index1BrandHigh, index2BrandHigh).trim();
+
+      brandLow = lowTable.substring(index1BrandLow, index2BrandLow).trim();
     }
+    console.log(lowBox, lowPaper, highBox, highPaper);
     w = new Watch(
       refNums[i],
       lowYear.trim(),
@@ -124,50 +185,5 @@ async function bazaar(lowP, highP, tPage, list) {
     //utilFunc.addToJson(w);
   }
 }
-
-assignData = () => {
-  lowYearIndex1 = lowTable.indexOf("Year of Manufacture") + 19;
-  lowYearIndex2 = lowYearIndex1 + 5;
-
-  lowBPIndex1 = lowTable.indexOf("Included") + 8;
-  lowBPIndex2 = lowTable.indexOf("Lug Material");
-  highYearIndex1 = highTable.indexOf("Year of Manufacture") + 19;
-  highYearIndex2 = highYearIndex1 + 5;
-
-  highBPIndex1 = highTable.indexOf("Included") + 8;
-  highBPIndex2 = highTable.indexOf("Lug Material");
-  lowYear = lowTable
-    .substring(lowYearIndex1, lowYearIndex2)
-    .replace("\n", "")
-    .replace("N/A", "")
-    .replace("Unknown", "");
-  lowBP = lowTable.substring(lowBPIndex1, lowBPIndex2).replace("\n", "");
-  if (lowBP.trim() === "Manufacturer's Box and Papers") {
-    lowPaper = "Yes";
-    lowBox = "Yes";
-  }
-
-  highYear = highTable
-    .substring(highYearIndex1, highYearIndex2)
-    .replace("\n", "")
-    .replace("N/A", "")
-    .replace("Unknown", "");
-  highBP = highTable.substring(highBPIndex1, highBPIndex2).replace("\n", "");
-
-  if (highBP.trim() === "Manufacturer's Box and Papers") {
-    highPaper = "Yes";
-    highBox = "Yes";
-  }
-
-  index1BrandLow = lowTable.indexOf("Signatures") + 10;
-  index2BrandLow = lowTable.indexOf("Strap Color");
-
-  index1BrandHigh = highTable.indexOf("Signatures") + 10;
-  index2BrandHigh = highTable.indexOf("Strap Color");
-
-  brandHigh = highTable.substring(index1BrandHigh, index2BrandHigh).trim();
-
-  brandLow = lowTable.substring(index1BrandLow, index2BrandLow).trim();
-};
 
 module.exports = { bazaar };

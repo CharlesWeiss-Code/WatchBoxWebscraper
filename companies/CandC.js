@@ -79,7 +79,7 @@ async function crownAndCaliber(lowP, highP, tPage, list) {
         highSku
       );
       list.push(w);
-      //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+      fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
       console.log(JSON.stringify(w, null, "\t"));
     }
   }

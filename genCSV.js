@@ -9,5 +9,5 @@ for (var propt in w) {
     s+=propt
     }
 }
-fs.writeFileSync("dataInCSV.csv",s+"\n")
+fs.writeFileSync("BLANKdataInCSV.csv",s+"\n")
 
