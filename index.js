@@ -11,7 +11,7 @@ const ewc = require("./companies/ewc.js");
 const Bazaar = require("./companies/bazaar.js");
 const david = require("./companies/davidsw.js");
 const Bobs = require("./companies/bobs.js");
-const CandC = require("./companies/CandC")
+const CandC = require("./companies/CandC");
 const REF = require("./refNums.js");
 const minArgs = require("./minimalArgs");
 
@@ -66,15 +66,13 @@ async function start() {
   //console.log(utilFunc.newDay());
 
   var watches = [];
-   await Bazaar.bazaar(lowPage, highPage, testPage, watches);
-   await CandC.crownAndCaliber(lowPage, highPage, testPage, watches)
+  // await Bazaar.bazaar(lowPage, highPage, testPage, watches);
+  // await CandC.crownAndCaliber(lowPage, highPage, testPage, watches)
+  // await ewc.EWC(lowPage, highPage, testPage, watches);
+   await david.davidsw(lowPage, highPage, testPage, watches);
+  // await Bobs.bobs(lowPage, highPage, testPage, watches);
+  // await chrono.chrono24(lowPage, highPage, testPage, watches);
 
-  await ewc.EWC(lowPage, highPage, testPage, watches);
-  await david.davidsw(lowPage, highPage, testPage, watches);
-   await Bobs.bobs(lowPage, highPage, testPage, watches);
-
-  await chrono.chrono24(lowPage, highPage, testPage, watches);
-  
   await browser.close();
   // }
 

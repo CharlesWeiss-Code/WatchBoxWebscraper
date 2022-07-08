@@ -2,7 +2,7 @@ const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../DataStructures/Watch");
 const fs = require("fs");
 async function davidsw(lowP, highP, tPage, list) {
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 22; i < refNums.length; i++) {
     console.log("");
     lowTables = "";
     highTables = "";
@@ -102,9 +102,15 @@ async function davidsw(lowP, highP, tPage, list) {
 
     lowBoxIndex1 = lowTableBoxAndPaper.indexOf("Box") + 3;
     lowBoxIndex2 = lowTableBoxAndPaper.indexOf("Hangtag");
+    if (lowBoxIndex2 === -1) {
+      lowBoxIndex2 = lowTableBoxAndPaper.indexOf("Warranty Papers")
+    }
 
     highBoxIndex1 = highTableBoxAndPaper.indexOf("Box") + 3;
     highBoxIndex2 = highTableBoxAndPaper.indexOf("Hangtag");
+    if (highBoxIndex2 === -1) {
+      highBoxIndex2 = lowTableBoxAndPaper.indexOf("Warranty Papers")
+    }
 
     lowBox = lowTableBoxAndPaper.substring(lowBoxIndex1, lowBoxIndex2);
     highBox = highTableBoxAndPaper.substring(highBoxIndex1, highBoxIndex2);
@@ -150,7 +156,8 @@ async function davidsw(lowP, highP, tPage, list) {
     );
     //console.log(w);
     list.push(w);
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    console.log(lowTableBoxAndPaper)
+    //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
 
     //utilFunc.addToJson(w);
     console.log(JSON.stringify(w, null, "\t"));
