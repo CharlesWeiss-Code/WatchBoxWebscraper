@@ -43,17 +43,8 @@ async function bazaar(lowP, highP, tPage, list) {
     lowSku = "";
     highSku = "";
 
-    var newURL = "https://www.luxurybazaar.com/search-results?q=" + refNums[i];
-    if (refNums[i] === "16570 BLK IX OYS") {
-      newURL =
-        "https://www.luxurybazaar.com/search-results?q=16570#/filter:lux_wa_dialcolor:Black";
-    } else if (refNums[i] === "16570 WHT IX OYS") {
-      newURL =
-        "https://www.luxurybazaar.com/search-results?q=16570#/filter:lux_wa_dialcolor:White";
-    } else if (refNums[i] === "116400GV-0001") {
-      newURL =
-        "https://www.luxurybazaar.com/search-results?q=116400GV#/filter:lux_wa_dialcolor:Black";
-    }
+    var newURL = utilFunc.getLink("LuxuryBazaar", refNums[i])
+
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
     await tPage.waitForTimeout(500);
@@ -209,5 +200,6 @@ async function bazaar(lowP, highP, tPage, list) {
     //utilFunc.addToJson(w);
   }
 }
+
 
 module.exports = { bazaar };

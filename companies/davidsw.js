@@ -19,35 +19,11 @@ async function davidsw(lowP, highP, tPage, list) {
     lowSku = "";
     highSku = "";
 
-    var newURL =
-      "https://davidsw.com/?s=" +
-      refNums[i] +
-      "&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+    var newURL = utilFunc.getLink("DavidSW", refNums[i])
+
     lowest = -1;
     highest = -1;
-    if (refNums[i] == "116500LN-0001") {
-      // special white daytona
-      newURL =
-        "https://davidsw.com/?filter_dial-color=white&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
 
-    } else if (refNums[i] == "116500LN-0002") {
-      newURL =
-        "https://davidsw.com/?filter_dial-color=black&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
-    }
-    else if (refNums[i] === "16570 BLK IX OYS") {
-      newURL = "https://davidsw.com/?filter_dial-color=black&s=16570&post_type=product&type_aws=true&aws_id=1&aws_filter=1"
-      
-    } else if (refNums[i] === "16570 WHT IX OYS") {
-      newURL = "https://davidsw.com/?filter_dial-color=white&s=16570&post_type=product&type_aws=true&aws_id=1&aws_filter=1"
-    } else if (refNums[i] === "126710BLNR-0002") {
-      newURL = "https://davidsw.com/?s=126710BLNR&post_type=product&type_aws=true&aws_id=1&aws_filter=1"
-    } else if (refNums[i] === "126710BLRO-0001") {
-      newURL = "https://davidsw.com/?s=126710BLRO&post_type=product&type_aws=true&aws_id=1&aws_filter=1" 
-    } else if (refNums[i] === "116400GV-0001") {
-      newURL = "https://davidsw.com/?filter_dial-color=black&s=116400GV&post_type=product&type_aws=true&aws_id=1&aws_filter=1"
-    } else if (refNums[i] === "214270-0003") {
-      newURL = "https://davidsw.com/?filter_dial-color=black&s=214270&post_type=product&type_aws=true&aws_id=1&aws_filter=1"
-    }
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
     if (
       await utilFunc.exists(tPage, "#main > div > div.col.large-9 > div > p")
@@ -59,20 +35,20 @@ async function davidsw(lowP, highP, tPage, list) {
       //https://davidsw.com/?s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1
       //https://davidsw.com/?orderby=price&paged=1&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1
       //https://davidsw.com/?orderby=price&paged=1&=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1
-      
+
       await lowP
-        .goto(getUrl(newURL, "orderby=price&paged=1&"),
-          { waitUntil: "networkidle0" }
-        )
+        .goto(getUrl(newURL, "orderby=price&paged=1&"), {
+          waitUntil: "networkidle0",
+        })
         .catch(async () => {
           await lowP.waitForTimeout(1000);
           await lowP.reload();
           await lowP.waitForTimeout(1000);
         });
       await highP
-        .goto(getUrl(newURL, "orderby=price-desc&"),
-          { waitUntil: "networkidle0" }
-        )
+        .goto(getUrl(newURL, "orderby=price-desc&"), {
+          waitUntil: "networkidle0",
+        })
         .catch(async () => {
           await highP.waitForTimeout(1000);
           await highP.reload();
@@ -85,24 +61,39 @@ async function davidsw(lowP, highP, tPage, list) {
         )
       ) {
         await assignDataResults(lowP, highP);
-        imageLow = String(await lowP
-          .$eval("img[class='wp-post-image skip-lazy lazy-load-active']", (el) => el.src)
-          .catch((err) => {
-            return "";
-          }))
-         imageHigh= String(await highP
-          .$eval("img[class='wp-post-image skip-lazy lazy-load-active']", (el) => el.src)
-          .catch((err) => {
-            return "";
-          }))
+        imageLow = String(
+          await lowP
+            .$eval(
+              "img[class='wp-post-image skip-lazy lazy-load-active']",
+              (el) => el.src
+            )
+            .catch((err) => {
+              return "";
+            })
+        );
+        imageHigh = String(
+          await highP
+            .$eval(
+              "img[class='wp-post-image skip-lazy lazy-load-active']",
+              (el) => el.src
+            )
+            .catch((err) => {
+              return "";
+            })
+        );
       } else {
         await assignDataOneResult(lowP);
 
-        imageHigh = String(await highP
-          .$eval("img[class='wp-post-image skip-lazy lazy-load-active']", (el) => el.src)
-          .catch((err) => {
-            return "";
-          }))
+        imageHigh = String(
+          await highP
+            .$eval(
+              "img[class='wp-post-image skip-lazy lazy-load-active']",
+              (el) => el.src
+            )
+            .catch((err) => {
+              return "";
+            })
+        );
         imageLow = imageHigh;
       }
     }
@@ -117,13 +108,13 @@ async function davidsw(lowP, highP, tPage, list) {
     lowBoxIndex1 = lowTableBoxAndPaper.indexOf("Box") + 3;
     lowBoxIndex2 = lowTableBoxAndPaper.indexOf("Hangtag");
     if (lowBoxIndex2 === -1) {
-      lowBoxIndex2 = lowTableBoxAndPaper.indexOf("Warranty Papers")
+      lowBoxIndex2 = lowTableBoxAndPaper.indexOf("Warranty Papers");
     }
 
     highBoxIndex1 = highTableBoxAndPaper.indexOf("Box") + 3;
     highBoxIndex2 = highTableBoxAndPaper.indexOf("Hangtag");
     if (highBoxIndex2 === -1) {
-      highBoxIndex2 = highTableBoxAndPaper.indexOf("Warranty Papers")
+      highBoxIndex2 = highTableBoxAndPaper.indexOf("Warranty Papers");
     }
 
     lowBox = lowTableBoxAndPaper.substring(lowBoxIndex1, lowBoxIndex2);
@@ -226,7 +217,6 @@ async function assignDataResults(lowP, highP) {
     )
   ).trim();
 
-
   await lowP.waitForSelector('div[class="title-wrapper"]');
   await highP.waitForSelector('div[class="title-wrapper"]');
 
@@ -245,8 +235,47 @@ async function assignDataResults(lowP, highP) {
 
   lowSku = await utilFunc.getItem(lowP, "span[class='sku']");
   highSku = await utilFunc.getItem(highP, "span[class='sku']");
-
 }
 
-getUrl = (url, filter) => url.substring(0,url.indexOf("&")+1)+filter+url.substring(url.indexOf("&s")+1)
+getUrl = (url, filter) =>
+  url.substring(0, url.indexOf("&") + 1) +
+  filter +
+  url.substring(url.indexOf("&s") + 1);
 
+getBaseURL = (refNum) => {
+  var result =
+    "https://davidsw.com/?s=" +
+    refNums[i] +
+    "&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+
+  if (refNum == "116500LN-0001") {
+    // special white daytona
+    newURL =
+      "https://davidsw.com/?filter_dial-color=white&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+  } else if (refNum == "116500LN-0002") {
+    newURL =
+      "https://davidsw.com/?filter_dial-color=black&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+  } else if (refNum === "16570 BLK IX OYS") {
+    newURL =
+      "https://davidsw.com/?filter_dial-color=black&s=16570&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+  } else if (refNum === "16570 WHT IX OYS") {
+    newURL =
+      "https://davidsw.com/?filter_dial-color=white&s=16570&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+  } else if (refNum === "126710BLNR-0002") {
+    newURL =
+      "https://davidsw.com/?s=126710BLNR&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+  } else if (refNum === "126710BLRO-0001") {
+    newURL =
+      "https://davidsw.com/?s=126710BLRO&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+  } else if (refNum === "116400GV-0001") {
+    newURL =
+      "https://davidsw.com/?filter_dial-color=black&s=116400GV&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+  } else if (refNum === "214270-0003") {
+    newURL =
+      "https://davidsw.com/?filter_dial-color=black&s=214270&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+  } else if (refNum === "5711/1A-010") {
+    newURL =
+      "https://davidsw.com/?filter_dial-color=blue&s=5711&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+  }
+  return result;
+};

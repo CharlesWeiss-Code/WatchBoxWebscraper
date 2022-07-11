@@ -5,6 +5,7 @@ const Watch = require("./Watch");
 const AWS = require("aws-sdk");
 const awsInfo = require("./aws/aws-info");
 
+
 async function noResults(page, selector) {
   var noResultsVar = false;
   if ((await page.$(selector)) != null) {
@@ -340,6 +341,164 @@ timeToSend = () => {
     }
 };
 
+var specialSites = {
+  LuxuryBazaar: function (refNum) {
+    switch (refNum) {
+      case "16570 BLK IX OYS":
+        return "https://www.luxurybazaar.com/search-results?q=16570#/filter:lux_wa_dialcolor:Black";
+
+      case "16570 WHT IX OYS":
+        return "https://www.luxurybazaar.com/search-results?q=16570#/filter:lux_wa_dialcolor:White";
+
+      case "116400GV-0001":
+        return "https://www.luxurybazaar.com/search-results?q=116400GV#/filter:lux_wa_dialcolor:Black";
+
+      case "5711/1A-010":
+        return "https://www.luxurybazaar.com/search-results?q=5711#/filter:lux_wa_dialcolor:Blue";
+
+      default:
+        return "https://www.luxurybazaar.com/search-results?q=" + refNum;
+    }
+  },
+  Bobs: function (refNum) {
+    switch (refNum) {
+      case "116500LN-0001":
+        return "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=116500LN#/filter:custom_field_9:White";
+
+      case "16570 BLK IX OYS":
+        return "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=16570#/filter:custom_field_9:Black";
+
+      case "16570 WHT IX OYS":
+        return "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=16570#/filter:custom_field_9:White";
+
+      case "116500LN-0002":
+        return "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=116500LN#/filter:custom_field_9:Black";
+
+      case "126710BLNR-0002":
+        return "https://www.bobswatches.com/shop?query=126710BLNR#/filter:custom_field_7:Jubilee/filter:custom_field_9:Black";
+
+      case "214270-0003":
+        return "https://www.bobswatches.com/shop?query=214270#/filter:custom_field_9:Black";
+
+      case "5711/1A-010":
+        return "https://www.bobswatches.com/shop?query=5711#/filter:custom_field_9:Blue";
+
+      default:
+        return (
+          "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=" +
+          refNum
+        );
+    }
+  },
+  "C&C": function (refNum) {
+    switch (refNum) {
+      case "116500LN-0001":
+        return "https://www.crownandcaliber.com/search?view=shop&q=116500LN#/filter:mfield_global_dial_color:White";
+
+      case "116500LN-0002":
+        return "https://www.crownandcaliber.com/search?view=shop&q=116500LN#/filter:mfield_global_dial_color:Black";
+
+      case "16570 BLK IX OYS":
+        return "https://www.crownandcaliber.com/search?view=shop&q=16570#/filter:mfield_global_dial_color:Black";
+
+      case "16570 WHT IX OYS":
+        return "https://www.crownandcaliber.com/search?view=shop&q=16570#/filter:mfield_global_dial_color:White";
+
+      case "126710BLNR-0002":
+        return "https://www.crownandcaliber.com/search?view=shop&q=126710BLNR";
+
+      case "126710BLRO-0001":
+        return "https://www.crownandcaliber.com/search?view=shop&q=126710BLRO";
+
+      case "116400GV-0001":
+        return "https://www.crownandcaliber.com/search?view=shop&q=116400GV#/filter:mfield_global_dial_color:Black";
+
+      case "5711/1A-010":
+        return "https://www.crownandcaliber.com/search?view=shop&q=5711#/filter:mfield_global_dial_color:Blue";
+
+      default:
+        return "https://www.crownandcaliber.com/search?view=shop&q=" + refNum;
+    }
+  },
+  C24: function (refNum) {
+    switch (refNum) {
+      case "16570 BLK IX OYS":
+        return "https://www.chrono24.com/search/index.htm?currencyId=USD&dialColor=702&dosearch=true&maxAgeInDays=0&pageSize=60&query=16570&redirectToSearchIndex=true&resultview=list";
+
+      case "16570 WHT IX OYS":
+        return "https://www.chrono24.com/search/index.htm?currencyId=USD&dialColor=701&dosearch=true&maxAgeInDays=0&pageSize=60&query=16570&redirectToSearchIndex=true&resultview=list";
+
+      default:
+        return (
+          "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=" +
+          refNum
+        );
+    }
+  },
+  DavidSW: function (refNum) {
+    switch (refNum) {
+      case "116500LN-0001":
+        return "https://davidsw.com/?filter_dial-color=white&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+
+      case "116500LN-0002":
+        return "https://davidsw.com/?filter_dial-color=black&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+
+      case "16570 BLK IX OYS":
+        return "https://davidsw.com/?filter_dial-color=black&s=16570&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+
+      case "16570 WHT IX OYS":
+        return "https://davidsw.com/?filter_dial-color=white&s=16570&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+
+      case "126710BLNR-0002":
+        return "https://davidsw.com/?s=126710BLNR&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+
+      case "126710BLRO-0001":
+        return "https://davidsw.com/?s=126710BLRO&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+
+      case "116400GV-0001":
+        return "https://davidsw.com/?filter_dial-color=black&s=116400GV&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+
+      case "214270-0003":
+        return "https://davidsw.com/?filter_dial-color=black&s=214270&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+
+      case "5711/1A-010":
+        return "https://davidsw.com/?filter_dial-color=blue&s=5711&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+
+      default:
+        return (
+          "https://davidsw.com/?s=" +
+          refNum +
+          "&post_type=product&type_aws=true&aws_id=1&aws_filter=1"
+        );
+    }
+  },
+  EWC: function (refNum) {
+    switch (refNum) {
+      case "116500LN-0001" || "116500LN-0002":
+        return "https://www2.europeanwatch.com/cgi-bin/search.pl?search=116500LN";
+
+      case "16570 BLK IX OYS":
+        return "https://www2.europeanwatch.com/cgi-bin/search.pl?search=16570";
+
+      case "16570 WHT IX OYS":
+        return "https://www2.europeanwatch.com/cgi-bin/search.pl?search=16570";
+
+      case "126710BLRO-0001":
+        return "https://www2.europeanwatch.com/cgi-bin/search.pl?search=126710BLRO";
+
+      case "126710BLNR-0002":
+        return "https://www2.europeanwatch.com/cgi-bin/search.pl?search=126710BLNR";
+
+      default:
+        return (
+          "https://www2.europeanwatch.com/cgi-bin/search.pl?search=" + refNum
+        );
+    }
+  },
+};
+
+getLink = (website, refNum) => specialSites[String(website)](String(refNum))
+
 module.exports = {
   noResults,
   noResults2,
@@ -355,4 +514,5 @@ module.exports = {
   getName,
   postAndDelete,
   timeToSend,
+  getLink
 };

@@ -1,8 +1,6 @@
-
-
-    - add promise catches to all functions that use them?
+     - add promise catches to all functions that use them?
     upload to aws = https://www.youtube.com/watch?v=xtRYi8ud1sM
 
-    - special watches should be handled in if statements now that setup is better
+    - special watches are to be handled in "./utilityFunctions" in specialSites obj
 
-    - make chrono noWatchesInList work.
+    - add comments to everything 

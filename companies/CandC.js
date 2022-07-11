@@ -35,29 +35,9 @@ async function crownAndCaliber(lowP, highP, tPage, list) {
     brandHigh = "";
     lowSku = "";
     highSku = "";
-    var url =
-      "https://www.crownandcaliber.com/search?view=shop&q=" + refNums[i];
 
-    if (refNums[i] === "116500LN-0001") {
-      url =
-        "https://www.crownandcaliber.com/search?view=shop&q=116500LN#/filter:mfield_global_dial_color:White";
-    } else if (refNums[i] === "116500LN-0002") {
-      url =
-        "https://www.crownandcaliber.com/search?view=shop&q=116500LN#/filter:mfield_global_dial_color:Black";
-    } else if (refNums[i] === "16570 BLK IX OYS") {
-      url =
-        "https://www.crownandcaliber.com/search?view=shop&q=16570#/filter:mfield_global_dial_color:Black";
-    } else if (refNums[i] === "16570 WHT IX OYS") {
-      url =
-        "https://www.crownandcaliber.com/search?view=shop&q=16570#/filter:mfield_global_dial_color:White";
-    } else if (refNums[i] === "126710BLNR-0002") {
-      url = "https://www.crownandcaliber.com/search?view=shop&q=126710BLNR";
-    } else if (refNums[i] === "126710BLRO-0001") {
-      url = "https://www.crownandcaliber.com/search?view=shop&q=126710BLRO";
-    } else if (refNums[i] === "116400GV-0001") {
-      url =
-        "https://www.crownandcaliber.com/search?view=shop&q=116400GV#/filter:mfield_global_dial_color:Black";
-    }
+    var url = utilFunc.getLink("C&C",refNums[i])
+
     console.log("CandC URL: ***  " + url);
     await tPage.goto(url, { waitUntil: "networkidle0" });
     await tPage.waitForTimeout(500)
@@ -157,8 +137,9 @@ prepare = async (lowP, highP, link) => {
     "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
     { delay: 20 }
   ).catch(async (err) => {
+    await lowP.waitForTimeout(999999)
     console.log("COULDNT CLICK THE THING")
-    await lowP.reload();
+    await lowP.goto(lowP.url())
     await lowP.waitForTimeout(500)
     await lowP.click(
       "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",

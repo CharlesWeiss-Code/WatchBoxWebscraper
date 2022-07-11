@@ -9,23 +9,7 @@ async function EWC(lowP, highP, tPage, list) {
     brandLow = "";
     brandHigh = "";
 
-    var newURL =
-      "https://www2.europeanwatch.com/cgi-bin/search.pl?search=" + refNums[i];
-
-
-
-    if (refNums[i] === "116500LN-0001" || refNums[i] === "116500LN-0002") {
-       newURL =
-        "https://www2.europeanwatch.com/cgi-bin/search.pl?search=" + "116500LN";
-    }else if (refNums[i] === "16570 BLK IX OYS") {
-      newURL = "https://www2.europeanwatch.com/cgi-bin/search.pl?search=16570"
-    } else if (refNums[i] === "16570 WHT IX OYS") {
-      newURL = "https://www2.europeanwatch.com/cgi-bin/search.pl?search=16570"
-    } else if (refNums[i] === "126710BLRO-0001") {
-      newURL = "https://www2.europeanwatch.com/cgi-bin/search.pl?search=126710BLRO"
-    } else if (refNums[i] === "126710BLNR-0002") {
-      newURL = "https://www2.europeanwatch.com/cgi-bin/search.pl?search=126710BLNR"
-    }
+    var newURL = utilFunc.getLink("EWC", refNums[i])
 
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
 
