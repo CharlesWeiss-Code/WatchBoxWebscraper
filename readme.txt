@@ -1,4 +1,5 @@
 Author & Editor: CHARLES SOLOMON WEISS
+Email: cweiss@thewatchbox.com
 
  - Watchbox web-scraper.
 
