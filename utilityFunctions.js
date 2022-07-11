@@ -246,7 +246,7 @@ postAndDelete = async () => {
     await deleteObj(res);
     await uploadFileToS3();
     fs.unlinkSync("./data.csv");
-    createBlank()
+    createBlank();
   });
 };
 
@@ -280,6 +280,66 @@ createBlank = () => {
   fs.writeFileSync("data.csv", s + "\n");
 };
 
+timeToSendTEST = () => {
+  var d = new Date();
+  d.setSeconds(0);
+  d.setMinutes(0);
+  d.setHours(0);
+  flag = false;
+  firstToday = true;
+  for (var i = 0; i < 1440; i++) {
+    if (d.getHours() === 10 && firstToday) {
+      flag = true;
+      firstToday = false;
+    }
+
+    if (i % 20 === 0) {
+      console.log(d.toLocaleTimeString());
+    }
+
+    if (d.getMinutes() === 0 && d.getHours() === 0) {
+      firstToday = true;
+    }
+
+    if (flag) {
+      console.log("SEND THE DOC NOW NOW NOW");
+      flag = false;
+      console.log(d.toLocaleTimeString());
+      return true;
+    } else {
+      //return false
+    }
+    d.setMinutes(d.getMinutes() + 1);
+  }
+};
+
+timeToSend = () => {
+  var d = new Date();
+  flag = false;
+  firstToday = true;
+  
+  /**
+   * If time = 12:00 AM firstToday = true
+   */
+    if (d.getHours() === 10 && firstToday) {
+      flag = true;
+      firstToday = false;
+    }
+
+    if (d.getMinutes() === 0 && d.getHours() === 0) {
+      firstToday = true;
+    }
+
+    if (flag) {
+      console.log("SEND THE DOC NOW NOW NOW");
+      flag = false;
+      console.log(d.toLocaleTimeString());
+      return true;
+    } else {
+      //return false
+    }
+};
+
 module.exports = {
   noResults,
   noResults2,
@@ -294,4 +354,5 @@ module.exports = {
   deleteObj,
   getName,
   postAndDelete,
+  timeToSend,
 };
