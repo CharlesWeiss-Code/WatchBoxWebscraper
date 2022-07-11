@@ -78,6 +78,36 @@ class Watch {
         this.generalLink.indexOf(".com")
       );
     }
+    switch(this.website) {
+      case "europeanwatch":
+        this.website = "EWC"
+        break;
+      
+      case "davidsw":
+        this.website = "DavidSW"
+        break
+
+      case "luxurybazaar":
+        this.website = "LuxuryBazaar"
+        break;
+
+      case "crownandcaliber":
+        this.website = "C&C"
+        break
+      
+      case "bobswatches":
+        this.website = "Bobs"
+        break
+
+      case "chrono24":
+        this.website = "C24"
+        break;
+
+      default:
+        this.website = ""
+        break
+    }
+    
     this.lowSku = lowSku
     this.highSku = highSku
   }

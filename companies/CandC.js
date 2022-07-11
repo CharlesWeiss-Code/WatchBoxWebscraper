@@ -96,7 +96,7 @@ async function crownAndCaliber(lowP, highP, tPage, list) {
         lowSku,
         highSku
       );
-      //console.log(lowTable, lowTable.charCodeAt(lowTable.indexOf("2010s")+5))
+
       list.push(w);
       fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
       console.log(JSON.stringify(w, null, "\t"));
@@ -116,7 +116,7 @@ prepare = async (lowP, highP, link) => {
   if (
     await utilFunc.exists(lowP, "#searchspring-content > h3")
   ) {
-    console.log("newURlj");
+
     await lowP.goto(link + "#/sort:ss_price:asc");
   }
 
@@ -125,7 +125,7 @@ prepare = async (lowP, highP, link) => {
   if (
     await utilFunc.exists(highP, "#searchspring-content > h3")
   ) {
-    console.log("newURlj");
+
 
     await highP.goto(link + "#/sort:ss_price:desc").catch(async (err) => {
       await highP.goto(link + "#/sort:ss_price:desc")
@@ -197,7 +197,7 @@ prepare = async (lowP, highP, link) => {
 
 assignData = () => {
   var lowYearIndex1 = lowTable.indexOf("Approximate Age - ") + 18;
-  var lowYearIndex2 = lowTable.indexOf("Case Material - ");
+  //var lowYearIndex2 = lowTable.indexOf("Case Material - ");
   if (lowYearIndex1 === 17) {
     lowYearIndex1 = lowTable.indexOf("Year - ") + 7;
   }
@@ -209,7 +209,7 @@ assignData = () => {
   var lowPaperIndex1 = lowBoxIndex2 + 9;
   var lowPaperIndex2 = lowTable.indexOf("Manual -");
 
-  //console.log(highTable)
+
   var highYearIndex1 = highTable.indexOf("Approximate Age - ") + 18;
   var highYearIndex2 = highTable.indexOf("Case Material - ");
   if (highYearIndex1 === 17) {
@@ -234,11 +234,11 @@ assignData = () => {
   lowBox = lowTable
     .substring(lowPaperIndex1, lowPaperIndex2)
     .replace(/\s+/g, "");
-  console.log(highYear);
+
   highYear = highTable
     .substring(highYearIndex1, highYearIndex2)
     .replace(/\s+/g, "");
-  console.log(highYear);
+
   if (highYear.length < 5 && highYear.indexOf("-Present") === -1) {
     highYear = highYear.slice(-4);
   } else {

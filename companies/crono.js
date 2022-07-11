@@ -56,33 +56,32 @@ async function chrono24(lowP, highP, tPage, list) {
       "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=" +
       refNums[i];
     if (refNums[i] === "16570 BLK IX OYS") {
-      newURL = "https://www.chrono24.com/search/index.htm?currencyId=USD&dialColor=702&dosearch=true&maxAgeInDays=0&pageSize=60&query=16570&redirectToSearchIndex=true&resultview=list"
+      newURL =
+        "https://www.chrono24.com/search/index.htm?currencyId=USD&dialColor=702&dosearch=true&maxAgeInDays=0&pageSize=60&query=16570&redirectToSearchIndex=true&resultview=list";
     } else if (refNums[i] === "16570 WHT IX OYS") {
-      newURL = "https://www.chrono24.com/search/index.htm?currencyId=USD&dialColor=701&dosearch=true&maxAgeInDays=0&pageSize=60&query=16570&redirectToSearchIndex=true&resultview=list"
+      newURL =
+        "https://www.chrono24.com/search/index.htm?currencyId=USD&dialColor=701&dosearch=true&maxAgeInDays=0&pageSize=60&query=16570&redirectToSearchIndex=true&resultview=list";
     }
     console.log("REF: " + refNums[i] + "\n" + "GENERAL URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
-
-    if (
-      await utilFunc.noResults2(
-        tPage,
-        "div[class='h1 m-b-0 text-center']",
-        "We've found no results"
-      ) /** ||
-      noWatchesInList(list, refNums[i]*/
-    ) {
-      //no results
+    var noWatchInList = noWatchesInList(list, refNums[i]);
+    var noResult = await utilFunc.noResults2(
+      tPage,
+      "div[class='h1 m-b-0 text-center']",
+      "We've found no results"
+    );
+    if (noWatchInList || noResult) {
+      //no results or the watch doesnt have any entries
+      console.log("No watch in list", noWatchInList, "No result", noResult);
       continue;
     } else {
-      //results
-      //prepare
+      // results
       await prepareStuff(lowP, highP, newURL, list, refNums[i]);
 
-      //assignData(lowTable, highTable);
-      if (parseFloat(lowest) > parseFloat(highest)) {
-        continue
+      if (parseInt(lowest) > parseInt(highest)) {
+        continue;
       }
-      console.log(childLow, childHigh)
+      console.log(childLow, childHigh);
       w = new Watch(
         refNums[i],
         yearLow,
@@ -115,21 +114,16 @@ async function chrono24(lowP, highP, tPage, list) {
 }
 
 prepareStuff = async (lowP, highP, url, list, rn) => {
-  test = 54;
   await lowP.goto(url + "&sortorder=1");
   await lowP.waitForTimeout(500)
+  if (await utilFunc.exists(lowP, "#modal-content > div > button")) {
+    await lowP.click("#modal-content > div > button"); // cookie tracker button
+    await lowP.waitForTimeout(500)
+  }
+
+
+  //await highP.click("#modal-content > div > a", {delay: 20})
   childLow = await checkTop(lowP, "low", list, rn);
-  // lowest = await utilFunc.getItem(
-  //   lowP,
-  //   "#wt-watches > div:nth-child(" +
-  //     childLow +
-  //     ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
-  // );
-  // if (lowest = "") {
-  //   lowest = await utilFunc.getItem(lowP,
-  //     "#wt-watches > div:nth-child("+childLow+") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price > div > strong"
-  //     )
-  // }
   lowest = await utilFunc.getItem(
     lowP,
     "#wt-watches > div:nth-child(" +
@@ -137,49 +131,47 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
       ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
   );
   if (lowest === "") {
-    lowest = await utilFunc.getItem(lowP,
-      "#wt-watches > div:nth-child("+childLow+") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price > div > strong"
-      )
+    lowest = await utilFunc.getItem(
+      lowP,
+      "#wt-watches > div:nth-child(" +
+        childHigh +
+        ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price > div > strong"
+    );
   }
-  //#wt-watches > div:nth-child(1) > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price
-  //#wt-watches > div:nth-child(1) > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong
-  //#wt-watches > div:nth-child(1) > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price > div > strong
+  lowDealerStatus = await utilFunc.getItem(
+    lowP,
+    "#wt-watches > div:nth-child(" +
+      childLow +
+      ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
+  );
 
-  if (flag) {
-    if (await utilFunc.exists(lowP, "#modal-content > div > button")) {
-      await lowP.click("#modal-content > div > button", { delay: 20 });
-      flag = false;
-    }
-  }
-
-  lowDealerStatus = String(
-    await utilFunc.getItem(
+  if (lowDealerStatus === "") {
+    lowDealerStatus = await utilFunc.getItem(
       lowP,
       "#wt-watches > div:nth-child(" +
         childLow +
-        ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
-    )
-  );
-  if (lowDealerStatus === "") {
-    lowDealerStatus = await utilFunc.getItem(lowP,
-      "#wt-watches > div:nth-child("+childLow+") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-seller-container > div > div.media-flex-body.d-flex.flex-column > div.article-seller-name.text-sm"
-      )
+        ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-seller-container > div > div.media-flex-body.d-flex.flex-column > div.article-seller-name.text-sm"
+    );
   }
-
-
-  if (lowDealerStatus.trim() === "Professional dealer") {
+  console.log("'" + lowDealerStatus.replace("\n", "").trim() + "'");
+  if (lowDealerStatus.replace("\n", "").trim() === "Professional dealer") {
     lowDealerStatus = "PD";
-  } else if (lowDealerStatus.trim() === "Private Seller") {
+  } else if (lowDealerStatus.replace("\n", "").trim() === "Private seller") {
     lowDealerStatus = "PS";
   } else {
     lowDealerStatus = "";
   }
 
+  if (await utilFunc.exists(lowP, "#modal-content > div > button")) {
+    await lowP.click("#modal-content > div > button");
+  }
   await lowP.click("#wt-watches > div:nth-child(" + childLow + ") > a", {
     delay: 20,
   });
+
   await lowP.reload();
   await lowP.waitForTimeout(500);
+
   lowTable = String(
     await utilFunc.getItem(
       lowP,
@@ -198,9 +190,12 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
       ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
   );
   if (highest === "") {
-    highest = await utilFunc.getItem(highP,
-      "#wt-watches > div:nth-child("+childHigh+") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price > div > strong"
-      )
+    highest = await utilFunc.getItem(
+      highP,
+      "#wt-watches > div:nth-child(" +
+        childHigh +
+        ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price > div > strong"
+    );
   }
   highDealerStatus = await utilFunc.getItem(
     highP,
@@ -208,17 +203,26 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
       childHigh +
       ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
   );
+
   if (highDealerStatus === "") {
-    highDealerStatus = await utilFunc.getItem(highP,
-      "#wt-watches > div:nth-child("+childHigh+") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-seller-container > div > div.media-flex-body.d-flex.flex-column > div.article-seller-name.text-sm"
-      )
+    highDealerStatus = await utilFunc.getItem(
+      highP,
+      "#wt-watches > div:nth-child(" +
+        childHigh +
+        ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-seller-container > div > div.media-flex-body.d-flex.flex-column > div.article-seller-name.text-sm"
+    );
   }
-  if (highDealerStatus.trim() === "Professional dealer") {
+  console.log("'" + highDealerStatus.replace("\n", "").trim() + "'");
+  if (highDealerStatus.replace("\n", "").trim() === "Professional dealer") {
     highDealerStatus = "PD";
-  } else if (highDealerStatus.trim() === "Private Seller") {
+  } else if (highDealerStatus.replace("\n", "").trim() === "Private seller") {
     highDealerStatus = "PS";
   } else {
     highDealerStatus = "";
+  }
+
+  if (await utilFunc.exists(highP, "#modal-content > div > button")) {
+    await highP.click("#modal-content > div > button");
   }
 
   await highP.click("#wt-watches > div:nth-child(" + childHigh + ") > a", {
@@ -360,11 +364,23 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
 };
 
 checkTop = async (page, LH, arr, rn) => {
+  // min = Math.floor(getBuffer(arr, 0.9, rn)/1000)*1000;
+  // max = Math.floor(getBuffer(a2rr, 1.1, rn)/1000)*1000;
   min = getBuffer(arr, 0.9, rn);
   max = getBuffer(arr, 1.1, rn);
+  console.log(
+    page.url() + "&priceFrom=" + parseInt(min) + "&priceTo=" + parseInt(max)
+  );
+  await page.goto(
+    page.url() + "&priceFrom=" + parseInt(min) + "&priceTo=" + parseInt(max)
+  );
+
   console.log(rn, min, max);
-  thing = await page.$("#wt-watches");
-  top = await page.evaluate((e) => e.children.length, thing);
+  top = await page
+    .$eval("#wt-watches", (e) => e.children.length)
+    .catch((e) => {
+      return 1;
+    });
   for (var i = 1; i <= top; i++) {
     var watch = await typeOf(page, "#wt-watches > div:nth-child(" + i + ")");
     var isntTop = await noTop(page, "#wt-watches > div:nth-child(" + i + ")");
@@ -383,8 +399,6 @@ checkTop = async (page, LH, arr, rn) => {
     if (watch && isntTop && price > min && price < max) {
       //console.log("Good", i, price);
       return i;
-    } else {
-      //console.log("Top", !isntTop, "Watch", watch, i)
     }
   }
   return 1;
@@ -442,11 +456,11 @@ noTop = async (page, s) => {
 };
 
 noWatchesInList = (list, rn) => {
-  list.forEach((watch) => {
-    if (watch.refNum === rn) {
+  for (var i = 0; i < list.length; i++) {
+    if (String(list[i].refNum.trim()) === rn) {
       return false;
     }
-  });
+  }
   return true;
 };
 

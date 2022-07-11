@@ -29,7 +29,7 @@ var testPage = null
 async function start() {
 
 
-  // if (repeat(15)) {
+
   refNums = REF.getRefNums();
 
   const browser = await puppeteer.launch({
@@ -69,7 +69,7 @@ async function start() {
     }
   });
 
-  //console.log(utilFunc.newDay());
+
 
   var watches = [];
 
@@ -86,7 +86,7 @@ async function start() {
   await chrono.chrono24(lowPage, highPage, testPage, watches);
 
   await browser.close();
-  // }
+
 
   // if (timeIsGood()) {
   //   utilFunc.uploadNewDataFile();

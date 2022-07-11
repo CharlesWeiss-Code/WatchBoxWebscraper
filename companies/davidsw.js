@@ -225,7 +225,7 @@ async function assignDataResults(lowP, highP) {
       "p[class='category uppercase is-smaller no-text-overflow product-cat op-7']"
     )
   ).trim();
-  console.log(brandLow, brandHigh);
+
 
   await lowP.waitForSelector('div[class="title-wrapper"]');
   await highP.waitForSelector('div[class="title-wrapper"]');
@@ -245,7 +245,7 @@ async function assignDataResults(lowP, highP) {
 
   lowSku = await utilFunc.getItem(lowP, "span[class='sku']");
   highSku = await utilFunc.getItem(highP, "span[class='sku']");
-  console.log(lowSku, highSku);
+
 }
 
 getUrl = (url, filter) => url.substring(0,url.indexOf("&")+1)+filter+url.substring(url.indexOf("&s")+1)

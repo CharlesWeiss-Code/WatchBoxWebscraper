@@ -171,7 +171,7 @@ async function getData(lowP, highP) {
 
   highSku = await highP.$eval("meta[itemprop='sku']", (el) => el.content);
 
-  console.log("LowSKU", lowSku, "HighSKU", highSku);
+
 
   await lowP.click(
     "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a",
@@ -279,26 +279,6 @@ async function prepare(lowP, highP, url) {
     });
   }
 
-  // await select(
-  //   lowP,
-  //   "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
-  //   "Price - Low to High"
-  // );
-
-
-  // await select(
-  //   highP,
-  //   "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
-  //   "Price - High to Low"
-  // ).catch(async (err) => {
-  //   console.log(err);
-  //   await highP.waitForTimeout(1000);
-  //   await select(
-  //     highP,
-  //     "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
-  //     "Price - High to Low"
-  //   );
-  // });
 }
 
 module.exports = { bobs };
