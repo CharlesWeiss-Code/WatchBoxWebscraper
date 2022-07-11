@@ -1,5 +1,5 @@
 const utilFunc = require("../utilityFunctions.js");
-const Watch = require("../DataStructures/Watch");
+const Watch = require("../Watch");
 const fs = require("fs");
 
 var lowest = "";
@@ -202,7 +202,7 @@ async function bazaar(lowP, highP, tPage, list) {
       highSku
     );
     list.push(w);
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
 
     //console.log(w);
     console.log(JSON.stringify(w, null, "\t"));

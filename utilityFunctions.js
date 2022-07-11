@@ -1,9 +1,9 @@
 const fs = require("fs");
 const { kill } = require("process");
 const request = require("request");
-const Watch = require("./DataStructures/Watch");
+const Watch = require("./Watch");
 const AWS = require("aws-sdk");
-const awsInfo = require("./aws-info");
+const awsInfo = require("./aws/aws-info");
 
 async function noResults(page, selector) {
   var noResultsVar = false;
@@ -156,7 +156,7 @@ yesterday = (date) => {
 };
 
 checkNewDay = async () => {
-  const stats = fs.statSync("dataInCSV.csv");
+  const stats = fs.statSync("data.csv");
   date = new Date();
 
   const indexNow = date.toLocaleString().indexOf(",");
@@ -174,7 +174,7 @@ checkNewDay = async () => {
     console.log("New day --> deleting old scrape and creating new one");
     await deleteObj();
     await uploadFileToS3();
-    fs.renameSync("dataInCSV.csv", "oldDataInCSV.csv");
+    fs.renameSync("data.csv", "olddata.csv");
     w = new Watch(
       "",
       "",
@@ -197,9 +197,9 @@ checkNewDay = async () => {
       "",
       ""
     );
-    fs.writeFileSync("dataInCSV.csv", getText() + "\n");
-    if (fs.existsSync("oldDataInCSV.csv")) {
-      fs.unlinkSync("oldDataInCSV.csv");
+    fs.writeFileSync("data.csv", getText() + "\n");
+    if (fs.existsSync("olddata.csv")) {
+      fs.unlinkSync("olddata.csv");
     }
   } else {
     console.log("Same Day");

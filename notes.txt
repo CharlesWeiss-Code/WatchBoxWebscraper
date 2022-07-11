@@ -10,6 +10,3 @@
     - https://www.crownandcaliber.com/search?view=shop&q=126710BLRO"
         - does Alan care that the bands are jubilee and oyster
             - can't filter Jubilee vs oyster
-
-    - delete things from DataStructures.
-    - create AWS folder

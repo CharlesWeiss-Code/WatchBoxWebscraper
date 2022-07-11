@@ -1,5 +1,5 @@
 const utilFunc = require("../utilityFunctions.js");
-const Watch = require("../DataStructures/Watch");
+const Watch = require("../Watch");
 const fs = require("fs");
 lowest = "";
 highest = "";
@@ -123,7 +123,7 @@ async function bobs(lowP, highP, tPage, list) {
     list.push(w);
 
     //console.log(w);
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
     //console.log(lowTable)
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w);

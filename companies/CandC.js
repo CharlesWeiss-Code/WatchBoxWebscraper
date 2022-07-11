@@ -1,5 +1,5 @@
 const utilFunc = require("../utilityFunctions.js");
-const Watch = require("../DataStructures/Watch");
+const Watch = require("../Watch");
 const REF = require("../refNums");
 const refNums = REF.getRefNums();
 var fs = require("fs");
@@ -20,7 +20,7 @@ var lowSku = "";
 var highSku = "";
 
 async function crownAndCaliber(lowP, highP, tPage, list) {
-  for (var i = 16; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     lowYear = "";
     lowPaper = "No";
     lowBox = "No";
@@ -98,7 +98,7 @@ async function crownAndCaliber(lowP, highP, tPage, list) {
       );
       //console.log(lowTable, lowTable.charCodeAt(lowTable.indexOf("2010s")+5))
       list.push(w);
-      fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+      fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
       console.log(JSON.stringify(w, null, "\t"));
     }
   }

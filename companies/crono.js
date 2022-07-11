@@ -1,5 +1,5 @@
 const utilFunc = require("../utilityFunctions.js");
-const Watch = require("../DataStructures/Watch");
+const Watch = require("../Watch");
 const fs = require("fs");
 const refN = require("../refNums");
 var refNums = refN.getRefNums();
@@ -30,7 +30,7 @@ var highDealerStatus = "";
 
 async function chrono24(lowP, highP, tPage, list) {
   flag = true;
-  for (var i = 15; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     lowest = "";
     highest = "";
     childLow = 1;
@@ -107,7 +107,7 @@ async function chrono24(lowP, highP, tPage, list) {
       );
 
       //console.log("lowSku", lowSku);
-      //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+      fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
       console.log(JSON.stringify(w, null, "\t"));
       //utilFunc.addToJson(w)
     }

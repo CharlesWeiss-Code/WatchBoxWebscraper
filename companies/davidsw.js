@@ -1,5 +1,5 @@
 const utilFunc = require("../utilityFunctions.js");
-const Watch = require("../DataStructures/Watch");
+const Watch = require("../Watch");
 const fs = require("fs");
 async function davidsw(lowP, highP, tPage, list) {
   for (var i = 0; i < refNums.length; i++) {
@@ -170,7 +170,7 @@ async function davidsw(lowP, highP, tPage, list) {
     );
     //console.log(w);
     list.push(w);
-    fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+    fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
 
     //utilFunc.addToJson(w);
     console.log(JSON.stringify(w, null, "\t"));
