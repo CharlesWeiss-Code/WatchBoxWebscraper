@@ -1,3 +1,6 @@
+/**
+ * This helps me filter out adds and stuff that I don't want. It also makes the scraper faster
+ */
 const minimal_args = [
   "--autoplay-policy=user-gesture-required",
   "--disable-background-networking",

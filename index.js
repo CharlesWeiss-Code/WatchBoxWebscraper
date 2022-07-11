@@ -1,11 +1,11 @@
-const { download } = require("express/lib/response");
+/**
+ * Index is where everything starts. All the companies functions are executed here.
+ * Settings for puppeteer can be configured here.  Probably the most important setting for me, "headless", can be 
+ * changed here.
+ */
+
+
 const puppeteer = require("puppeteer");
-
-const fs = require("fs");
-const editJsonFile = require("edit-json-file");
-
-const request = require("request");
-
 const chrono = require("./companies/crono.js");
 const ewc = require("./companies/ewc.js");
 const Bazaar = require("./companies/bazaar.js");
@@ -14,21 +14,17 @@ const Bobs = require("./companies/bobs.js");
 const CandC = require("./companies/CandC");
 const REF = require("./refNums.js");
 const minArgs = require("./minimalArgs");
-
-
-
-
 const utilFunc = require("./utilityFunctions");
-/*
-I HAVE MADE TIMEOUT: 0 ON SOME OF THE PAGE.GOTO(). just for testing. eventually should make timeout:60000 (1min)
-*/
+/**
+ * I HAVE MADE TIMEOUT: 0 ON SOME OF THE PAGE.GOTO(). just for testing. eventually should make timeout:60000 (1min)
+ */
+
 var lowPage = null
 var highPage = null
 var testPage = null
 
+
 async function start() {
-
-
 
   refNums = REF.getRefNums();
 
@@ -72,7 +68,6 @@ async function start() {
 
 
   var watches = [];
-
   await Bazaar.bazaar(lowPage, highPage, testPage, watches);
   await newPages(browser);
   await CandC.crownAndCaliber(lowPage, highPage, testPage, watches);
@@ -87,18 +82,8 @@ async function start() {
 
   await browser.close();
 
-
-  // if (timeIsGood()) {
-  //   utilFunc.uploadNewDataFile();
-  // }
-  //await start();
+  //await start()
 }
-
-repeat = (hour) => {
-  current = new Date();
-  console.log(current.toUTCString()); /**runs at 6AM every day */
-  return current.getUTCHours() === hour;
-};
 
 newPages = async (browser) => {
   lowPage.close();

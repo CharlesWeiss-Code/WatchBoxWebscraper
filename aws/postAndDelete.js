@@ -1,5 +1,9 @@
-const AWS = require("aws-sdk");
-const awsInfo = require("./aws-info");
+/**
+ * This file's purpose is to give me the opportunity to manually post the current csv to the s3 bucket
+ * and delete the old csv from the bucket.
+ */
+
+
 const utilFunc = require("../utilityFunctions")
 
 run = async () => {

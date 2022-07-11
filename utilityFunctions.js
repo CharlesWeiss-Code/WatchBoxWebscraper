@@ -1,11 +1,22 @@
+/**
+ * This file contains many functions that are commonly used, or just don't have any other logical home.
+ */
+
 const fs = require("fs");
-const { kill } = require("process");
 const request = require("request");
 const Watch = require("./Watch");
 const AWS = require("aws-sdk");
 const awsInfo = require("./aws/aws-info");
+const { Puppeteer } = require("puppeteer");
 
 
+
+/**
+ * 
+ * @param {Puppeteer.Page} page that you want to check the results for
+ * @param {HTML Selector (String)} selector that identifies if there are no results
+ * @returns {boolean} Boolean that represents if there were results or not
+ */
 async function noResults(page, selector) {
   var noResultsVar = false;
   if ((await page.$(selector)) != null) {
@@ -14,10 +25,17 @@ async function noResults(page, selector) {
   return noResultsVar;
 }
 
-async function noResults2(page, selector, s) {
+/**
+ * 
+ * @param {Puppeteer.Page} page that you want to check the results for
+ * @param {HTML Selector (String)} selector that identifies if there are no results
+ * @param {String} str that should appear in the text content of the selector
+ * @returns {boolean} Boolean that represents if there were results or not
+ */
+async function noResults2(page, selector, str) {
   var noResults = false;
   if (
-    String(await page.$eval(selector, (el) => el.textContent)).indexOf(s) != -1
+    String(await page.$eval(selector, (el) => el.textContent)).indexOf(str) != -1
   ) {
     noResults = true;
     console.log("no results");
@@ -25,29 +43,29 @@ async function noResults2(page, selector, s) {
   return noResults;
 }
 
-function downloadImage(uri, fileName) {
-  return new Promise((resolve, reject) => {
-    request.head(uri, function (err, res, body) {
-      request(uri)
-        .pipe(fs.createWriteStream("./watchImages/" + fileName + ".png"))
-        .on("close", resolve);
-    });
-  });
-}
 
+/**
+ * 
+ * @param {Puppeteer.Page} page that contains the selector you want to evaluate.
+ * @param {HTML Selector (String)} selector that contains the text content you want
+ * @returns {String} selector's text content
+ */
 async function getItem(page, selector) {
-  //   await page.waitForSelector(selector).then(async (res) => {
-  //   return String(await page.evaluate(res => res.textContent))
-  // })
   return String(
     await page
       .$eval(String(selector), (el) => el.textContent)
-      .catch(() => {
+      .catch((err) => {
         return "";
       })
   );
 }
 
+/**
+ * 
+ * @param {Puppeteer.page} page that contains the selector you want to check the existence of
+ * @param {HTML Selector (String)} selector that you want to check the existence of 
+ * @returns {boolean} selector's existence
+ */
 async function exists(page, selector) {
   if (
     selector ===
@@ -63,6 +81,11 @@ async function exists(page, selector) {
   return existsVar;
 }
 
+/**
+ * @param {Date} d1 
+ * @param {Date} d2
+ * @returns {boolean} wether the dates are the same or not
+ */
 sameDate = (d1, d2) => {
   if (
     d1.getMonth() === d2.getMonth() &&
@@ -74,33 +97,25 @@ sameDate = (d1, d2) => {
   return false;
 };
 
-addToJson = (watch) => {
-  let data = fs.readFileSync("data.json");
-  let parsed = JSON.parse(data);
-  parsed[watch.getWebsite()][watch.getRefNum()].push(watch);
-  fs.writeFileSync("data.json", JSON.stringify(parsed, null, 3));
-  console.log(JSON.stringify(watch, null, "\t"));
-};
-
-addToTSV = (watch) => {
-  let data = fs.readFileSync("dataInTSV.json");
-  let parsed = JSON.parse(data);
-
-  fs.writeFileSync("data.json", JSON.stringify(parsed, null, 3));
-  console.log(JSON.stringify(watch, null, "\t"));
-};
-
-CSV = (w) => {
-  s = "";
-  for (var propt in w) {
+/**
+ * @param {Watch} watch that you want to convert to csv
+ * @returns {String} str that contains watch in csv format.
+ */
+CSV = (watch) => {
+  str = "";
+  for (var propt in watch) {
     if (typeof propt != "function") {
-      s += w[propt] + ",";
+      str += watch[propt] + ",";
     }
   }
-  return s;
+  return str;
   //console.log(s)
 };
 
+
+/**
+ * @returns {void}
+ */
 uploadFileToS3 = async () => {
   key = getKey();
   const s3 = new AWS.S3({
@@ -123,6 +138,9 @@ uploadFileToS3 = async () => {
   });
 };
 
+/**
+ * @returns {String} key that the new csv will be upload to the S3 bucket with
+ */
 getKey = () => {
   var date = new Date();
   var key =
@@ -135,6 +153,10 @@ getKey = () => {
   return key + ".csv";
 };
 
+/**
+ * @param {String} key to the csv that I want to delete in the s3 buckcet
+ * @returns {void}
+ */
 deleteObj = async (key) => {
   date = new Date();
   const s3 = new AWS.S3({
@@ -143,7 +165,6 @@ deleteObj = async (key) => {
   });
   var params = {
     Bucket: awsInfo.getBucketName(),
-    //Key: yesterday(date),
     Key: key,
   };
 
@@ -153,75 +174,12 @@ deleteObj = async (key) => {
   });
 };
 
-yesterday = (date) => {
-  d = new Date();
-  d.setDate(date.getDate() - 1);
-  return getKey(d);
-};
 
-checkNewDay = async () => {
-  const stats = fs.statSync("data.csv");
-  date = new Date();
 
-  const indexNow = date.toLocaleString().indexOf(",");
-  const indexData = stats.mtime.toLocaleString().indexOf(",");
-  if (
-    !(
-      date.toLocaleString().substring(0, indexNow) ===
-      stats.mtime.toLocaleString().substring(0, indexData)
-    )
-  ) {
-    /**
-     * last time editing file was over a day ago
-     *
-     */
-    console.log("New day --> deleting old scrape and creating new one");
-    await deleteObj();
-    await uploadFileToS3();
-    fs.renameSync("data.csv", "olddata.csv");
-    w = new Watch(
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      "",
-      ""
-    );
-    fs.writeFileSync("data.csv", getText() + "\n");
-    if (fs.existsSync("olddata.csv")) {
-      fs.unlinkSync("olddata.csv");
-    }
-  } else {
-    console.log("Same Day");
-  }
-};
-
-getText = () => {
-  var s = "";
-  for (var propt in w) {
-    if (propt != "website") {
-      s += propt + ",";
-    } else {
-      s += propt;
-    }
-  }
-  return s;
-};
-
+/**
+ * @param {function} _callback that you want to invoke once the name of the current csv in the S3 is returned
+ * @returns {String} key to the object in the S3
+ */
 getName = async (_callback) => {
   result = null;
   const s3 = new AWS.S3({
@@ -242,6 +200,10 @@ getName = async (_callback) => {
   });
 };
 
+
+/**
+ * @returns {void} deletes the old object in the S3, uploads the current object to the S3, deletes the old S3 (locally), creates a blank "data.csv" file
+ */
 postAndDelete = async () => {
   getName(async (res) => {
     await deleteObj(res);
@@ -251,6 +213,9 @@ postAndDelete = async () => {
   });
 };
 
+/**
+ * @returns {String} str that is the header of the new "data.csv" file
+ */
 createBlank = () => {
   w = new Watch(
     "",
@@ -274,13 +239,16 @@ createBlank = () => {
     "",
     ""
   );
-  s = "";
+  str = "";
   for (var propt in w) {
-    s += propt + ",";
+    str += propt + ",";
   }
-  fs.writeFileSync("data.csv", s + "\n");
+  fs.writeFileSync("data.csv", str + "\n");
 };
 
+/**
+ * @returns {boolean} whether the filled "data.csv" file should be sent or not. Returns true once per day.
+ */
 timeToSendTEST = () => {
   var d = new Date();
   d.setSeconds(0);
@@ -314,6 +282,9 @@ timeToSendTEST = () => {
   }
 };
 
+/**
+ * @returns {boolean} whether the filled "data.csv" file should be sent or not. Returns true once per day.
+ */
 timeToSend = () => {
   var d = new Date();
   flag = false;
@@ -497,19 +468,21 @@ var specialSites = {
   },
 };
 
+/**
+ * @param {String} website that the special link belongs under
+ * @param {String} refNum that the special link belongs to
+ * @returns {String} that corresponds the correct link for that website and refNum
+ */
 getLink = (website, refNum) => specialSites[String(website)](String(refNum))
 
 module.exports = {
   noResults,
   noResults2,
-  downloadImage,
   getItem,
   exists,
   sameDate,
-  addToJson,
   CSV,
   uploadFileToS3,
-  checkNewDay,
   deleteObj,
   getName,
   postAndDelete,

@@ -1,3 +1,7 @@
+/**
+ * Holds every reference number I want to look up
+ */
+
 refNums = [
   "311.30.42.30.01.005",
   "116500LN-0001",

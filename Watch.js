@@ -1,4 +1,6 @@
-const fs = require("fs");
+/**
+ * The class that astracts a virtual watch from our competetor's websites.
+ */
 
 class Watch {
   constructor(
