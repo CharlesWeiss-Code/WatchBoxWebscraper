@@ -48,14 +48,17 @@ async function getItem(page, selector) {
 }
 
 async function exists(page, selector) {
-  if (selector === "#searchspring-content > div.category-products.ng-scope > div > div:nth-child(1) > h3"){
-    await page.reload()
+  if (
+    selector ===
+    "#searchspring-content > div.category-products.ng-scope > div > div:nth-child(1) > h3"
+  ) {
+    await page.reload();
   }
   var existsVar = false;
   if ((await page.$(selector)) != null) {
     existsVar = true;
   }
-  console.log(existsVar)
+  console.log(existsVar);
   return existsVar;
 }
 
@@ -140,7 +143,7 @@ deleteObj = async (key) => {
   var params = {
     Bucket: awsInfo.getBucketName(),
     //Key: yesterday(date),
-    Key: key
+    Key: key,
   };
 
   s3.deleteObject(params, function (err, data) {
@@ -238,9 +241,44 @@ getName = async (_callback) => {
   });
 };
 
-// getName((result) => {
+postAndDelete = async () => {
+  getName(async (res) => {
+    await deleteObj(res);
+    await uploadFileToS3();
+    fs.unlinkSync("./data.csv");
+    createBlank()
+  });
+};
 
-// });
+createBlank = () => {
+  w = new Watch(
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    ""
+  );
+  s = "";
+  for (var propt in w) {
+    s += propt + ",";
+  }
+  fs.writeFileSync("data.csv", s + "\n");
+};
 
 module.exports = {
   noResults,
@@ -254,5 +292,6 @@ module.exports = {
   uploadFileToS3,
   checkNewDay,
   deleteObj,
-  getName
+  getName,
+  postAndDelete,
 };

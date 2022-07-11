@@ -4,8 +4,7 @@ const utilFunc = require("../utilityFunctions")
 
 run = async () => {
      utilFunc.getName(async (res) => {
-        await utilFunc.deleteObj(res)
-        await utilFunc.uploadFileToS3()
+        await utilFunc.postAndDelete(res)
     })
 }
 run()
