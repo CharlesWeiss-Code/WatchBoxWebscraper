@@ -44,8 +44,19 @@ async function bazaar(lowP, highP, tPage, list) {
     highSku = "";
 
     var newURL = "https://www.luxurybazaar.com/search-results?q=" + refNums[i];
+    if (refNums[i] === "16570 BLK IX OYS") {
+      newURL =
+        "https://www.luxurybazaar.com/search-results?q=16570#/filter:lux_wa_dialcolor:Black";
+    } else if (refNums[i] === "16570 WHT IX OYS") {
+      newURL =
+        "https://www.luxurybazaar.com/search-results?q=16570#/filter:lux_wa_dialcolor:White";
+    } else if (refNums[i] === "116400GV-0001") {
+      newURL =
+        "https://www.luxurybazaar.com/search-results?q=116400GV#/filter:lux_wa_dialcolor:Black";
+    }
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
+    await tPage.waitForTimeout(500);
     if (
       !(await utilFunc.noResults(
         tPage,
@@ -55,31 +66,42 @@ async function bazaar(lowP, highP, tPage, list) {
       // no results
       continue;
     } else {
-      await lowP.goto(
-        "https://www.luxurybazaar.com/search-results?q=" +
-          refNums[i] +
-          "#/sort:ss_sort_price_asc:asc",
-        { waitUntil: "networkidle0" }
-      );
-      await highP.goto(
-        "https://www.luxurybazaar.com/search-results?q=" +
-          refNums[i] +
-          "#/sort:ss_sort_price_desc:desc",
-        { waitUntil: "networkidle0" }
-      );
+      if (newURL.indexOf("#") != -1) {
+        await lowP.goto(newURL + "/sort:ss_sort_price_asc:asc");
+        await highP.goto(newURL + "/sort:ss_sort_price_desc:desc");
+      } else {
+        await lowP.goto(newURL + "#/sort:ss_sort_price_asc:asc");
+        await highP.goto(newURL + "#/sort:ss_sort_price_desc:desc");
+      }
 
-      await lowP.waitForTimeout(500);
-      await highP.waitForTimeout(500);
-      lowest = await utilFunc.getItem(lowP, 'span[class="price ng-binding"]');
+      await lowP.waitForTimeout(500)
+      await highP.waitForTimeout(500)
+      lowest = await utilFunc.getItem(lowP, "span[class='price ng-binding']");
 
-      highest = await utilFunc.getItem(highP, 'span[class="price ng-binding"]');
+      highest = await utilFunc.getItem(highP, "span[class='price ng-binding']");
 
-      await lowP.click(
-        "#searchspring-content > div.category-products.ng-scope > div > ul > li:nth-child(1) > a"
-      );
-      await highP.click(
-        "#searchspring-content > div.category-products.ng-scope > div > ul > li:nth-child(1) > a"
-      );
+      await lowP.reload();
+      await highP.reload();
+
+      await lowP
+        .waitForSelector("a[class='product-image']")
+        .then(async (res) => {
+          await lowP
+            .evaluate((a) => a.href, res)
+            .then(async (res2) => {
+              await lowP.goto(res2);
+            });
+        });
+
+      await highP
+        .waitForSelector("a[class='product-image']")
+        .then(async (res) => {
+          await highP
+            .evaluate((a) => a.href, res)
+            .then(async (res2) => {
+              await highP.goto(res2);
+            });
+        });
 
       await lowP.waitForTimeout(500);
       await highP.waitForTimeout(500);
@@ -139,7 +161,9 @@ async function bazaar(lowP, highP, tPage, list) {
       highBP = highTable
         .substring(highBPIndex1, highBPIndex2)
         .replace("\n", "");
-        if (highBP.replace(/[^a-zA-Z ]/g, "") === "Manufacturers Box and Papers") {
+      if (
+        highBP.replace(/[^a-zA-Z ]/g, "") === "Manufacturers Box and Papers"
+      ) {
         highPaper = "Yes";
         highBox = "Yes";
       }

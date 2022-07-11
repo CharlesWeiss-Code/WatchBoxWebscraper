@@ -55,7 +55,11 @@ async function chrono24(lowP, highP, tPage, list) {
     var newURL =
       "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=" +
       refNums[i];
-
+    if (refNums[i] === "16570 BLK IX OYS") {
+      newURL = "https://www.chrono24.com/search/index.htm?currencyId=USD&dialColor=702&dosearch=true&maxAgeInDays=0&pageSize=60&query=16570&redirectToSearchIndex=true&resultview=list"
+    } else if (refNums[i] === "16570 WHT IX OYS") {
+      newURL = "https://www.chrono24.com/search/index.htm?currencyId=USD&dialColor=701&dosearch=true&maxAgeInDays=0&pageSize=60&query=16570&redirectToSearchIndex=true&resultview=list"
+    }
     console.log("REF: " + refNums[i] + "\n" + "GENERAL URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
 
@@ -75,7 +79,9 @@ async function chrono24(lowP, highP, tPage, list) {
       await prepareStuff(lowP, highP, newURL, list, refNums[i]);
 
       //assignData(lowTable, highTable);
-
+      if (parseFloat(lowest) > parseFloat(highest)) {
+        continue
+      }
       w = new Watch(
         refNums[i],
         yearLow,

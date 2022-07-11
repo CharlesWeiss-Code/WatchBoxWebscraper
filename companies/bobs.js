@@ -47,26 +47,34 @@ async function bobs(lowP, highP, tPage, list) {
       refNums[i];
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
 
-    await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 0 })
-
-    if (refNums[i] === "116500LN-0001" || refNums[i] === "116500LN-0002") {
-      newURL = 
-        "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=116500LN";
-        await tPage.goto(newURL, { waitUntil: "networkidle0" });
-
-
+    if (refNums[i] === "116500LN-0001") {
+      newURL =
+        "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=116500LN#/filter:custom_field_9:White";
+    } else if (refNums[i] === "16570 BLK IX OYS") {
+      newURL =
+        "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=16570#/filter:custom_field_9:Black";
+    } else if (refNums[i] === "16570 WHT IX OYS") {
+      newURL =
+        "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=16570#/filter:custom_field_9:White";
+    } else if (refNums[i] === "116500LN-0002") {
+      newURL =
+        "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=116500LN#/filter:custom_field_9:Black";
+    } else if (refNums[i] === "126710BLNR-0002") {
+      newURL = "https://www.bobswatches.com/shop?query=126710BLNR#/filter:custom_field_7:Jubilee/filter:custom_field_9:Black"
+    } else if (refNums[i] === "214270-0003") {
+      newURL = "https://www.bobswatches.com/shop?query=214270#/filter:custom_field_9:Black"
     }
-    await tPage.waitForTimeout(500)
-    if ((
-      await utilFunc
-        .noResults(
-          tPage,
-          "#searchspring-content > div > div > div > div > div > div.no-results"
-        )
-    )) {
+    await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 0 });
+
+    await tPage.waitForTimeout(500);
+    if (
+      await utilFunc.noResults(
+        tPage,
+        "#searchspring-content > div > div > div > div > div > div.no-results"
+      )
+    ) {
       continue;
     } else {
-
       await prepare(lowP, highP, newURL); // sorts page
       await getData(lowP, highP); // gets data tables and price
       imageLow = await lowP.evaluate(() => {
@@ -255,18 +263,28 @@ async function getData(lowP, highP) {
 }
 
 async function prepare(lowP, highP, url) {
-  await lowP.goto(url + "#/sort:price:asc", {
-    waitUntil: "networkidle0",
-  });
-  await lowP.waitForTimeout(1000);
+  if (url.indexOf("#") === -1) {
+    await lowP.goto(url + "#/sort:price:asc", {
+      waitUntil: "networkidle0",
+    });
+    await highP.goto(url + "#/sort:price:desc", {
+      waitUntil: "networkidle0",
+    });
+  } else {
+    await lowP.goto(url + "/sort:price:asc", {
+      waitUntil: "networkidle0",
+    });
+    await highP.goto(url + "/sort:price:desc", {
+      waitUntil: "networkidle0",
+    });
+  }
+
   // await select(
   //   lowP,
   //   "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
   //   "Price - Low to High"
   // );
-  await highP.goto(url + "#/sort:price:desc", {
-    waitUntil: "networkidle0",
-  });
+
 
   // await select(
   //   highP,

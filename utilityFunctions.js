@@ -35,6 +35,9 @@ function downloadImage(uri, fileName) {
 }
 
 async function getItem(page, selector) {
+  //   await page.waitForSelector(selector).then(async (res) => {
+  //   return String(await page.evaluate(res => res.textContent))
+  // })
   return String(
     await page
       .$eval(String(selector), (el) => el.textContent)
@@ -45,10 +48,14 @@ async function getItem(page, selector) {
 }
 
 async function exists(page, selector) {
+  if (selector === "#searchspring-content > div.category-products.ng-scope > div > div:nth-child(1) > h3"){
+    await page.reload()
+  }
   var existsVar = false;
   if ((await page.$(selector)) != null) {
     existsVar = true;
   }
+  console.log(existsVar)
   return existsVar;
 }
 

@@ -12,64 +12,47 @@ async function EWC(lowP, highP, tPage, list) {
     var newURL =
       "https://www2.europeanwatch.com/cgi-bin/search.pl?search=" + refNums[i];
 
-    console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
+
+
+    if (refNums[i] === "116500LN-0001" || refNums[i] === "116500LN-0002") {
+       newURL =
+        "https://www2.europeanwatch.com/cgi-bin/search.pl?search=" + "116500LN";
+    }else if (refNums[i] === "16570 BLK IX OYS") {
+      newURL = "https://www2.europeanwatch.com/cgi-bin/search.pl?search=16570"
+    } else if (refNums[i] === "16570 WHT IX OYS") {
+      newURL = "https://www2.europeanwatch.com/cgi-bin/search.pl?search=16570"
+    } else if (refNums[i] === "126710BLRO-0001") {
+      newURL = "https://www2.europeanwatch.com/cgi-bin/search.pl?search=126710BLRO"
+    } else if (refNums[i] === "126710BLNR-0002") {
+      newURL = "https://www2.europeanwatch.com/cgi-bin/search.pl?search=126710BLNR"
+    }
 
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
-    
+
+    console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
+
     await tPage.waitForTimeout(1000);
-    if (refNums[i] === "116500LN-0001" || refNums[i] === "116500LN-0002") {
-      var url =
-        "https://www2.europeanwatch.com/cgi-bin/search.pl?search=" + "116500LN";
-      await tPage.goto(url, { waituntil: "networkidle0" });
-      await lowP.goto(url, { waituntil: "networkidle0" });
-      await highP.goto(url, { waituntil: "networkidle0" });
 
-      if (await utilFunc.noResults(tPage, "body > section > h3")) {
-        // no reults
-        continue;
-      } else {
-        //EWC Is weird and needs its own function.
-        lowest = await findPriceEWC(lowP, url, "asc");
-        highest = await findPriceEWC(highP, url, "desc");
-
-        brandLow = await utilFunc.getItem(
-          lowP,
-          "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3"
-        );
-        brandHigh = await utilFunc.getItem(
-          highP,
-          "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3"
-        );
-        brandLow = brandLow.substring(0, brandLow.indexOf(" "));
-        brandHigh = brandHigh.substring(0, brandHigh.indexOf(" "));
-
-        console.log("Lowest: " + lowest);
-        console.log("Highest: " + highest);
-        console.log("URL: " + tPage.url());
-      }
+    if (await utilFunc.noResults(tPage, "body > section > h3")) {
+      continue;
     } else {
-      if (await utilFunc.noResults(tPage, "body > section > h3")) {
-        lowest = 0;
-        highest = 0;
-        continue;
-      } else {
-        //EWC Is weird and needs its own function.
-        lowest = await findPriceEWC(lowP, newURL, "asc");
-        highest = await findPriceEWC(highP, newURL, "desc");
+      //EWC Is weird and needs its own function.
+      lowest = await findPriceEWC(lowP, newURL, "asc");
+      highest = await findPriceEWC(highP, newURL, "desc");
 
-        brandLow = await utilFunc.getItem(
-          lowP,
-          "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3"
-        );
-        brandHigh = await utilFunc.getItem(
-          highP,
-          "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3"
-        );
-        brandLow = brandLow.substring(0, brandLow.indexOf(" "));
-        brandHigh = brandHigh.substring(0, brandHigh.indexOf(" "));
-        console.log(brandLow, brandHigh);
-      }
+      brandLow = await utilFunc.getItem(
+        lowP,
+        "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3"
+      );
+      brandHigh = await utilFunc.getItem(
+        highP,
+        "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3"
+      );
+      brandLow = brandLow.substring(0, brandLow.indexOf(" "));
+      brandHigh = brandHigh.substring(0, brandHigh.indexOf(" "));
+      console.log(brandLow, brandHigh);
     }
+
     w = new Watch(
       refNums[i],
       "",

@@ -5,7 +5,7 @@
 
     - special watches should be handled in if statements now that setup is better
 
-WSSA0030,Box,Yes,Box,Yes,7475.00,7475.00,https://davidsw.com/shop/watch/cartier/cartier-wssa0030-santos-de-cartier-large-with-blue-dial-14/,https://davidsw.com/shop/watch/cartier/cartier-wssa0030-santos-de-cartier-large-with-blue-dial-14/,2021,2021,,,https://davidsw.com/shop/watch/cartier/cartier-wssa0030-santos-de-cartier-large-with-blue-dial-14/,2022_07_07,https://3gjx4b3452bb1chpkbd5xa4j-wpengine.netdna-ssl.com/wp-content/uploads/2022/06/IMG_5663.jpg,https://3gjx4b3452bb1chpkbd5xa4j-wpengine.netdna-ssl.com/wp-content/uploads/2022/06/IMG_5663.jpg,Cartier,Cartier,davidsw,42304,42304,
-- says box instead of yes
-
 make chrono noWatchesInList work.
+    - https://www.luxurybazaar.com/search-results?q=126710BLNR#/filter:lux_wa_dialcolor:Black
+    - https://www.crownandcaliber.com/search?view=shop&q=126710BLRO"
+        - does Alan care that the bands are jubile and oyster

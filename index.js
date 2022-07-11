@@ -22,8 +22,13 @@ const utilFunc = require("./utilityFunctions");
 /*
 I HAVE MADE TIMEOUT: 0 ON SOME OF THE PAGE.GOTO(). just for testing. eventually should make timeout:60000 (1min)
 */
+var lowPage = null
+var highPage = null
+var testPage = null
 
 async function start() {
+
+
   // if (repeat(15)) {
   refNums = REF.getRefNums();
 
@@ -32,9 +37,10 @@ async function start() {
     defaultViewport: null,
     args: minArgs.getMinimalArgs(),
   });
-  const lowPage = await browser.newPage();
-  const highPage = await browser.newPage();
-  const testPage = await browser.newPage();
+  testPage = await browser.newPage();
+  lowPage = await browser.newPage();
+  highPage = await browser.newPage();
+
   const blocked_domains = ["googlesyndication.com", "adservice.google.com"];
 
   await lowPage.setRequestInterception(true);
@@ -66,12 +72,18 @@ async function start() {
   //console.log(utilFunc.newDay());
 
   var watches = [];
+
   // await Bazaar.bazaar(lowPage, highPage, testPage, watches);
-  // await CandC.crownAndCaliber(lowPage, highPage, testPage, watches)
-  // await ewc.EWC(lowPage, highPage, testPage, watches);
-   await david.davidsw(lowPage, highPage, testPage, watches);
-  // await Bobs.bobs(lowPage, highPage, testPage, watches);
-  // await chrono.chrono24(lowPage, highPage, testPage, watches);
+  // await newPages(browser);
+  await CandC.crownAndCaliber(lowPage, highPage, testPage, watches);
+  await newPages(browser);
+  await ewc.EWC(lowPage, highPage, testPage, watches);
+  await newPages(browser);
+  await david.davidsw(lowPage, highPage, testPage, watches);
+  await newPages(browser);
+  await Bobs.bobs(lowPage, highPage, testPage, watches);
+  await newPages(browser);
+  await chrono.chrono24(lowPage, highPage, testPage, watches);
 
   await browser.close();
   // }
@@ -86,6 +98,15 @@ repeat = (hour) => {
   current = new Date();
   console.log(current.toUTCString()); /**runs at 6AM every day */
   return current.getUTCHours() === hour;
+};
+
+newPages = async (browser) => {
+  lowPage.close();
+  highPage.close();
+  testPage.close();
+  testPage = await browser.newPage();
+  lowPage = await browser.newPage();
+  highPage = await browser.newPage();
 };
 
 start();
