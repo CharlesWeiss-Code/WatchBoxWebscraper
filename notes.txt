@@ -4,9 +4,5 @@
     upload to aws = https://www.youtube.com/watch?v=xtRYi8ud1sM
 
     - special watches should be handled in if statements now that setup is better
-
-    make chrono noWatchesInList work.
-    - https://www.luxurybazaar.com/search-results?q=126710BLNR#/filter:lux_wa_dialcolor:Black
-    - https://www.crownandcaliber.com/search?view=shop&q=126710BLRO"
-        - does Alan care that the bands are jubilee and oyster
-            - can't filter Jubilee vs oyster
+    
+    - make chrono noWatchesInList work.
