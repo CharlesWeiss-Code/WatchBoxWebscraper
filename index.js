@@ -75,14 +75,14 @@ async function start() {
 
   // await Bazaar.bazaar(lowPage, highPage, testPage, watches);
   // await newPages(browser);
-  await CandC.crownAndCaliber(lowPage, highPage, testPage, watches);
-  await newPages(browser);
-  await ewc.EWC(lowPage, highPage, testPage, watches);
-  await newPages(browser);
-  await david.davidsw(lowPage, highPage, testPage, watches);
-  await newPages(browser);
-  await Bobs.bobs(lowPage, highPage, testPage, watches);
-  await newPages(browser);
+  // await CandC.crownAndCaliber(lowPage, highPage, testPage, watches);
+  // await newPages(browser);
+  // await ewc.EWC(lowPage, highPage, testPage, watches);
+  // await newPages(browser);
+  // await david.davidsw(lowPage, highPage, testPage, watches);
+  // await newPages(browser);
+  // await Bobs.bobs(lowPage, highPage, testPage, watches);
+  // await newPages(browser);
   await chrono.chrono24(lowPage, highPage, testPage, watches);
 
   await browser.close();

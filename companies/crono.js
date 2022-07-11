@@ -30,7 +30,7 @@ var highDealerStatus = "";
 
 async function chrono24(lowP, highP, tPage, list) {
   flag = true;
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 15; i < refNums.length; i++) {
     lowest = "";
     highest = "";
     childLow = 1;
@@ -82,6 +82,7 @@ async function chrono24(lowP, highP, tPage, list) {
       if (parseFloat(lowest) > parseFloat(highest)) {
         continue
       }
+      console.log(childLow, childHigh)
       w = new Watch(
         refNums[i],
         yearLow,
@@ -106,7 +107,7 @@ async function chrono24(lowP, highP, tPage, list) {
       );
 
       //console.log("lowSku", lowSku);
-      fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
+      //fs.appendFileSync("./dataInCSV.csv", utilFunc.CSV(w) + "\n");
       console.log(JSON.stringify(w, null, "\t"));
       //utilFunc.addToJson(w)
     }
@@ -116,13 +117,33 @@ async function chrono24(lowP, highP, tPage, list) {
 prepareStuff = async (lowP, highP, url, list, rn) => {
   test = 54;
   await lowP.goto(url + "&sortorder=1");
+  await lowP.waitForTimeout(500)
   childLow = await checkTop(lowP, "low", list, rn);
+  // lowest = await utilFunc.getItem(
+  //   lowP,
+  //   "#wt-watches > div:nth-child(" +
+  //     childLow +
+  //     ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
+  // );
+  // if (lowest = "") {
+  //   lowest = await utilFunc.getItem(lowP,
+  //     "#wt-watches > div:nth-child("+childLow+") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price > div > strong"
+  //     )
+  // }
   lowest = await utilFunc.getItem(
     lowP,
     "#wt-watches > div:nth-child(" +
       childLow +
       ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
   );
+  if (lowest === "") {
+    lowest = await utilFunc.getItem(lowP,
+      "#wt-watches > div:nth-child("+childLow+") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price > div > strong"
+      )
+  }
+  //#wt-watches > div:nth-child(1) > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price
+  //#wt-watches > div:nth-child(1) > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong
+  //#wt-watches > div:nth-child(1) > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price > div > strong
 
   if (flag) {
     if (await utilFunc.exists(lowP, "#modal-content > div > button")) {
@@ -139,6 +160,13 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
         ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
     )
   );
+  if (lowDealerStatus === "") {
+    lowDealerStatus = await utilFunc.getItem(lowP,
+      "#wt-watches > div:nth-child("+childLow+") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-seller-container > div > div.media-flex-body.d-flex.flex-column > div.article-seller-name.text-sm"
+      )
+  }
+
+
   if (lowDealerStatus.trim() === "Professional dealer") {
     lowDealerStatus = "PD";
   } else if (lowDealerStatus.trim() === "Private Seller") {
@@ -169,12 +197,22 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
       childHigh +
       ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
   );
+  if (highest === "") {
+    highest = await utilFunc.getItem(highP,
+      "#wt-watches > div:nth-child("+childHigh+") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price > div > strong"
+      )
+  }
   highDealerStatus = await utilFunc.getItem(
     highP,
     "#wt-watches > div:nth-child(" +
       childHigh +
       ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
   );
+  if (highDealerStatus === "") {
+    highDealerStatus = await utilFunc.getItem(highP,
+      "#wt-watches > div:nth-child("+childHigh+") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-seller-container > div > div.media-flex-body.d-flex.flex-column > div.article-seller-name.text-sm"
+      )
+  }
   if (highDealerStatus.trim() === "Professional dealer") {
     highDealerStatus = "PD";
   } else if (highDealerStatus.trim() === "Private Seller") {

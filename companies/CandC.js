@@ -20,7 +20,7 @@ var lowSku = "";
 var highSku = "";
 
 async function crownAndCaliber(lowP, highP, tPage, list) {
-  for (var i = 4; i < refNums.length; i++) {
+  for (var i = 16; i < refNums.length; i++) {
     lowYear = "";
     lowPaper = "No";
     lowBox = "No";
@@ -127,7 +127,9 @@ prepare = async (lowP, highP, link) => {
   ) {
     console.log("newURlj");
 
-    await highP.goto(link + "#/sort:ss_price:desc");
+    await highP.goto(link + "#/sort:ss_price:desc").catch(async (err) => {
+      await highP.goto(link + "#/sort:ss_price:desc")
+    })
   }
   await highP.waitForTimeout(1000);
 

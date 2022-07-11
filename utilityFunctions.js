@@ -103,7 +103,7 @@ uploadFileToS3 = async () => {
     accessKeyId: awsInfo.getKeyID(),
     secretAccessKey: awsInfo.getSecret(),
   });
-  const content = fs.readFileSync("./dataInCSV.csv");
+  const content = fs.readFileSync("./data.csv");
   const params = {
     Bucket: awsInfo.getBucketName(),
     Key: key,
