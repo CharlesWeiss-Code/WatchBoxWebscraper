@@ -70,38 +70,39 @@ async function chrono24(lowP, highP, tPage, list) {
     } else {
       // results
       await prepareStuff(lowP, highP, newURL, list, refNums[i]);
-
+      console.log(childLow, childHigh);
+      console.log(parseInt(lowest), parseInt(highest));
       if (parseInt(lowest) > parseInt(highest)) {
         continue;
-      }
-      console.log(childLow, childHigh);
-      w = new Watch(
-        refNums[i],
-        yearLow,
-        yearHigh,
-        lowBox,
-        lowPaper,
-        highBox,
-        highPaper,
-        lowest.trim(),
-        highest.trim(),
-        lowDealerStatus,
-        highDealerStatus,
-        lowP.url(),
-        highP.url(),
-        tPage.url(),
-        lowImage,
-        highImage,
-        brandLow,
-        brandHigh,
-        lowSku,
-        highSku
-      );
+      } else {
+        w = new Watch(
+          refNums[i],
+          yearLow,
+          yearHigh,
+          lowBox,
+          lowPaper,
+          highBox,
+          highPaper,
+          lowest.trim(),
+          highest.trim(),
+          lowDealerStatus,
+          highDealerStatus,
+          lowP.url(),
+          highP.url(),
+          tPage.url(),
+          lowImage,
+          highImage,
+          brandLow,
+          brandHigh,
+          lowSku,
+          highSku
+        );
 
-      //console.log("lowSku", lowSku);
-      fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
-      console.log(JSON.stringify(w, null, "\t"));
-      //utilFunc.addToJson(w)
+        //console.log("lowSku", lowSku);
+        fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
+        console.log(JSON.stringify(w, null, "\t"));
+        //utilFunc.addToJson(w)
+      }
     }
   }
 }
@@ -459,7 +460,6 @@ typeOf = async (page, sel) => {
     }
   }
 };
-
 
 /**
  * @param {Puppeteer.Page} page

@@ -35,7 +35,7 @@ HOW TO USE:
     - If the program crashes OR you want to stop it for any reason, and continue the scrape WHERE YOU LEFT OFF, 
     (assuming all files in "./companies" are printing the URL and the refernce number), copy the latest reference number from the console,
     go to "./refNums.js" and press "command" and "f" synchronously, and then paste the reference number into the search bar. It will
-    highlight the reference number. Take the line number of the highlighted reference number, subtract 2, and that is the new 
+    highlight the reference number. Take the line number of the highlighted reference number, subtract 6, and that is the new 
     index into "refNums" that you want to start with. If the scraper crashed at "./CandC.js" on reference number "79250BM-0001",
     the new index would be 24.  With that number in mind, comment out the preceeding functions to "CandC" in "./Index.js",
     and replace the for loop line that should be,

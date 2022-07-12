@@ -6,9 +6,8 @@
 
 const utilFunc = require("../utilityFunctions")
 
-run = async () => {
-     utilFunc.getName(async (res) => {
+!async function(){
+    utilFunc.getName(async (res) => {
         await utilFunc.postAndDelete(res)
     })
-}
-run()
+}()

@@ -59,7 +59,7 @@ async function bobs(lowP, highP, tPage, list) {
     ) {
       continue;
     } else {
-      await prepare(lowP, highP, newURL); // sorts page
+      await prepare(lowP,highP,newURL)
       await getData(lowP, highP); // gets data tables and price
       imageLow = await lowP.evaluate(() => {
         const image = document.querySelector("#mainImage");
@@ -131,10 +131,16 @@ async function getData(lowP, highP) {
     "2"
   );
 
+  await lowP.waitForTimeout(500)
+
   lowest = await utilFunc.getItem(
     lowP,
     "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding"
   );
+
+  await highP.waitForTimeout(500)
+
+
   highest = await utilFunc.getItem(
     highP,
     "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding"
@@ -162,6 +168,15 @@ async function getData(lowP, highP) {
   lowTable = await lowP.$$eval("tbody", (options) => options[1].textContent);
 
   highTable = await highP.$$eval("tbody", (options) => options[1].textContent);
+  console.log("'"+lowest+"'","'"+highest+"'")
+
+  if (lowest === "") {
+    console.log("llkjhasdfkljhasdf")
+    lowest = await utilFunc.getItem(lowP, "span[class='price']")
+  }
+  if (highest === "") {
+    highest = await utilFunc.getItem(highP, "span[class='price']")
+  }
 
   index1YearLow = -1;
   if (lowTable.indexOf("Serial/Year:") != -1) {
@@ -235,12 +250,13 @@ async function getData(lowP, highP) {
   }
 }
 
+
 /**
  * @param {Puppeteer.Page} lowP that you want to navagate to the right URL
  * @param {Puppeteer.Page} highP that you want to navagate to the right URL
  * @param {String} url that you want to modify
  */
- prepare = async (lowP, highP, url) =>{
+async function prepare(lowP, highP, url) {
   if (url.indexOf("#") === -1) {
     await lowP.goto(url + "#/sort:price:asc", {
       waitUntil: "networkidle0",
@@ -257,8 +273,4 @@ async function getData(lowP, highP) {
     });
   }
 }
-
-
-
-
 module.exports = { bobs };
