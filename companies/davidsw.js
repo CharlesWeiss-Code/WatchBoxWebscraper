@@ -1,6 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../Watch");
 const fs = require("fs");
+const { Puppeteer } = require("puppeteer");
 async function davidsw(lowP, highP, tPage, list) {
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
@@ -170,6 +171,10 @@ async function davidsw(lowP, highP, tPage, list) {
 
 module.exports = { davidsw };
 
+/**
+ * @param {Puppeteer.Page} lowP that you want to get data from
+ * @returns {void} assigns data from lowP to both lowest and highest price watches
+ */
 async function assignDataOneResult(lowP) {
   lowTables = "";
   lowTables = await lowP.$$eval("tbody", (options) =>
@@ -195,6 +200,11 @@ async function assignDataOneResult(lowP) {
   highTables = lowTables;
 }
 
+/**
+ * @param {Puppeteer.Page} lowP that you want to get data from
+ * @param {Puppeteer.Page} highP that you want to get data from
+ * @returns {void} assigns data to both lowest and highest price watches
+ */
 async function assignDataResults(lowP, highP) {
   // checking to see if it shows multiple watches or went straight to one watch
   await lowP.waitForSelector('span[class="price"]');
@@ -237,45 +247,12 @@ async function assignDataResults(lowP, highP) {
   highSku = await utilFunc.getItem(highP, "span[class='sku']");
 }
 
+
+/**
+ * @param {String} url that you want to modify 
+ * @param {String} filter that you want to apply to the url
+ */
 getUrl = (url, filter) =>
   url.substring(0, url.indexOf("&") + 1) +
   filter +
   url.substring(url.indexOf("&s") + 1);
-
-getBaseURL = (refNum) => {
-  var result =
-    "https://davidsw.com/?s=" +
-    refNums[i] +
-    "&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
-
-  if (refNum == "116500LN-0001") {
-    // special white daytona
-    newURL =
-      "https://davidsw.com/?filter_dial-color=white&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
-  } else if (refNum == "116500LN-0002") {
-    newURL =
-      "https://davidsw.com/?filter_dial-color=black&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
-  } else if (refNum === "16570 BLK IX OYS") {
-    newURL =
-      "https://davidsw.com/?filter_dial-color=black&s=16570&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
-  } else if (refNum === "16570 WHT IX OYS") {
-    newURL =
-      "https://davidsw.com/?filter_dial-color=white&s=16570&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
-  } else if (refNum === "126710BLNR-0002") {
-    newURL =
-      "https://davidsw.com/?s=126710BLNR&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
-  } else if (refNum === "126710BLRO-0001") {
-    newURL =
-      "https://davidsw.com/?s=126710BLRO&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
-  } else if (refNum === "116400GV-0001") {
-    newURL =
-      "https://davidsw.com/?filter_dial-color=black&s=116400GV&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
-  } else if (refNum === "214270-0003") {
-    newURL =
-      "https://davidsw.com/?filter_dial-color=black&s=214270&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
-  } else if (refNum === "5711/1A-010") {
-    newURL =
-      "https://davidsw.com/?filter_dial-color=blue&s=5711&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
-  }
-  return result;
-};

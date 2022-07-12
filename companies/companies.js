@@ -1,2 +1,0 @@
-const bazaar = require("./bazaar")
-

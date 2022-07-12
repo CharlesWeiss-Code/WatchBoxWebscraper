@@ -2,6 +2,7 @@ const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../Watch");
 const fs = require("fs");
 const refN = require("../refNums");
+const { Puppeteer } = require("puppeteer");
 var refNums = refN.getRefNums();
 
 var lowest = "";
@@ -52,7 +53,7 @@ async function chrono24(lowP, highP, tPage, list) {
     lowSku = "";
     highSku = "";
 
-    var newURL = utilFunc.getLink("C24", refNums[i])
+    var newURL = utilFunc.getLink("C24", refNums[i]);
 
     console.log("REF: " + refNums[i] + "\n" + "GENERAL URL: " + newURL);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
@@ -105,17 +106,24 @@ async function chrono24(lowP, highP, tPage, list) {
   }
 }
 
+/**
+ * @param {Puppeteer.Page} lowP that you want to get information from
+ * @param {Puppeteer.Page} highP that you want to get information from
+ * @param {String} url that will serve as a template for the actual urls that lowP and highP go to
+ * @param {[Watch]} list of watches from the beginning of the current scrape to now
+ * @param {String} rn that is currently being scraped
+ * @returns {void} assigns the values neccesary for creating a new watch object
+ */
 prepareStuff = async (lowP, highP, url, list, rn) => {
   await lowP.goto(url + "&sortorder=1");
-  await lowP.waitForTimeout(500)
+  await lowP.waitForTimeout(500);
   if (await utilFunc.exists(lowP, "#modal-content > div > button")) {
     await lowP.click("#modal-content > div > button"); // cookie tracker button
-    await lowP.waitForTimeout(500)
+    await lowP.waitForTimeout(500);
   }
 
-
   //await highP.click("#modal-content > div > a", {delay: 20})
-  childLow = await checkTop(lowP, "low", list, rn);
+  childLow = await validChild(lowP, list, rn);
   lowest = await utilFunc.getItem(
     lowP,
     "#wt-watches > div:nth-child(" +
@@ -174,7 +182,7 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
   await highP.goto(url + "&searchorder=11&sortorder=11");
   await highP.waitForTimeout(1000);
   //await highP.click("#modal-content > div > a", {delay: 20})
-  childHigh = await checkTop(highP, "high", list, rn);
+  childHigh = await validChild(highP, list, rn);
   highest = await utilFunc.getItem(
     highP,
     "#wt-watches > div:nth-child(" +
@@ -355,7 +363,13 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
   }
 };
 
-checkTop = async (page, LH, arr, rn) => {
+/**
+ * @param {Puppeteer.Page} page that you want to find the lowest nth-child(k) for k that isn't a "Top" choice by Chrono24.
+ * @param {[Watch]} arr of watches from the beginning of the current scrape to now
+ * @param {String} rn that is currently being scraped
+ * @returns {int} nth-child(k) for k that isn't a "Top" choice by Chrono24.
+ */
+validChild = async (page, arr, rn) => {
   // min = Math.floor(getBuffer(arr, 0.9, rn)/1000)*1000;
   // max = Math.floor(getBuffer(a2rr, 1.1, rn)/1000)*1000;
   min = getBuffer(arr, 0.9, rn);
@@ -396,6 +410,12 @@ checkTop = async (page, LH, arr, rn) => {
   return 1;
 };
 
+/**
+ * @param {[Watch]} list of watches from the beginning of the current scrape to now
+ * @param {float} percent that you want to multiply the average by
+ * @param {String} refNum that you want to find the average price of
+ * @returns {float} maximum/minimum price used to filter chrono24 results
+ */
 getBuffer = (list, percent, refNum) => {
   var price = 0;
   var num = 0;
@@ -410,19 +430,23 @@ getBuffer = (list, percent, refNum) => {
       }
     }
   });
-
-  result = (price / num) * percent;
   if (num === 0 && percent < 1.0) {
     return 0;
   } else if (num === 0 && percent > 1.0) {
     return Number.MAX_SAFE_INTEGER;
   }
+  result = (price / num) * percent;
   //console.log(price, result);
   return result;
 };
 
-typeOf = async (page, s) => {
-  let element = await page.$(s);
+/**
+ * @param {Puppeteer.Page} page that the child element is in.
+ * @param {String} sel that you want to check the type of
+ * @returns {boolean} is the type a watch or not
+ */
+typeOf = async (page, sel) => {
+  let element = await page.$(sel);
   if (element === null) {
     return false;
   } else {
@@ -436,9 +460,14 @@ typeOf = async (page, s) => {
   }
 };
 
-noTop = async (page, s) => {
-  // works
-  let element = await page.$(s);
+
+/**
+ * @param {Puppeteer.Page} page
+ * @param {String} sel in question that may represent a "Top" choice from Chrono24
+ * @returns {boolean} is the selector a "Top" choice or not.
+ */
+noTop = async (page, sel) => {
+  let element = await page.$(sel);
   if (element === null) {
     return false;
   } else {
@@ -447,6 +476,11 @@ noTop = async (page, s) => {
   }
 };
 
+/**
+ * @param {[Watch]} list of watches from the beginning of the current scrape to now
+ * @param {String} rn of the current watch being scraped
+ * @returns {boolean} is the current reference number represented anywhere in the [Watches]
+ */
 noWatchesInList = (list, rn) => {
   for (var i = 0; i < list.length; i++) {
     if (String(list[i].refNum.trim()) === rn) {

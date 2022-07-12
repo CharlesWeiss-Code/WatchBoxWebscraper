@@ -3,6 +3,7 @@ const Watch = require("../Watch");
 const REF = require("../refNums");
 const refNums = REF.getRefNums();
 var fs = require("fs");
+const { Puppeteer } = require("puppeteer");
 
 var lowYear = "";
 var lowPaper = "No";
@@ -84,6 +85,11 @@ async function crownAndCaliber(lowP, highP, tPage, list) {
   }
 }
 
+/**
+ * @param {Puppeteer.Page} lowP that you want to get the table of information from (lowest price)
+ * @param {Puppeteer.Page} highP that you want to get the table of information from (highest price)
+ * @param {String} link that you want to direct lowP and highP to
+ */
 prepare = async (lowP, highP, link) => {
   endAsc = "/sort:ss_price:asc";
   endDesc = "/sort:ss_price:desc";
@@ -176,6 +182,10 @@ prepare = async (lowP, highP, link) => {
     });
 };
 
+
+/**
+ * @returns {void} assigns all neccesary fields for a new watch object
+ */
 assignData = () => {
   var lowYearIndex1 = lowTable.indexOf("Approximate Age - ") + 18;
   //var lowYearIndex2 = lowTable.indexOf("Case Material - ");

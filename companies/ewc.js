@@ -1,6 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../Watch");
 const fs = require("fs");
+const { Puppeteer } = require("puppeteer");
 async function EWC(lowP, highP, tPage, list) {
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
@@ -68,6 +69,13 @@ async function EWC(lowP, highP, tPage, list) {
   }
 }
 
+
+/**
+ * @param {Puppeteer.Page} page that you want to find the lowest and highest prices of
+ * @param {String} url that you want the page to go to
+ * @param {String} type of price you want to return. Either "asc" or String
+ * @returns {int} price
+ */
 async function findPriceEWC(page, url, type) {
   await page.goto(url, { waituntil: "networkidle0", timeout: 60000 });
   prices = await page.$$eval(
