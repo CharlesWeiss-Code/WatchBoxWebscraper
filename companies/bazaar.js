@@ -20,6 +20,7 @@ var brandLow = "";
 var brandHigh = "";
 var lowSku = "";
 var highSku = "";
+
 async function bazaar(lowP, highP, tPage, list) {
   result = [];
   for (var i = 0; i < refNums.length; i++) {

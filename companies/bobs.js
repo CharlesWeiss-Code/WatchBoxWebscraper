@@ -1,6 +1,7 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../Watch");
 const fs = require("fs");
+const { Puppeteer } = require("puppeteer");
 lowest = "";
 highest = "";
 highTable = "";
@@ -113,23 +114,12 @@ async function bobs(lowP, highP, tPage, list) {
   }
 }
 
-async function select(page, sel, Text) {
-  let $elemHandler = await page.$(sel);
-  let properties = await $elemHandler.getProperties();
-  for (const property of properties.values()) {
-    const element = property.asElement();
-    if (element) {
-      let hText = await element.getProperty("text");
-      let text = await hText.jsonValue();
-      if (text === Text) {
-        let hValue = await element.getProperty("value");
-        let value = await hValue.jsonValue();
-        await page.select(sel, value); // or use 58730
-      }
-    }
-  }
-}
-
+/**
+ * 
+ * @param {Puppeteer.Page} lowP that you want to assign data from
+ * @param {Puppeteer.Page} highP that you want to assign data from
+ * @returns {void}
+ */
 async function getData(lowP, highP) {
   await lowP.click(
     "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
@@ -245,6 +235,11 @@ async function getData(lowP, highP) {
   }
 }
 
+/**
+ * @param {Puppeteer.Page} lowP that you want to navagate to the right URL
+ * @param {Puppeteer.Page} highP that you want to navagate to the right URL
+ * @param {String} url that you want to modify
+ */
  prepare = async (lowP, highP, url) =>{
   if (url.indexOf("#") === -1) {
     await lowP.goto(url + "#/sort:price:asc", {

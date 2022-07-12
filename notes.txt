@@ -3,4 +3,4 @@
 
     - special watches are to be handled in "./utilityFunctions" in specialSites obj
 
-    - add comments to everything 
+    - add comments to companies[CandC,last company]
