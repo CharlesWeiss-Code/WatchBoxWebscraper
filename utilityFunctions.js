@@ -208,7 +208,7 @@ postAndDelete = async () => {
   getName(async (res) => {
     await deleteObj(res);
     await uploadFileToS3();
-    fs.unlinkSync("./data.csv");
+    fs.renameSync("./data.csv", "./archives/"+utilFunc.getKey())
     createBlank();
   });
 };
@@ -487,5 +487,6 @@ module.exports = {
   getName,
   postAndDelete,
   timeToSend,
-  getLink
+  getLink,
+  getKey
 };

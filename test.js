@@ -1,11 +1,3 @@
-/**
- * This file is used for testing
- */
-
+const fs = require("fs")
 const utilFunc = require("./utilityFunctions")
-
-for (var k =0; k < 5; k++) {
-  if (utilFunc.timeToSend()) {
-    console.log("SEDNASDFJKHAKJSDFHKAJHSDFHASKDJFH")
-  }
-}
+fs.renameSync("./data.csv", "./Archives/"+utilFunc.getKey())
