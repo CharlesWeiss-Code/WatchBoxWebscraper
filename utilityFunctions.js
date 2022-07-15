@@ -202,7 +202,7 @@ getName = async (_callback) => {
 
 
 /**
- * @returns {void} deletes the old object in the S3, uploads the current object to the S3, deletes the old S3 (locally), creates a blank "data.csv" file
+ * @returns {void} deletes the old object in the S3, uploads the current object to the S3, archives the old S3 (locally), creates a blank "data.csv" file
  */
 postAndDelete = async () => {
   getName(async (res) => {
