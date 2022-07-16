@@ -20,7 +20,7 @@ async function davidsw(lowP, highP, tPage, list) {
     lowSku = "";
     highSku = "";
 
-    var newURL = utilFunc.getLink("DavidSW", refNums[i])
+    var newURL = utilFunc.getLink("DavidSW", refNums[i]);
 
     lowest = -1;
     highest = -1;
@@ -110,12 +110,20 @@ async function davidsw(lowP, highP, tPage, list) {
     lowBoxIndex2 = lowTableBoxAndPaper.indexOf("Hangtag");
     if (lowBoxIndex2 === -1) {
       lowBoxIndex2 = lowTableBoxAndPaper.indexOf("Warranty Papers");
+      otherLowBoxIndex2 = lowTableBoxAndPaper.indexOf("Booklet")
+      if (otherLowBoxIndex2 < lowBoxIndex2) {
+        lowBoxIndex2 = otherLowBoxIndex2
+      }
     }
-
+    console.log(lowTableBoxAndPaper.replace("\n", "'/n'").replace(" ", "' '"))
     highBoxIndex1 = highTableBoxAndPaper.indexOf("Box") + 3;
     highBoxIndex2 = highTableBoxAndPaper.indexOf("Hangtag");
     if (highBoxIndex2 === -1) {
       highBoxIndex2 = highTableBoxAndPaper.indexOf("Warranty Papers");
+      otherhighBoxIndex2 = highTableBoxAndPaper.indexOf("Booklet")
+      if (otherhighBoxIndex2 < highBoxIndex2) {
+        highBoxIndex2 = otherhighBoxIndex2
+      }
     }
 
     lowBox = lowTableBoxAndPaper.substring(lowBoxIndex1, lowBoxIndex2);
@@ -247,9 +255,8 @@ async function assignDataResults(lowP, highP) {
   highSku = await utilFunc.getItem(highP, "span[class='sku']");
 }
 
-
 /**
- * @param {String} url that you want to modify 
+ * @param {String} url that you want to modify
  * @param {String} filter that you want to apply to the url
  */
 getUrl = (url, filter) =>

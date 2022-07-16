@@ -208,7 +208,8 @@ postAndDelete = async () => {
   getName(async (res) => {
     await deleteObj(res);
     await uploadFileToS3();
-    fs.renameSync("./data.csv", "./archives/"+utilFunc.getKey())
+    fs.renameSync("./data.csv", "./archives/"+getKey())
+    
     createBlank();
   });
 };
