@@ -1,9 +1,8 @@
 /**
  * Index is where everything starts. All the companies functions are executed here.
- * Settings for puppeteer can be configured here.  Probably the most important setting for me, "headless", can be 
+ * Settings for puppeteer can be configured here.  Probably the most important setting for me, "headless", can be
  * changed here.
  */
-
 
 const puppeteer = require("puppeteer");
 const chrono = require("./companies/crono.js");
@@ -19,13 +18,11 @@ const utilFunc = require("./utilityFunctions");
  * I HAVE MADE TIMEOUT: 0 ON SOME OF THE PAGE.GOTO(). just for testing. eventually should make timeout:60000 (1min)
  */
 
-var lowPage = null
-var highPage = null
-var testPage = null
-
+var lowPage = null;
+var highPage = null;
+var testPage = null;
 
 async function start() {
-
   refNums = REF.getRefNums();
 
   const browser = await puppeteer.launch({
@@ -39,33 +36,9 @@ async function start() {
 
   const blocked_domains = ["googlesyndication.com", "adservice.google.com"];
 
-  await lowPage.setRequestInterception(true);
-  lowPage.on("request", (request) => {
-    const url = request.url();
-    if (
-      blocked_domains.some((domain) => url.includes(domain)) ||
-      (request.isNavigationRequest() && request.redirectChain().length)
-    ) {
-      request.abort();
-    } else {
-      request.continue();
-    }
-  });
-
-  await highPage.setRequestInterception(true);
-  highPage.on("request", (request) => {
-    const url = request.url();
-    if (
-      blocked_domains.some((domain) => url.includes(domain)) ||
-      (request.isNavigationRequest() && request.redirectChain().length)
-    ) {
-      request.abort();
-    } else {
-      request.continue();
-    }
-  });
-
-
+ await setupPage(lowPage)
+ await setupPage(highPage)
+ await setupPage(testPage)
 
   var watches = [];
   await Bazaar.bazaar(lowPage, highPage, testPage, watches);
@@ -93,5 +66,20 @@ newPages = async (browser) => {
   lowPage = await browser.newPage();
   highPage = await browser.newPage();
 };
+
+async function setupPage(page) {
+  await page.setRequestInterception(true);
+  page.on("request", (request) => {
+    const url = request.url();
+    if (
+      blocked_domains.some((domain) => url.includes(domain)) ||
+      (request.isNavigationRequest() && request.redirectChain().length)
+    ) {
+      request.abort();
+    } else {
+      request.continue();
+    }
+  });
+}
 
 start();

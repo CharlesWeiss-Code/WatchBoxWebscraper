@@ -21,7 +21,7 @@ var lowSku = "";
 var highSku = "";
 
 async function crownAndCaliber(lowP, highP, tPage, list) {
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 3; i < refNums.length; i++) {
     lowYear = "";
     lowPaper = "No";
     lowBox = "No";
@@ -119,14 +119,15 @@ prepare = async (lowP, highP, link) => {
   }
   await highP.waitForTimeout(1000);
 
-  lowest = await utilFunc.getItem(
+  lowest = String(await utilFunc.getItem(
     lowP,
-    'span[class="current-price product-price__price"]'
-  );
-  highest = await utilFunc.getItem(
+    '#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > span.current-price.product-price__price > span'
+  ))
+  highest = String(await utilFunc.getItem(
     highP,
-    'span[class="current-price product-price__price"]'
-  );
+    '#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > span.current-price.product-price__price > span'
+  ))
+  utilFunc.log([lowest.replace(" ", "' '").replace("\n", "/n"),highest.replace(" ", "' '").replace("\n", "/n")])
 
   brandLow = await utilFunc.getItem(
     lowP,
@@ -229,12 +230,13 @@ assignData = () => {
   highYear = highTable
     .substring(highYearIndex1, highYearIndex2)
     .replace(/\s+/g, "");
+ 
 
-  if (highYear.length < 5 && highYear.indexOf("-Present") === -1) {
-    highYear = highYear.slice(-4);
-  } else {
-    highYear = highYear.substring(0, 4) + "+";
-  }
+    if (highYear.length > 5 && highYear.indexOf("-Present") === -1) {
+      highYear = highYear.slice(-4);
+    } else {
+      highYear = highYear.substring(0, 4) + "+";
+    }
 
   highPaper = highTable
     .substring(highBoxIndex1, highBoxIndex2)

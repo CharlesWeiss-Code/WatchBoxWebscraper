@@ -95,13 +95,12 @@ async function bazaar(lowP, highP, tPage, list) {
             });
         });
 
-      await lowP.waitForTimeout(500);
-      await highP.waitForTimeout(500);
+      await lowP.waitForTimeout(1000);
+      await highP.waitForTimeout(1000);
 
       lowTable = String(
         await utilFunc.getItem(lowP, 'div[class="attributes-table-container"]')
       );
-      // console.log(lowTable) gets it
       highTable = String(
         await utilFunc.getItem(highP, 'div[class="attributes-table-container"]')
       );
@@ -123,7 +122,7 @@ async function bazaar(lowP, highP, tPage, list) {
 
       lowSku = await utilFunc.getItem(lowP, "div[class='web-id']");
       highSku = await utilFunc.getItem(highP, "div[class='web-id']");
-
+        
       lowYearIndex1 = lowTable.indexOf("Year of Manufacture") + 19;
       lowYearIndex2 = lowYearIndex1 + 5;
 
@@ -170,7 +169,7 @@ async function bazaar(lowP, highP, tPage, list) {
 
       brandLow = lowTable.substring(index1BrandLow, index2BrandLow).trim();
     }
-    console.log(lowBox, lowPaper, highBox, highPaper);
+
     w = new Watch(
       refNums[i],
       lowYear.trim(),
@@ -193,12 +192,10 @@ async function bazaar(lowP, highP, tPage, list) {
       lowSku,
       highSku
     );
+
     list.push(w);
     fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
-
-    //console.log(w);
     console.log(JSON.stringify(w, null, "\t"));
-    //utilFunc.addToJson(w);
   }
 }
 

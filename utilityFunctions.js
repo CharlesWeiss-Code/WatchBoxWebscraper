@@ -476,6 +476,15 @@ var specialSites = {
  */
 getLink = (website, refNum) => specialSites[String(website)](String(refNum))
 
+
+function log(str) { console.log("'"+str+"'")}
+function log(arr) {
+  s = ""
+  arr.forEach(el => {
+    s+="'"+el
+  })
+  console.log(s+"'")
+}
 module.exports = {
   noResults,
   noResults2,
@@ -489,5 +498,6 @@ module.exports = {
   postAndDelete,
   timeToSend,
   getLink,
-  getKey
+  getKey,
+  log
 };
