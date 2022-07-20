@@ -3,7 +3,7 @@ const Watch = require("../Watch");
 const fs = require("fs");
 const { Puppeteer } = require("puppeteer");
 async function EWC(lowP, highP, tPage, list) {
-  for (var i = 25; i < refNums.length; i++) {
+  for (var i = 33; i < refNums.length; i++) {
     console.log("");
     lowest = -1;
     highest = -1;

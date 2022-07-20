@@ -4,6 +4,6 @@
 
      - make the average come from the current scrape (in data.csv) *************************
 
-     - luxury bazaar 116610LV-0002
+     - luxury bazaar 116610LV-0002 (lowLink)
      - david is messed up
-     - chrono 16570 BLK IX OYS low price > min price
+     - Handle min and max when lowest/highest = ""

@@ -24,7 +24,11 @@ async function davidsw(lowP, highP, tPage, list) {
 
     var newURL = utilFunc.getLink("DavidSW", refNums[i]);
     console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
-    await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 0 });
+    await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 0 }).catch(async () => {
+      await tPage.waitForTimeout(500)
+      await tPage.reload()
+      await tPage.waitForTimeout(1000)
+    })
     if (
       await utilFunc.exists(tPage, "#main > div > div.col.large-9 > div > p")
     ) {
