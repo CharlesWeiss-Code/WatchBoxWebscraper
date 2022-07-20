@@ -8,11 +8,13 @@ const Watch = require("./Watch");
 const AWS = require("aws-sdk");
 const awsInfo = require("./aws/aws-info");
 const { Puppeteer } = require("puppeteer");
-
-
+const credentials = require("./twilioCredentials.js");
+const accountSid = credentials.getAccountSid();
+const authToken = credentials.getAuthToken();
+const trialNumber = credentials.getTrialNumber();
 
 /**
- * 
+ *
  * @param {Puppeteer.Page} page that you want to check the results for
  * @param {HTML Selector (String)} selector that identifies if there are no results
  * @returns {boolean} Boolean that represents if there were results or not
@@ -26,7 +28,7 @@ async function noResults(page, selector) {
 }
 
 /**
- * 
+ *
  * @param {Puppeteer.Page} page that you want to check the results for
  * @param {HTML Selector (String)} selector that identifies if there are no results
  * @param {String} str that should appear in the text content of the selector
@@ -35,7 +37,8 @@ async function noResults(page, selector) {
 async function noResults2(page, selector, str) {
   var noResults = false;
   if (
-    String(await page.$eval(selector, (el) => el.textContent)).indexOf(str) != -1
+    String(await page.$eval(selector, (el) => el.textContent)).indexOf(str) !=
+    -1
   ) {
     noResults = true;
     console.log("no results");
@@ -43,9 +46,8 @@ async function noResults2(page, selector, str) {
   return noResults;
 }
 
-
 /**
- * 
+ *
  * @param {Puppeteer.Page} page that contains the selector you want to evaluate.
  * @param {HTML Selector (String)} selector that contains the text content you want
  * @returns {String} selector's text content
@@ -61,9 +63,9 @@ async function getItem(page, selector) {
 }
 
 /**
- * 
+ *
  * @param {Puppeteer.page} page that contains the selector you want to check the existence of
- * @param {HTML Selector (String)} selector that you want to check the existence of 
+ * @param {HTML Selector (String)} selector that you want to check the existence of
  * @returns {boolean} selector's existence
  */
 async function exists(page, selector) {
@@ -82,7 +84,7 @@ async function exists(page, selector) {
 }
 
 /**
- * @param {Date} d1 
+ * @param {Date} d1
  * @param {Date} d2
  * @returns {boolean} wether the dates are the same or not
  */
@@ -111,7 +113,6 @@ CSV = (watch) => {
   return str;
   //console.log(s)
 };
-
 
 /**
  * @returns {void}
@@ -174,8 +175,6 @@ deleteObj = async (key) => {
   });
 };
 
-
-
 /**
  * @param {function} _callback that you want to invoke once the name of the current csv in the S3 is returned
  * @returns {String} key to the object in the S3
@@ -200,7 +199,6 @@ getName = async (_callback) => {
   });
 };
 
-
 /**
  * @returns {void} deletes the old object in the S3, uploads the current object to the S3, archives the old S3 (locally), creates a blank "data.csv" file
  */
@@ -208,8 +206,8 @@ postAndDelete = async () => {
   getName(async (res) => {
     await deleteObj(res);
     await uploadFileToS3();
-    fs.renameSync("./data.csv", "./archives/"+getKey())
-    
+    fs.renameSync("./data.csv", "./archives/" + getKey());
+
     createBlank();
   });
 };
@@ -290,27 +288,27 @@ timeToSend = () => {
   var d = new Date();
   flag = false;
   firstToday = true;
-  
+
   /**
    * If time = 12:00 AM firstToday = true
    */
-    if (d.getHours() === 10 && firstToday) {
-      flag = true;
-      firstToday = false;
-    }
+  if (d.getHours() === 10 && firstToday) {
+    flag = true;
+    firstToday = false;
+  }
 
-    if (d.getMinutes() === 0 && d.getHours() === 0) {
-      firstToday = true;
-    }
+  if (d.getMinutes() === 0 && d.getHours() === 0) {
+    firstToday = true;
+  }
 
-    if (flag) {
-      console.log("SEND THE DOC NOW NOW NOW");
-      flag = false;
-      console.log(d.toLocaleTimeString());
-      return true;
-    } else {
-      //return false
-    }
+  if (flag) {
+    console.log("SEND THE DOC NOW NOW NOW");
+    flag = false;
+    console.log(d.toLocaleTimeString());
+    return true;
+  } else {
+    //return false
+  }
 };
 
 var specialSites = {
@@ -474,16 +472,30 @@ var specialSites = {
  * @param {String} refNum that the special link belongs to
  * @returns {String} that corresponds the correct link for that website and refNum
  */
-getLink = (website, refNum) => specialSites[String(website)](String(refNum))
+getLink = (website, refNum) => specialSites[String(website)](String(refNum));
 
-
-function log(str) { console.log("'"+str+"'")}
+function log(str) {
+  console.log("'" + str + "'");
+}
 function log(arr) {
-  s = ""
-  arr.forEach(el => {
-    s+="'"+el
-  })
-  console.log(s+"'")
+  s = "";
+  arr.forEach((el) => {
+    s += "'" + el;
+  });
+  console.log(s + "'");
+}
+
+function sendMessage() {
+  const twilio = require("twilio");
+  const client = new twilio(accountSid, authToken);
+
+  client.messages
+    .create({
+      body: "Scrape Completed " + new Date().toLocaleString(),
+      to: "2154210016",
+      from: trialNumber,
+    })
+    .then((message) => console.log(message.sid));
 }
 
 module.exports = {
@@ -500,5 +512,6 @@ module.exports = {
   timeToSend,
   getLink,
   getKey,
-  log
+  log,
+  sendMessage,
 };

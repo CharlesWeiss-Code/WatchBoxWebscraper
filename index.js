@@ -50,8 +50,10 @@ async function start() {
   await Bobs.bobs(lowPage, highPage, testPage, watches);
   await newPages(browser);
   await chrono.chrono24(lowPage, highPage, testPage, watches);
-
   await browser.close();
+
+  
+  utilFunc.sendMessage()
 
   //await start()
 }
