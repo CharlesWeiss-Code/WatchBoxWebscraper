@@ -5,4 +5,5 @@
 
     - add comments to companies[CandC,last company]
 
-
+     - make the average come from the current scrape (in data.csv) *************************
+     - there are more patterns in the urls in utilityFunctions
