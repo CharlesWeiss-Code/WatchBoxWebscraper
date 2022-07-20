@@ -314,106 +314,118 @@ timeToSend = () => {
 
 var specialSites = {
   LuxuryBazaar: function (refNum, newRefNum) {
+    console.log("'" + refNum + "'\t'" + newRefNum + "'");
     switch (refNum) {
-      case "16570 BLK IX OYS" || // REGULAR --> SHORTENED --> BLACK DIAL
-        "216570-0002" ||
-        "116400GV-0001" ||
-        "16610 BLK OYS":
+      case "16570 BLK IX OYS": // REGULAR --> SHORTENED --> BLACK DIAL
+      case "216570-0002":
+      case "116400GV-0001":
+      case "16610 BLK OYS":
+        console.log("REGULAR --> SHORTENED --> BLACK DIAL");
         return (
           "https://www.luxurybazaar.com/search-results?q=" +
           newRefNum +
           "#/filter:lux_wa_dialcolor:Black"
         );
 
-      case "16570 WHT IX OYS" || "216570-0001" || "116520-0016": // REGULAR --> SHORTENED --> WHITE DIAL
+      case "16570 WHT IX OYS":
+      case "216570-0001":
+      case "116520-0016": // REGULAR --> SHORTENED --> WHITE DIAL
+        console.log("REGULAR --> SHORTENED --> WHITE DIAL");
         return (
           "https://www.luxurybazaar.com/search-results?q=" +
           newRefNum +
           "#/filter:lux_wa_dialcolor:White"
         );
 
-      case "5711/1A-010" ||
-        "116400GV-0002" ||
-        "16613 BLU IX OYS" || // REGULAR --> SHORTENED --> BLUE DIAL
-        "126660-0002":
+      case "5711/1A-010":
+      case "116400GV-0002":
+      case "16613 BLU IX OYS": // REGULAR --> SHORTENED --> BLUE DIAL
+      case "126660-0002":
+        console.log("REGULAR --> SHORTENED --> BLUE DIAL");
+
         return (
           "https://www.luxurybazaar.com/search-results?q=" +
           newRefNum +
           "#/filter:lux_wa_dialcolor:Blue"
         );
 
-      case "116610LN-0001" || // REGULAR --> SHORTENED
-        "126610LV-0002" ||
-        "126610LN-0001" ||
-        "116610LV-0002" ||
-        "124060-0001" ||
-        "114060-0002" ||
-        "116900-0001" ||
-        "116700LN-0001" ||
-        "116660-0001" ||
-        "126711CHNR-0002" ||
-        "114270-0001" ||
-        "16622 PT IX OYS" ||
-        "124270-0001" ||
-        "116710BLNR-0002" ||
-        "126600-0001":
+      case "116610LN-0001": // REGULAR --> SHORTENED
+      case "126610LV-0002":
+      case "126610LN-0001":
+      case "116610LV-0002":
+      case "124060-0001":
+      case "114060-0002":
+      case "116900-0001":
+      case "116700LN-0001":
+      case "116660-0001":
+      case "126711CHNR-0002":
+      case "114270-0001":
+      case "16622 PT IX OYS":
+      case "124270-0001":
+      case "116710BLNR-0002":
+      case "126600-0001":
+        console.log("REGULAR --> SHORTENED");
+
         return "https://www.luxurybazaar.com/search-results?q=" + newRefNum;
 
       case "116400GV-0001":
         return "https://www.luxurybazaar.com/search-results?q=116400GV#/filter:lux_wa_dialcolor:Black";
       default:
+        console.log("REGULAR");
+
         return "https://www.luxurybazaar.com/search-results?q=" + refNum;
     }
   },
   Bobs: function (refNum, newRefNum) {
+    console.log("'" + refNum + "'\t'" + newRefNum + "'");
     switch (refNum) {
-      case "116500LN-0001" || // REGULAR --> SHORTENED --> WHITE DIAL
-        "16570 WHT IX OYS" ||
-        "116520-0016" ||
-        "216570-0001":
+      case "116500LN-0001": // REGULAR --> SHORTENED --> WHITE DIAL
+      case "16570 WHT IX OYS":
+      case "116520-0016":
+      case "216570-0001":
         return (
           "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=" +
           newRefNum +
           "#/filter:custom_field_9:White"
         );
 
-      case "16570 BLK IX OYS" || // REGULAR --> SHORTENED --> BLACK DIAL
-        "216570-0002" ||
-        "116500LN-0002" ||
-        "126710BLNR-0002" ||
-        "214270-0003" ||
-        "126610LV-0002" ||
-        "16610 BLK OYS" ||
-        "116400GV-0001" ||
-        "126610LN-0001":
+      case "16570 BLK IX OYS": // REGULAR --> SHORTENED --> BLACK DIAL
+      case "216570-0002":
+      case "116500LN-0002":
+      case "126710BLNR-0002":
+      case "214270-0003":
+      case "126610LV-0002":
+      case "16610 BLK OYS":
+      case "116400GV-0001":
+      case "126610LN-0001":
         return (
           "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=" +
           newRefNum +
           "#/filter:custom_field_9:Black"
         );
 
-      case "5711/1A-010" || // REGULAR --> SHORTENED --> BLUE DIAL
-        "16613 BLU IX OYS" ||
-        "126660-0002" ||
-        "116400GV-0002" ||
-        "116610LV-0002":
+      case "5711/1A-010": // REGULAR --> SHORTENED --> BLUE DIAL
+      case "16613 BLU IX OYS":
+      case "126660-0002":
+      case "116400GV-0002":
+      case "116610LV-0002":
         return (
           "https://www.bobswatches.com/shop?query=" +
           newRefNum +
           "#/filter:custom_field_9:Blue"
         );
 
-      case "124060-0001" || // REGULAR --> SHORTENED
-        "126600-0001" ||
-        "114060-0002" ||
-        "116900-0001" ||
-        "116660-0001" ||
-        "126711CHNR-0002" ||
-        "114270-0001" ||
-        "16622 PT IX OYS" ||
-        "124270-0001" ||
-        "116710BLNR-0002" ||
-        "116700LN-0001":
+      case "124060-0001": // REGULAR --> SHORTENED
+      case "126600-0001":
+      case "114060-0002":
+      case "116900-0001":
+      case "116660-0001":
+      case "126711CHNR-0002":
+      case "114270-0001":
+      case "16622 PT IX OYS":
+      case "124270-0001":
+      case "116710BLNR-0002":
+      case "116700LN-0001":
         return "https://www.bobswatches.com/shop?query=" + newRefNum;
 
       default:
@@ -424,54 +436,55 @@ var specialSites = {
     }
   },
   "C&C": function (refNum, newRefNum) {
+    console.log("'" + refNum + "'\t'" + newRefNum + "'");
     switch (refNum) {
-      case "116500LN-0001" ||
-        "216570-0001" ||
-        "16570 WHT IX OYS" ||
-        "116520-0016": // REGULAR --> SHORTENED --> WHITE DIAL
+      case "116500LN-0001":
+      case "216570-0001":
+      case "16570 WHT IX OYS":
+      case "116520-0016": // REGULAR --> SHORTENED --> WHITE DIAL
         return (
           "https://www.crownandcaliber.com/search?view=shop&q=" +
           newRefNum +
           "#/filter:mfield_global_dial_color:White"
         );
 
-      case "116500LN-0002" ||
-        "16570 BLK IX OYS" ||
-        "116400GV-0001" ||
-        "116610 BLK OYS": // REGULAR --> SHORTENED --> BLACK DIAL
+      case "116500LN-0002":
+      case "16570 BLK IX OYS":
+      case "116400GV-0001":
+      case "116610 BLK OYS": // REGULAR --> SHORTENED --> BLACK DIAL
         return (
           "https://www.crownandcaliber.com/search?view=shop&q=" +
           newRefNum +
           "#/filter:mfield_global_dial_color:Black"
         );
 
-      case "5711/1A-010" ||
-        "16613 BLU IX OYS" ||
-        "126660-0002" ||
-        "116400GV-0002": // REGULAR --> SHORTENED --> BLUE DIAL
+      case "5711/1A-010":
+      case "16613 BLU IX OYS":
+      case "126660-0002":
+      case "116400GV-0002": // REGULAR --> SHORTENED --> BLUE DIAL
         return (
           "https://www.crownandcaliber.com/search?view=shop&q=" +
           newRefNum +
           "#/filter:mfield_global_dial_color:Blue"
         );
 
-      case "124060-0001" || // REGULAR --> SHORTENED
-        "116610LV-0002" ||
-        "126610LN-0001" ||
-        "126610LV-0002" ||
-        "116610LN-0001" ||
-        "126710BLRO-0001" ||
-        "126710BLNR-0002" ||
-        "114060-0002" ||
-        "116900-0001" ||
-        "116700LN-0001" ||
-        "116660-0001" ||
-        "126711CHNR-0002" ||
-        "114270-0001" ||
-        "16622 PT IX OYS" ||
-        "124270-0001" ||
-        "116710BLNR-0002" ||
-        "12660-0001":
+      case "124060-0001": // REGULAR --> SHORTENED
+      case "116610LV-0002":
+      case "126610LN-0001":
+      case "126610LV-0002":
+      case "116610LN-0001":
+      case "126710BLRO-0001":
+      case "126710BLNR-0002":
+      case "114060-0002":
+      case "116900-0001":
+      case "116700LN-0001":
+      case "116660-0001":
+      case "126711CHNR-0002":
+      case "114270-0001":
+      case "16622 PT IX OYS":
+      case "124270-0001":
+      case "116710BLNR-0002":
+      case "12660-0001":
         return (
           "https://www.crownandcaliber.com/search?view=shop&q=" + newRefNum
         );
@@ -481,6 +494,7 @@ var specialSites = {
     }
   },
   C24: function (refNum, newRefNum) {
+    console.log("'" + refNum + "'\t'" + newRefNum + "'");
     switch (refNum) {
       case "16570 BLK IX OYS":
         return "https://www.chrono24.com/search/index.htm?currencyId=USD&dialColor=702&dosearch=true&maxAgeInDays=0&pageSize=60&query=16570&redirectToSearchIndex=true&resultview=list";
@@ -499,62 +513,74 @@ var specialSites = {
     }
   },
   DavidSW: function (refNum, newRefNum) {
+    console.log("'" + refNum + "'\t'" + newRefNum + "'");
+
     switch (refNum) {
-      case "116500LN-0001" || // REGULAR --> SHORTENED --> WHITE DIAL
-        "16570 WHT IX OYS" ||
-        "116520-0016" ||
-        "216570-0001":
+      case "116610LN-0001":
+        return "https://davidsw.com/?s=116610LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+
+      case "16610 BLK OYS":
+        return "https://davidsw.com/?filter_bezel=aluminum&filter_dial-color=black&s=16610&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+
+      case "116500LN-0001": // REGULAR --> SHORTENED --> WHITE DIAL
+      case "16570 WHT IX OYS":
+      case "116520-0016":
+      case "216570-0001":
         return (
           "https://davidsw.com/?filter_dial-color=white&s=" +
           newRefNum +
           "&post_type=product&type_aws=true&aws_id=1&aws_filter=1"
         );
 
-      case "116500LN-0002" || // REGULAR --> SHORTENED --> BLACK DIAL
-        "16570 BLK IX OYS" ||
-        "216570-0002" ||
-        "116400GV-0001" ||
-        "214270-0003":
+      case "116500LN-0002": // REGULAR --> SHORTENED --> BLACK DIAL
+      case "16570 BLK IX OYS":
+      case "216570-0002":
+      case "116400GV-0001":
+      case "214270-0003":
         return (
           "https://davidsw.com/?filter_dial-color=black&s=" +
           newRefNum +
           "&post_type=product&type_aws=true&aws_id=1&aws_filter=1"
         );
 
-      case "5711/1A-010" || // REGULAR --> SHORTENED --> BLUE DIAL
-        "126660-0002" ||
-        "16613 BLU IX OYS" ||
-        "116400GV-0002":
-        return "https://davidsw.com/?filter_dial-color=blue&s="+newRefNum+"&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+      case "5711/1A-010": // REGULAR --> SHORTENED --> BLUE DIAL
+      case "126660-0002":
+      case "16613 BLU IX OYS":
+      case "116400GV-0002":
+        return (
+          "https://davidsw.com/?filter_dial-color=blue&s=" +
+          newRefNum +
+          "&post_type=product&type_aws=true&aws_id=1&aws_filter=1"
+        );
 
-      case "116610LN-0001":
-        return "https://davidsw.com/?filter_complications=date&s=116610LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
+      case "126610LV-0002": // REGULAR --> SHORTENED --> BLACK DIAL && DATE
+      case "126610LN-0001":
+        return (
+          "https://davidsw.com/?filter_dial-color=black&filter_complications=date&s=" +
+          newRefNum +
+          "&post_type=product&type_aws=true&aws_id=1&aws_filter=1"
+        );
 
-      case "126610LV-0002" || "126610LN-0001": // REGULAR --> SHORTENED --> BLACK DIAL && DATE
-        return "https://davidsw.com/?filter_dial-color=black&filter_complications=date&s="+newRefNum+"&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
-
-      case "124060-0001" ||  // REGULAR --> SHORTENED 
-        "126710BLNR-0002" ||
-        "126710BLRO-0001" ||
-        "116610LV-0002" ||
-        "114060-0002" ||
-        "116900-0001" ||
-        "116700LN-0001" ||
-        "116660-0001" ||
-        "126711CHNR-0002" ||
-        "114270-0001" ||
-        "16622 PT IX OYS" ||
-        "124270-0001" ||
-        "116710BLNR-0002" ||
-        "12660-0001":
+      case "124060-0001": // REGULAR --> SHORTENED
+      case "126710BLNR-0002":
+      case "126710BLRO-0001":
+      case "116610LV-0002":
+      case "114060-0002":
+      case "116900-0001":
+      case "116700LN-0001":
+      case "116660-0001":
+      case "126711CHNR-0002":
+      case "114270-0001":
+      case "16622 PT IX OYS":
+      case "124270-0001":
+      case "116710BLNR-0002":
+      case "12660-0001":
         return (
           "https://davidsw.com/?s=" +
           newRefNum +
           "&post_type=product&type_aws=true&aws_id=1&aws_filter=1"
         );
-      case "16610 BLK OYS":
-        return "https://davidsw.com/?filter_bezel=aluminum&filter_dial-color=black&s=16610&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
-        
+
       default:
         return (
           "https://davidsw.com/?s=" +
@@ -564,39 +590,39 @@ var specialSites = {
     }
   },
   EWC: function (refNum, newRefNum) {
+    console.log("'" + refNum + "'\t'" + newRefNum + "'");
     switch (refNum) {
-      case "126600-0001" ||
-        "16610 BLK OYS" ||
-        "124060-0001" ||
-        "116610LV-0002" ||
-        "126610LN-0001" ||
-        "126610LV-0002" ||
-        "126710BLNR-0002" ||
-        "126710BLRO-0001" ||
-        "16570 WHT IX OYS" ||
-        "16570 BLK IX OYS" ||
-        "116500LN-0002" ||
-        "114060-0002" ||
-        "116400GV-0001" ||
-        "116900-0001" ||
-        "116700LN-0001" ||
-        "216570-0001" ||
-        "216570-0002" ||
-        "16613 BLU IX OYS" ||
-        "116660-0001" ||
-        "126711CHNR-0002" ||
-        "116520-0016" ||
-        "114270-0001" ||
-        "16622 PT IX OYS" ||
-        "124270-0001" ||
-        "126660-0002" ||
-        "116710BLNR-0002" ||
-        "116400GV-0002" ||
-        "116500LN-0001":
+      case "126600-0001": // REGULAR --> SHORTENED
+      case "16610 BLK OYS":
+      case "124060-0001":
+      case "116610LV-0002":
+      case "126610LN-0001":
+      case "126610LV-0002":
+      case "126710BLNR-0002":
+      case "126710BLRO-0001":
+      case "16570 WHT IX OYS":
+      case "16570 BLK IX OYS":
+      case "116500LN-0002":
+      case "114060-0002":
+      case "116400GV-0001":
+      case "116900-0001":
+      case "116700LN-0001":
+      case "216570-0001":
+      case "216570-0002":
+      case "16613 BLU IX OYS":
+      case "116660-0001":
+      case "126711CHNR-0002":
+      case "116520-0016":
+      case "114270-0001":
+      case "16622 PT IX OYS":
+      case "124270-0001":
+      case "126660-0002":
+      case "116710BLNR-0002":
+      case "116400GV-0002":
+      case "116500LN-0001":
         return (
           "https://www2.europeanwatch.com/cgi-bin/search.pl?search=" +
-          newRefNum +
-          refNum
+          newRefNum 
         );
 
       default:
@@ -613,15 +639,18 @@ var specialSites = {
  * @returns {String} that corresponds the correct link for that website and refNum
  */
 getLink = (website, refNum) => {
-  var newRefNum = "";
-  if (refNum.indexOf("-") != -1) {
-    newRefNum = refNum.substring(0, refNum.length - 5);
-  } else if (refNum.indexOf(" ") != -1) {
-    newRefNum = refNum.substring(0, refNum.indexOf(" "));
-  } else if (refNum.indexOf("/" != -1)) {
-    newRefNum = refNum.substring(0, refNum.indexOf("/"));
+  dashIndex = refNum.indexOf("-");
+  spaceIndex = refNum.indexOf(" ");
+  slashIndex = refNum.indexOf("/");
+  list = [dashIndex, spaceIndex, slashIndex];
+  mainIndex = Number.MAX_SAFE_INTEGER
+  for (var i = 0; i < list.length; i++) {
+    if (list[i] < mainIndex && list[i] != -1) {
+      mainIndex = list[i]
+    }
   }
-  specialSites[String(website)](String(refNum), newRefNum);
+  newRefNum = refNum.substring(0,mainIndex)
+  return specialSites[String(website)](String(refNum), newRefNum);
 };
 
 function log(str) {
@@ -648,6 +677,31 @@ function sendMessage() {
     .then(() => console.log("Scrape completed.  Sending message..."));
 }
 
+function getPricesForAverage() {
+  fileData = fs.readFileSync("./data.csv").toString();
+  fileData = fileData.substring(fileData.indexOf("\n") + 1);
+
+  list = [];
+  len = fileData.split("\n").length - 1;
+  for (var k = 0; k < len; k++) {
+    refNum = fileData.substring(0, fileData.indexOf(","));
+    for (var i = 0; i < 5; i++) {
+      fileData = fileData.substring(fileData.indexOf(",") + 1);
+    }
+    lowPrice = fileData.substring(0, fileData.indexOf(","));
+    fileData = fileData.substring(fileData.indexOf(",") + 1);
+    highPrice = fileData.substring(0, fileData.indexOf(","));
+    fileData = fileData.substring(fileData.indexOf("\n") + 1);
+    list.push({
+      refNum: refNum,
+      lowPrice: lowPrice,
+      highPrice: highPrice,
+    });
+  }
+
+  return list;
+}
+
 module.exports = {
   noResults,
   noResults2,
@@ -664,4 +718,5 @@ module.exports = {
   getKey,
   log,
   sendMessage,
+  getPricesForAverage,
 };

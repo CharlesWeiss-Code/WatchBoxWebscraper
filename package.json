@@ -19,7 +19,7 @@
     "json-2-csv": "^3.17.1",
     "json2csv": "^5.0.7",
     "path": "^0.12.7",
-    "puppeteer": "^14.1.0",
+    "puppeteer": "^14.4.1",
     "request": "^2.88.2",
     "twilio": "^3.79.0"
   }

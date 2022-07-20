@@ -1,9 +1,9 @@
      - add promise catches to all functions that use them?
-    upload to aws = https://www.youtube.com/watch?v=xtRYi8ud1sM
 
     - special watches are to be handled in "./utilityFunctions" in specialSites obj
 
-    - add comments to companies[CandC,last company]
-
      - make the average come from the current scrape (in data.csv) *************************
-     - there are more patterns in the urls in utilityFunctions
+
+     - luxury bazaar 116610LV-0002
+     - david is messed up
+     - chrono 16570 BLK IX OYS low price > min price

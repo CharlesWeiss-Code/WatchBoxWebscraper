@@ -19,24 +19,18 @@ async function davidsw(lowP, highP, tPage, list) {
     imageHigh = "";
     lowSku = "";
     highSku = "";
+    lowest = "";
+    highest = "";
 
     var newURL = utilFunc.getLink("DavidSW", refNums[i]);
-
-    lowest = -1;
-    highest = -1;
-
-    await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
+    console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
+    await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 0 });
     if (
       await utilFunc.exists(tPage, "#main > div > div.col.large-9 > div > p")
     ) {
       // no results
       continue;
     } else {
-      console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
-      //https://davidsw.com/?s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1
-      //https://davidsw.com/?orderby=price&paged=1&s=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1
-      //https://davidsw.com/?orderby=price&paged=1&=116500LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1
-
       await lowP
         .goto(getUrl(newURL, "orderby=price&paged=1&"), {
           waitUntil: "networkidle0",
@@ -110,19 +104,19 @@ async function davidsw(lowP, highP, tPage, list) {
     lowBoxIndex2 = lowTableBoxAndPaper.indexOf("Hangtag");
     if (lowBoxIndex2 === -1) {
       lowBoxIndex2 = lowTableBoxAndPaper.indexOf("Warranty Papers");
-      otherLowBoxIndex2 = lowTableBoxAndPaper.indexOf("Booklet")
+      otherLowBoxIndex2 = lowTableBoxAndPaper.indexOf("Booklet");
       if (otherLowBoxIndex2 < lowBoxIndex2) {
-        lowBoxIndex2 = otherLowBoxIndex2
+        lowBoxIndex2 = otherLowBoxIndex2;
       }
     }
-    console.log(lowTableBoxAndPaper.replace("\n", "'/n'").replace(" ", "' '"))
+    console.log(lowTableBoxAndPaper.replace("\n", "'/n'").replace(" ", "' '"));
     highBoxIndex1 = highTableBoxAndPaper.indexOf("Box") + 3;
     highBoxIndex2 = highTableBoxAndPaper.indexOf("Hangtag");
     if (highBoxIndex2 === -1) {
       highBoxIndex2 = highTableBoxAndPaper.indexOf("Warranty Papers");
-      otherhighBoxIndex2 = highTableBoxAndPaper.indexOf("Booklet")
+      otherhighBoxIndex2 = highTableBoxAndPaper.indexOf("Booklet");
       if (otherhighBoxIndex2 < highBoxIndex2) {
-        highBoxIndex2 = otherhighBoxIndex2
+        highBoxIndex2 = otherhighBoxIndex2;
       }
     }
 

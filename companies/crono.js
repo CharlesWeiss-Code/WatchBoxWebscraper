@@ -25,7 +25,6 @@ var highImage = "";
 var highBP = "";
 var lowSku = "";
 var highSku = "";
-var test = 3;
 var lowDealerStatus = "";
 var highDealerStatus = "";
 
@@ -70,8 +69,6 @@ async function chrono24(lowP, highP, tPage, list) {
     } else {
       // results
       await prepareStuff(lowP, highP, newURL, list, refNums[i]);
-      console.log(childLow, childHigh);
-      console.log(parseInt(lowest), parseInt(highest));
       if (parseInt(lowest) > parseInt(highest)) {
         continue;
       } else {
@@ -154,7 +151,7 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
         ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-seller-container > div > div.media-flex-body.d-flex.flex-column > div.article-seller-name.text-sm"
     );
   }
-  console.log("'" + lowDealerStatus.replace("\n", "").trim() + "'");
+
   if (lowDealerStatus.replace("\n", "").trim() === "Professional dealer") {
     lowDealerStatus = "PD";
   } else if (lowDealerStatus.replace("\n", "").trim() === "Private seller") {
@@ -163,9 +160,9 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
     lowDealerStatus = "";
   }
 
-  if (await utilFunc.exists(lowP, "#modal-content > div > button")) {
-    await lowP.click("#modal-content > div > button");
-  }
+  // if (await utilFunc.exists(lowP, "#modal-content > div > button")) {
+  //   await lowP.click("#modal-content > div > button");
+  // }
   await lowP.click("#wt-watches > div:nth-child(" + childLow + ") > a", {
     delay: 20,
   });
@@ -213,7 +210,7 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
         ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-seller-container > div > div.media-flex-body.d-flex.flex-column > div.article-seller-name.text-sm"
     );
   }
-  console.log("'" + highDealerStatus.replace("\n", "").trim() + "'");
+
   if (highDealerStatus.replace("\n", "").trim() === "Professional dealer") {
     highDealerStatus = "PD";
   } else if (highDealerStatus.replace("\n", "").trim() === "Private seller") {
@@ -371,18 +368,9 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
  * @returns {int} nth-child(k) for k that isn't a "Top" choice by Chrono24.
  */
 validChild = async (page, arr, rn) => {
-  // min = Math.floor(getBuffer(arr, 0.9, rn)/1000)*1000;
-  // max = Math.floor(getBuffer(a2rr, 1.1, rn)/1000)*1000;
   min = getBuffer(arr, 0.9, rn);
   max = getBuffer(arr, 1.1, rn);
-  console.log(
-    page.url() + "&priceFrom=" + parseInt(min) + "&priceTo=" + parseInt(max)
-  );
-  await page.goto(
-    page.url() + "&priceFrom=" + parseInt(min) + "&priceTo=" + parseInt(max)
-  );
-
-  console.log(rn, min, max);
+  console.log("Min " + min + "\tMax " + max);
   top = await page
     .$eval("#wt-watches", (e) => e.children.length)
     .catch((e) => {
@@ -402,9 +390,7 @@ validChild = async (page, arr, rn) => {
     price = price.replace("$", "").trim();
     price = parseFloat(price);
 
-    //console.log("Watch: ", watch, "IsntTop", isntTop, "price > min", price > min, "price < max",price < max, "P", price, "Ma", max,"Mi",min,i)
     if (watch && isntTop && price > min && price < max) {
-      //console.log("Good", i, price);
       return i;
     }
   }
@@ -420,25 +406,19 @@ validChild = async (page, arr, rn) => {
 getBuffer = (list, percent, refNum) => {
   var price = 0;
   var num = 0;
-  list.forEach((watch) => {
-    if (watch.refNum.trim() === refNum.trim()) {
+
+  for (var i = 0; i < list.length; i++) {
+    watch = list[i];
+    if (watch["refNum"].trim().indexOf(refNum.trim()) != -1) {
       if (percent === 0.9) {
-        price += parseFloat(watch.lowPrice.trim());
-        num++;
+        price += parseFloat(watch["lowPrice"].trim());
       } else {
-        price += parseFloat(watch.highPrice.trim());
-        num++;
+        price += parseFloat(watch["highPrice"].trim());
       }
+      num++;
     }
-  });
-  if (num === 0 && percent < 1.0) {
-    return 0;
-  } else if (num === 0 && percent > 1.0) {
-    return Number.MAX_SAFE_INTEGER;
   }
-  result = (price / num) * percent;
-  //console.log(price, result);
-  return result;
+  return (price / num) * percent;
 };
 
 /**
@@ -453,7 +433,6 @@ typeOf = async (page, sel) => {
   } else {
     let value = await page.evaluate((el) => el.className, element);
     if (String(value) === "article-item-container wt-search-result") {
-      //console.log(value, i)
       return true;
     } else {
       return false;
@@ -483,7 +462,8 @@ noTop = async (page, sel) => {
  */
 noWatchesInList = (list, rn) => {
   for (var i = 0; i < list.length; i++) {
-    if (String(list[i].refNum.trim()) === rn) {
+    if (list[i]["refNum"].trim().indexOf(rn) != -1) {
+      console.log("Watch Exists");
       return false;
     }
   }

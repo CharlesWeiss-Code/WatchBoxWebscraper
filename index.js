@@ -39,17 +39,18 @@ async function start() {
   await setupPage(testPage);
 
   var watches = [];
-  await Bazaar.bazaar(lowPage, highPage, testPage, watches);
-  await newPages(browser);
-  await CandC.crownAndCaliber(lowPage, highPage, testPage, watches);
-  await newPages(browser);
-  await ewc.EWC(lowPage, highPage, testPage, watches);
-  await newPages(browser);
-  await david.davidsw(lowPage, highPage, testPage, watches);
-  await newPages(browser);
-  await Bobs.bobs(lowPage, highPage, testPage, watches);
-  await newPages(browser);
-  await chrono.chrono24(lowPage, highPage, testPage, watches);
+  // await Bazaar.bazaar(lowPage, highPage, testPage, watches);
+  // await newPages(browser);
+  // await CandC.crownAndCaliber(lowPage, highPage, testPage, watches);
+  // await newPages(browser);
+  // await ewc.EWC(lowPage, highPage, testPage, watches);
+  // await newPages(browser);
+  // await david.davidsw(lowPage, highPage, testPage, watches);
+  // await newPages(browser);
+  // await Bobs.bobs(lowPage, highPage, testPage, watches);
+  // await newPages(browser);
+  await chrono.chrono24(lowPage, highPage, testPage, utilFunc.getPricesForAverage())
+  // await chrono.chrono24(lowPage, highPage, testPage, watches);
   await browser.close();
 
   
@@ -76,7 +77,7 @@ async function setupPage(page) {
       blocked_domains.some((domain) => url.includes(domain)) ||
       (request.isNavigationRequest() && request.redirectChain().length)
     ) {
-      request.abort();
+      request.abort()
     } else {
       request.continue();
     }

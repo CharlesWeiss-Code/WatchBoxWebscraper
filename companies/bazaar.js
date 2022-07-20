@@ -72,28 +72,28 @@ async function bazaar(lowP, highP, tPage, list) {
 
       highest = await utilFunc.getItem(highP, "span[class='price ng-binding']");
 
-      await lowP.reload();
-      await highP.reload();
 
-      await lowP
-        .waitForSelector("a[class='product-image']")
-        .then(async (res) => {
-          await lowP
-            .evaluate((a) => a.href, res)
-            .then(async (res2) => {
-              await lowP.goto(res2);
-            });
-        });
+      await lowP.click("a[class='product-image']")
+      await highP.click("a[class='product-image']")
+      // await lowP
+      //   .waitForSelector("a[class='product-image']")
+      //   .then(async (res) => {
+      //     await lowP
+      //       .evaluate((a) => a.href, res)
+      //       .then(async (res2) => {
+      //         await lowP.goto(res2);
+      //       });
+      //   });
 
-      await highP
-        .waitForSelector("a[class='product-image']")
-        .then(async (res) => {
-          await highP
-            .evaluate((a) => a.href, res)
-            .then(async (res2) => {
-              await highP.goto(res2);
-            });
-        });
+      // await highP
+      //   .waitForSelector("a[class='product-image']")
+      //   .then(async (res) => {
+      //     await highP
+      //       .evaluate((a) => a.href, res)
+      //       .then(async (res2) => {
+      //         await highP.goto(res2);
+      //       });
+      //   });
 
       await lowP.waitForTimeout(1000);
       await highP.waitForTimeout(1000);
