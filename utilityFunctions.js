@@ -485,6 +485,7 @@ function log(arr) {
   })
   console.log(s+"'")
 }
+
 module.exports = {
   noResults,
   noResults2,
