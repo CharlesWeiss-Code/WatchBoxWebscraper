@@ -495,7 +495,7 @@ function sendMessage() {
       to: "2154210016",
       from: trialNumber,
     })
-    .then((message) => console.log(message.sid));
+    .then(() => console.log("Scrape completed.  Sending message..."));
 }
 
 module.exports = {
