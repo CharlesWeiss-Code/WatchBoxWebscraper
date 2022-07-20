@@ -34,11 +34,9 @@ async function start() {
   lowPage = await browser.newPage();
   highPage = await browser.newPage();
 
-  const blocked_domains = ["googlesyndication.com", "adservice.google.com"];
-
- await setupPage(lowPage)
- await setupPage(highPage)
- await setupPage(testPage)
+  await setupPage(lowPage);
+  await setupPage(highPage);
+  await setupPage(testPage);
 
   var watches = [];
   await Bazaar.bazaar(lowPage, highPage, testPage, watches);
@@ -68,6 +66,7 @@ newPages = async (browser) => {
 };
 
 async function setupPage(page) {
+  const blocked_domains = ["googlesyndication.com", "adservice.google.com"];
   await page.setRequestInterception(true);
   page.on("request", (request) => {
     const url = request.url();
