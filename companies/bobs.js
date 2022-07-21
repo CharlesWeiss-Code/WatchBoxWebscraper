@@ -21,8 +21,8 @@ highSku = "";
 var brandLow = "";
 var brandHigh = "";
 
-async function bobs(lowP, highP, tPage, list) {
-  for (var i = 0; i < refNums.length; i++) {
+async function bobs(lowP, highP, tPage) {
+  for (var i = 63; i < refNums.length; i++) {
     lowest = "";
     highest = "";
     highTable = "";
@@ -106,7 +106,7 @@ async function bobs(lowP, highP, tPage, list) {
       lowSku,
       highSku
     );
-    list.push(w);
+
 
     //console.log(w);
     fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");

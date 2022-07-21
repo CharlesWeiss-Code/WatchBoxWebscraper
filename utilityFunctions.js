@@ -1009,17 +1009,17 @@ function log(str) {
 //   console.log(s + "'");
 // }
 
-function sendMessage() {
+function sendMessage(str) {
   const twilio = require("twilio");
   const client = new twilio(accountSid, authToken);
 
   client.messages
     .create({
-      body: "Scrape Completed\n" + new Date().toLocaleString(),
+      body: str,
       to: "2154210016",
       from: trialNumber,
     })
-    .then(() => console.log("Scrape completed.  Sending message..."));
+    .then(() => console.log("\nSending message...\n"));
 }
 
 function getPricesForAverage() {

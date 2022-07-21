@@ -38,23 +38,37 @@ async function start() {
   await setupPage(highPage);
   await setupPage(testPage);
 
-  var watches = [];
-  await Bazaar.bazaar(lowPage, highPage, testPage, watches);
+
+  // await Bazaar.bazaar(lowPage, highPage, testPage);
+  // await newPages(browser);
+  // await utilFunc.sendMessage(
+  //   "Completed Bazaar: " + new Date().toLocaleString()
+  // );
+  // await CandC.crownAndCaliber(lowPage, highPage, testPage);
+  // await newPages(browser);
+  // utilFunc.sendMessage("Completed CandC: " + new Date().toLocaleString());
+
+  // await ewc.EWC(lowPage, highPage, testPage);
+  // await newPages(browser);
+  // utilFunc.sendMessage("Completed EWC: " + new Date().toLocaleString());
+
+  // await david.davidsw(lowPage, highPage, testPage);
+  // await newPages(browser);
+  // utilFunc.sendMessage("Completed DavidSW: " + new Date().toLocaleString());
+
+  await Bobs.bobs(lowPage, highPage, testPage);
   await newPages(browser);
-  await CandC.crownAndCaliber(lowPage, highPage, testPage, watches);
-  await newPages(browser);
-  await ewc.EWC(lowPage, highPage, testPage, watches);
-  await newPages(browser);
-  await david.davidsw(lowPage, highPage, testPage, watches);
-  await newPages(browser);
-  await Bobs.bobs(lowPage, highPage, testPage, watches);
-  await newPages(browser);
-  await chrono.chrono24(lowPage, highPage, testPage, utilFunc.getPricesForAverage())
+  utilFunc.sendMessage("Completed Bobs: " + new Date().toLocaleString());
+
+  await chrono.chrono24(
+    lowPage,
+    highPage,
+    testPage,
+    utilFunc.getPricesForAverage()
+  );
   await browser.close();
-
-  
-  utilFunc.sendMessage()
-
+  utilFunc.sendMessage("Completed C24: " + new Date().toLocaleString());
+  utilFunc.sendMessage("**SCRAPE COMPLETED**\n" + new Date().toLocaleString());
 }
 
 newPages = async (browser) => {
@@ -75,7 +89,7 @@ async function setupPage(page) {
       blocked_domains.some((domain) => url.includes(domain)) ||
       (request.isNavigationRequest() && request.redirectChain().length)
     ) {
-      request.abort()
+      request.abort();
     } else {
       request.continue();
     }

@@ -21,7 +21,7 @@ var brandHigh = "";
 var lowSku = "";
 var highSku = "";
 
-async function bazaar(lowP, highP, tPage, list) {
+async function bazaar(lowP, highP, tPage) {
   result = [];
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
@@ -193,7 +193,6 @@ async function bazaar(lowP, highP, tPage, list) {
       highSku
     );
 
-    list.push(w);
     fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
     console.log(JSON.stringify(w, null, "\t"));
   }

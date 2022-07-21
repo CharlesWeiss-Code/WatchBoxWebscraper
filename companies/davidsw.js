@@ -2,7 +2,7 @@ const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../Watch");
 const fs = require("fs");
 const { Puppeteer } = require("puppeteer");
-async function davidsw(lowP, highP, tPage, list) {
+async function davidsw(lowP, highP, tPage) {
   for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowTables = "";
@@ -174,7 +174,7 @@ async function davidsw(lowP, highP, tPage, list) {
       highSku
     );
     //console.log(w);
-    list.push(w);
+
     fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
 
     //utilFunc.addToJson(w);

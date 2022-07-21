@@ -20,8 +20,8 @@ var brandHigh = "";
 var lowSku = "";
 var highSku = "";
 
-async function crownAndCaliber(lowP, highP, tPage, list) {
-  for (var i = 24; i < refNums.length; i++) {
+async function crownAndCaliber(lowP, highP, tPage) {
+  for (var i = 0; i < refNums.length; i++) {
     lowYear = "";
     lowPaper = "No";
     lowBox = "No";
@@ -82,7 +82,6 @@ async function crownAndCaliber(lowP, highP, tPage, list) {
         highSku
       );
 
-      list.push(w);
       fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
       console.log(JSON.stringify(w, null, "\t"));
     }
@@ -160,14 +159,18 @@ prepare = async (lowP, highP, link) => {
       );
     });
 
+  await lowP.reload();
+  await lowP.waitForTimeout(500);
   await highP.click(
     "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
     { delay: 20 }
   );
 
-  await lowP.waitForSelector('div[class="prod-specs"]');
+  await highP.reload();
+  await highP.waitForTimeout(500);
+
   lowTable = await utilFunc.getItem(lowP, 'div[class="prod-specs"]');
-  await highP.waitForSelector('div[class="prod-specs"]');
+
   highTable = await utilFunc.getItem(highP, 'div[class="prod-specs"]');
 
   lowSku = await (

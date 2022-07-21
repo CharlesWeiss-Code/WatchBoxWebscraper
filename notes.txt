@@ -4,10 +4,21 @@
 
      - make the average come from the current scrape (in data.csv) *************************
 
-     - luxury bazaar 116610LV-0002 (lowLink)
      - Handle min and max when lowest/highest = ""
 
      - Warn
           - (datejust EX) modles with many sub modles and combinations can return bad data
           - Can't filter bracelet type
           - Can't filter indices type
+
+     - try to make ewc better. last sentence of paragraph can possibly be parsed
+          - year = last 1-2 sentences from "dated" to "."
+          - box and papers are in last two sentences
+
+     - C24 124060-0001 Low Sku
+
+     - C24 124300-0005 High Sku
+
+     - C24 116508-0013 Low Sku
+
+     - C24 126610LN-0001 High Sku

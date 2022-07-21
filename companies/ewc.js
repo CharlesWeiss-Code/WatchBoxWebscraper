@@ -2,8 +2,10 @@ const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../Watch");
 const fs = require("fs");
 const { Puppeteer } = require("puppeteer");
-async function EWC(lowP, highP, tPage, list) {
-  for (var i = 33; i < refNums.length; i++) {
+
+
+async function EWC(lowP, highP, tPage) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = -1;
     highest = -1;
@@ -80,9 +82,8 @@ async function EWC(lowP, highP, tPage, list) {
       highSku
     );
     //console.log(w);
-    list.push(w);
-    fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
 
+    fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w);
   }
