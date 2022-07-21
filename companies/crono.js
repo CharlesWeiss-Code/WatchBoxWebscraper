@@ -60,7 +60,7 @@ async function chrono24(lowP, highP, tPage, list) {
       ((i + 5 * refNums.length) / (refNums.length * 6)) * 100 + "%"
     );
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
-    await tPage.waitForTimeout(500)
+    await tPage.waitForTimeout(500);
     var noWatchInList = noWatchesInList(list, refNums[i]);
     var noResult = await utilFunc.noResults2(
       tPage,
@@ -100,10 +100,8 @@ async function chrono24(lowP, highP, tPage, list) {
           highSku
         );
 
-        //console.log("lowSku", lowSku);
         fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
         console.log(JSON.stringify(w, null, "\t"));
-        //utilFunc.addToJson(w)
       }
     }
   }
@@ -165,13 +163,11 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
     lowDealerStatus = "";
   }
 
-  // if (await utilFunc.exists(lowP, "#modal-content > div > button")) {
-  //   await lowP.click("#modal-content > div > button");
-  // }
-  await lowP.click("#wt-watches > div:nth-child(" + childLow + ") > a", {
-    delay: 20,
-  });
-
+  const lowLink = await lowP.$eval(
+    "#wt-watches > div:nth-child(" + childLow + ") > a",
+    (res) => res.href
+  );
+  await lowP.goto(lowLink, { waitUntil: "networkidle0", timeout: 60000 });
   await lowP.reload();
   await lowP.waitForTimeout(500);
 
@@ -228,9 +224,14 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
     await highP.click("#modal-content > div > button");
   }
 
-  await highP.click("#wt-watches > div:nth-child(" + childHigh + ") > a", {
-    delay: 20,
-  });
+  // await highP.click("#wt-watches > div:nth-child(" + childHigh + ") > a", {
+  //   delay: 20,
+  // });
+  const highLink = await highP.$eval(
+    "#wt-watches > div:nth-child(" + childHigh + ") > a",
+    (res) => res.href
+  );
+  await highP.goto(highLink, { waitUntil: "networkidle0", timeout: 60000 });
 
   await highP.reload();
   await highP.waitForTimeout(500);
@@ -258,25 +259,32 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
   );
 
   /***************** */
-  lowSkuIndex1 = lowTable.indexOf("Listing code") + 12;
-  lowSkuIndex2 = lowTable.indexOf("Brand");
-  if (
-    lowSkuIndex2 > lowTable.indexOf("Dealer product code") &&
-    lowTable.indexOf("Dealer product code") != -1
-  ) {
-    lowSkuIndex2 = lowTable.indexOf("Dealer product code");
-  }
+  // lowSkuIndex1 = lowTable.indexOf("Listing code") + 12;
+  //lowSkuIndex2 = lowTable.indexOf("Brand")
+
+  // if (
+  //   lowSkuIndex2 > lowTable.indexOf("Dealer product code") &&
+  //   lowTable.indexOf("Dealer product code") != -1
+  // ) {
+  //   lowSkuIndex2 = lowTable.indexOf("Dealer product code");
+  // }
+  // if (lowSkuIndex2 > lowTable.indexOf("Reference number")) {
+  //   lowSkuIndex2 = lowTable.indexOf("Reference number");
+  // }
 
   /***************** */
 
-  highSkuIndex1 = highTable.indexOf("Listing code") + 12;
-  highSkuIndex2 = highTable.indexOf("Brand");
-  if (
-    highSkuIndex2 > highTable.indexOf("Dealer product code") &&
-    highTable.indexOf("Dealer product code") != -1
-  ) {
-    highSkuIndex2 = highTable.indexOf("Dealer product code");
-  }
+  // highSkuIndex1 = highTable.indexOf("Listing code") + 12;
+  // highSkuIndex2 = highTable.indexOf("Brand");
+  // if (
+  //   highSkuIndex2 > highTable.indexOf("Dealer product code") &&
+  //   highTable.indexOf("Dealer product code") != -1
+  // ) {
+  //   highSkuIndex2 = highTable.indexOf("Dealer product code");
+  // }
+  // if (highSkuIndex2 > Table.indexOf("Reference number")) {
+  //   highSkuIndex2 = highTable.indexOf("Reference number");
+  // }
   /***************** */
 
   index1BrandLow = lowTable.indexOf("Brand") + 5;
@@ -332,8 +340,10 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
   }
   /***************** */
 
-  lowSku = lowTable.substring(lowSkuIndex1, lowSkuIndex2).trim();
-  highSku = highTable.substring(highSkuIndex1, highSkuIndex2).trim();
+  // lowSku = lowTable.substring(lowSkuIndex1, lowSkuIndex2).trim();
+  lowSku = await utilFunc.getItem(lowP,"#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2)")
+  // highSku = highTable.substring(highSkuIndex1, highSkuIndex2).trim();
+  highSku = await utilFunc.getItem(highP,"#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2)")
   brandLow = lowTable.substring(index1BrandLow, index2BrandLow).trim();
   if (brandLow.length > 50) {
     brandLow = "";

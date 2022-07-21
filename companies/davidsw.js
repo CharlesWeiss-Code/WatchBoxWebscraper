@@ -173,11 +173,8 @@ async function davidsw(lowP, highP, tPage) {
       lowSku,
       highSku
     );
-    //console.log(w);
 
-    fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
-
-    //utilFunc.addToJson(w);
+    // fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
     console.log(JSON.stringify(w, null, "\t"));
   }
 }

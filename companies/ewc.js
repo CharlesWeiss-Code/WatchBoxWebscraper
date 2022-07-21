@@ -21,7 +21,7 @@ var lowPaper = "No";
 var highPaper = "No";
 
 async function EWC(lowP, highP, tPage) {
-  for (var i = 34; i < refNums.length; i++) {
+  for (var i = 59; i < refNums.length; i++) {
     console.log("");
     lowest = "";
     highest = "";
@@ -123,13 +123,31 @@ async function EWC(lowP, highP, tPage) {
           ") > a",
         (res) => res.href
       );
+
       highLink = await lowP.$eval(
         "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
           highestChild +
           ") > a",
         (res) => res.href
       );
+      console.log(highLink);
+      await lowP
+        .goto(lowLink, { waitUntil: "networkidle0", timeout: 60000 })
+        .catch(async () => {
+          await lowP.waitForTimeout(500);
+          await lowP.reload();
+          await lowP.waitForTimeout(500);
+        });
+      await highP
+        .goto(highLink, { waitUntil: "networkidle0", timeout: 60000 })
+        .catch(async () => {
+          await lowP.waitForTimeout(500);
+          await highP.reload();
+          await highP.waitForTimeout(500);
+        });
 
+      await lowP.waitForTimeout(500);
+      await highP.waitForTimeout(500);
       await BPandDateStuff(lowP, lowestChild, highP, highestChild);
     }
 
@@ -157,33 +175,9 @@ async function EWC(lowP, highP, tPage) {
     );
     //console.log(w);
 
-    // fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
+    fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
     console.log(JSON.stringify(w, null, "\t"));
     //utilFunc.addToJson(w);
-  }
-}
-
-/**
- * @param {Puppeteer.Page} page that you want to find the lowest and highest prices of
- * @param {String} url that you want the page to go to
- * @param {String} type of price you want to return. Either "asc" or String
- * @returns {int} price
- */
-async function findPriceEWC(page, url, type) {
-  await page.goto(url, { waituntil: "networkidle0", timeout: 60000 });
-  prices = await page.$$eval(
-    "body > section > section.flex.flex-wrap.watch-list.mx-auto > section > div > div.flex.flex-col.h-full.justify-start.mt-2 > div > p",
-    (price) =>
-      price.map((value) =>
-        parseInt(String(value.textContent).replace("$", "").replace(",", ""))
-      )
-  );
-  lowest = Math.min.apply(null, prices);
-  highest = Math.max.apply(null, prices);
-  if (type === "asc") {
-    return lowest;
-  } else {
-    return highest;
   }
 }
 
@@ -233,20 +227,20 @@ async function getChild(str, page) {
   }
 }
 
-// await BPandDateStuff(lowP,lowestChild,highP,highestChild)
 async function BPandDateStuff(lowP, lowestChild, highP, highestChild) {
-  lowPara = await utilFunc.getItem(
-    lowP,
-    "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
-      lowestChild +
-      ") > div > div.flex.flex-col.h-full.justify-start.mt-2 > p"
+  lowPara = String(
+    await utilFunc.getItem(
+      lowP,
+      "p[class='font-proxima mt-6 watch-bio-short-section']"
+    )
   );
-  highPara = await utilFunc.getItem(
-    highP,
-    "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
-      highestChild +
-      ") > div > div.flex.flex-col.h-full.justify-start.mt-2 > p"
+  highPara = String(
+    await utilFunc.getItem(
+      highP,
+      "p[class='font-proxima mt-6 watch-bio-short-section']"
+    )
   );
+
 
   lowSku = lowPara
     .substring(lowPara.indexOf("(") + 1, lowPara.indexOf(")"))
@@ -255,30 +249,33 @@ async function BPandDateStuff(lowP, lowestChild, highP, highestChild) {
     .substring(highPara.indexOf("(") + 1, highPara.indexOf(")"))
     .trim();
 
+  console.log("'" + lowSku + "'" + highSku + "'");
+
   if (lowPara.indexOf("undated") === -1) {
-    if (lowPara.indexOf("dated") != -1) {
-      lowYearIndex1 = lowPara.indexOf("dated") + 5;
-      lowYearIndex2 = getPeriodIndex(lowPara, lowYearIndex1);
-      lowYear = lowPara
-        .substring(lowYearIndex1, lowYearIndex2)
-        .trim()
-        .match(/\d/g)
-        .join("");
+    lowYearIndex1 = lowPara.indexOf("dated") + 5;
+    if (lowYearIndex1 === 4) {
+      lowYearIndex1 = lowPara.indexOf("from") + 4;
+    }
+    if (lowYearIndex1 != 3) {
+      lowYear = lowPara.substring(lowYearIndex1).trim().match(/\d{4}/).join("");
     }
   }
 
   if (highPara.indexOf("undated") === -1) {
-    if (highPara.indexOf("dated") != -1) {
-      highYearIndex1 = highPara.indexOf("dated") + 5;
-      highYearIndex2 = getPeriodIndex(highPara, highYearIndex1);
+    highYearIndex1 = highPara.indexOf("dated") + 5;
+    if (highYearIndex1 === 4) {
+      highYearIndex1 = highPara.indexOf("from") + 4;
+    }
+    if (highYearIndex1 != 3) {
       highYear = highPara
-        .substring(highYearIndex1, highYearIndex2)
+        .substring(highYearIndex1)
         .trim()
-        .match(/\d/g)
+        .match(/\d{4}/)
         .join("");
     }
   }
 
+  console.log("'" + lowYear + "'" + highYear + "'");
   if (
     lowPara.toLowerCase().indexOf(brandLow.toLowerCase() + " box and papers")
   ) {
@@ -289,10 +286,11 @@ async function BPandDateStuff(lowP, lowestChild, highP, highestChild) {
     lowPaper = "Yes";
   } else if (lowPara.toLowerCase().indexOf("original certificate") != -1) {
     lowPaper = "Yes";
-  } else if (lowPara.toLowerCase().indexOf(brandLow.toLowerCase()+" box") != -1) {
-    lowBox = "Yes"
+  } else if (
+    lowPara.toLowerCase().indexOf(brandLow.toLowerCase() + " box") != -1
+  ) {
+    lowBox = "Yes";
   }
-
 
   if (
     highPara.toLowerCase().indexOf(brandHigh.toLowerCase() + " box and papers")
@@ -304,8 +302,10 @@ async function BPandDateStuff(lowP, lowestChild, highP, highestChild) {
     highPaper = "Yes";
   } else if (highPara.toLowerCase().indexOf("original certificate") != -1) {
     highPaper = "Yes";
-  } else if (highPara.toLowerCase().indexOf(brandHigh.toLowerCase()+" box") != -1) {
-    highBox = "Yes"
+  } else if (
+    highPara.toLowerCase().indexOf(brandHigh.toLowerCase() + " box") != -1
+  ) {
+    highBox = "Yes";
   }
 }
 
@@ -319,6 +319,9 @@ function getPeriodIndex(str, datedIndex) {
   for (var i = 0, j = i + 1; i < periods.length - 1; i++) {
     if (datedIndex > periods[i] && datedIndex < periods[j]) {
       return periods[j];
+    } else if (j === periods.length - 1 && datedIndex > periods[j]) {
+      console.log("aiwefiuahwefiluhaweliufhawhefiluauwiehfiuawhefihuaw");
+      return str.indexOf("(");
     }
   }
 }

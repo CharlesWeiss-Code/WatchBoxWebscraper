@@ -11,14 +11,5 @@
           - Can't filter bracelet type
           - Can't filter indices type
 
-     - try to make ewc better. last sentence of paragraph can possibly be parsed
-          - year = last 1-2 sentences from "dated" to "."
-          - box and papers are in last two sentences
 
-     - C24 124060-0001 Low Sku
-
-     - C24 124300-0005 High Sku
-
-     - C24 116508-0013 Low Sku
-
-     - C24 126610LN-0001 High Sku
+     - start 5:07 PM 
