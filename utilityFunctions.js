@@ -317,6 +317,9 @@ var specialSites = {
     console.log("'" + refNum + "'\t'" + newRefNum + "'");
     switch (refNum) {
       case "116622-0003": // REGULAR --> SHORTENED --> GREY DIAL
+      case "126333-0020":
+      case "116333-0001":
+      case "126234-0045":
         return (
           "https://www.luxurybazaar.com/search-results?q=" +
           newRefNum +
@@ -341,6 +344,7 @@ var specialSites = {
         );
 
       case "16233 CHP IX JUB": // REGULAR --> SHORTENED --> CHAMPAGNE DIAL
+      case "326933-0001":
         return (
           "https://www.luxurybazaar.com/search-results?q=" +
           newRefNum +
@@ -349,6 +353,7 @@ var specialSites = {
 
       case "124300-0005": // REGULAR --> SHORTENED --> GREEN DIAL
       case "116508-0013":
+      case "126000-0005":
         return (
           "https://www.luxurybazaar.com/search-results?q=" +
           newRefNum +
@@ -357,7 +362,12 @@ var specialSites = {
 
       case "16570 BLK IX OYS": // REGULAR --> SHORTENED --> BLACK DIAL
       case "216570-0002":
+      case "116400-0001":
+      case "116300-0001":
       case "116200-0059":
+      case "116719BLRO-0001":
+      case "126300-0012":
+      case "124300-0002":
       case "116400GV-0001":
       case "16610 BLK OYS":
       case "116400GV-0001":
@@ -378,6 +388,7 @@ var specialSites = {
       case "216570-0001":
       case "116520-0016": // REGULAR --> SHORTENED --> WHITE DIAL
       case "226570-0001":
+      case "116400-0002":
         console.log("REGULAR --> SHORTENED --> WHITE DIAL");
         return (
           "https://www.luxurybazaar.com/search-results?q=" +
@@ -390,6 +401,9 @@ var specialSites = {
       case "326934-0003":
       case "16613 BLU IX OYS": // REGULAR --> SHORTENED --> BLUE DIAL
       case "126660-0002":
+      case "116622-0001":
+      case "126622-0002":
+      case "326934-0004":
       case "116506-0001":
       case "116660-0003":
       case "126300-0001":
@@ -417,15 +431,19 @@ var specialSites = {
       case "116660-0001":
       case "126711CHNR-0002":
       case "126710BLRO-0002":
+      case "214270-0001":
       case "114270-0001":
       case "16622 PT IX OYS":
       case "124270-0001":
+      case "126613LN-0002":
       case "116710BLNR-0002":
+      case "116680-0001":
       case "126600-0001":
       case "126613LB-0002":
       case "126710BLNR-0003":
       case "16710 COKE OYS":
       case "116613LN-0001":
+      case "124273-0001":
       case "126603-0001":
       case "16600 BLK IX OYS":
       case "126715CHNR-0001":
@@ -444,6 +462,9 @@ var specialSites = {
     console.log("'" + refNum + "'\t'" + newRefNum + "'");
     switch (refNum) {
       case "116622-0003": // REGULAR --> SHORTENED --> GREY DIAL
+      case "126333-0020":
+      case "126234-0045":
+      case "116333-0001":
         return (
           "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=" +
           newRefNum +
@@ -469,6 +490,7 @@ var specialSites = {
 
       case "124300-0005": // REGULAR --> SHORTENED --> GREEN DIAL
       case "116508-0013":
+      case "126000-0005":
         return (
           "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=" +
           newRefNum +
@@ -476,6 +498,7 @@ var specialSites = {
         );
 
       case "16233 CHP IX JUB": // REGULAR --> SHORTENED --> CHAMPAGNE DIAL
+      case "326933-0001":
         return (
           "https://www.bobswatches.com/shop?submit.x=0&submit.y=0&query=" +
           newRefNum +
@@ -484,6 +507,7 @@ var specialSites = {
 
       case "116500LN-0001": // REGULAR --> SHORTENED --> WHITE DIAL
       case "16570 WHT IX OYS":
+      case "116400-0002":
       case "116520-0016":
       case "226570-0001":
       case "216570-0001":
@@ -496,10 +520,15 @@ var specialSites = {
       case "16570 BLK IX OYS": // REGULAR --> SHORTENED --> BLACK DIAL
       case "216570-0002":
       case "116500LN-0002":
+      case "116300-0001":
+      case "126300-0012":
+      case "116400-0001":
       case "126710BLNR-0002":
       case "116200-0059":
+      case "116719BLRO-0001":
       case "126710BLNR-0003":
       case "214270-0003":
+      case "124300-0002":
       case "126610LV-0002":
       case "16610 BLK OYS":
       case "116400GV-0001":
@@ -519,8 +548,11 @@ var specialSites = {
       case "5711/1A-010": // REGULAR --> SHORTENED --> BLUE DIAL
       case "16613 BLU IX OYS":
       case "116506-0001":
+      case "116622-0001":
       case "126660-0002":
+      case "326934-0004":
       case "116400GV-0002":
+      case "126622-0002":
       case "116660-0003":
       case "326934-0003":
       case "116509-0071":
@@ -540,6 +572,7 @@ var specialSites = {
       case "114060-0002":
       case "116900-0001":
       case "116660-0001":
+      case "126613LN-0002":
       case "116600-0003":
       case "126711CHNR-0002":
       case "114270-0001":
@@ -549,8 +582,11 @@ var specialSites = {
       case "126710BLRO-0002":
       case "116710BLNR-0002":
       case "116700LN-0001":
+      case "116680-0001":
       case "126613LB-0002":
       case "126603-0001":
+      case "214270-0001":
+      case "124273-0001":
       case "126715CHNR-0001":
       case "16710 COKE OYS":
       case "16600 BLK IX OYS":
@@ -569,6 +605,9 @@ var specialSites = {
     console.log("'" + refNum + "'\t'" + newRefNum + "'");
     switch (refNum) {
       case "116622-0003": // REGULAR --> SHORTENED --> GREY DIAL
+      case "126333-0020":
+      case "126234-0045":
+      case "116333-0001":
         return (
           "https://www.crownandcaliber.com/search?view=shop&q=" +
           newRefNum +
@@ -594,6 +633,7 @@ var specialSites = {
 
       case "124300-0005": // REGULAR --> SHORTENED --> GREEN DIAL
       case "116508-0013":
+      case "126000-0005":
         return (
           "https://www.crownandcaliber.com/search?view=shop&q=" +
           newRefNum +
@@ -601,6 +641,7 @@ var specialSites = {
         );
 
       case "16233 CHP IX JUB": // REGULAR --> SHORTENED --> CHAMPAGNE DIAL
+      case "326933-0001":
         return (
           "https://www.crownandcaliber.com/search?view=shop&q=" +
           newRefNum +
@@ -612,6 +653,7 @@ var specialSites = {
       case "16570 WHT IX OYS":
       case "116520-0016": // REGULAR --> SHORTENED --> WHITE DIAL
       case "226570-0001":
+      case "116400-0002":
         return (
           "https://www.crownandcaliber.com/search?view=shop&q=" +
           newRefNum +
@@ -623,9 +665,14 @@ var specialSites = {
       case "116400GV-0001":
       case "226659-0002": // REGULAR --> SHORTENED --> BLACK DIAL
       case "116520-0015":
+      case "116400-0001":
+      case "124300-0002":
       case "116200-0059":
+      case "116719BLRO-0001":
       case "16610LV":
+      case "116300-0001":
       case "126660-0001":
+      case "126300-0012":
       case "226570-0002":
       case "116610 BLK OYS":
       case "1675 BLK PEP OYS":
@@ -641,6 +688,9 @@ var specialSites = {
       case "326934-0003": // REGULAR --> SHORTENED --> BLUE DIAL
       case "126300-0001":
       case "116506-0001":
+      case "126622-0002":
+      case "326934-0004":
+      case "116622-0001":
       case "116660-0003":
       case "116509-0071":
       case "124300-0003":
@@ -658,6 +708,7 @@ var specialSites = {
       case "126610LN-0001":
       case "126610LV-0002":
       case "116610LN-0001":
+      case "214270-0001":
       case "126710BLRO-0001":
       case "126710BLRO-0002":
       case "126710BLNR-0002":
@@ -666,9 +717,11 @@ var specialSites = {
       case "116900-0001":
       case "116700LN-0001":
       case "116613LN-0001":
+      case "126613LN-0002":
       case "116660-0001":
       case "126711CHNR-0002":
       case "114270-0001":
+      case "124273-0001":
       case "116600-0003":
       case "126715CHNR-0001":
       case "16622 PT IX OYS":
@@ -677,6 +730,7 @@ var specialSites = {
       case "12660-0001":
       case "126613LB-0002":
       case "126603-0001":
+      case "116680-0001":
       case "16710 COKE OYS":
       case "16600 BLK IX OYS":
       case "116681-0001":
@@ -716,6 +770,9 @@ var specialSites = {
         return "https://davidsw.com/?filter_bezel=aluminum&filter_dial-color=black&s=16610&post_type=product&type_aws=true&aws_id=1&aws_filter=1";
 
       case "116622-0003": // REGULAR --> SHORTENED --> GREY DIAL
+      case "126333-0020":
+      case "126234-0045":
+      case "116333-0001":
         return (
           "https://davidsw.com/?filter_dial-color=Grey&s=" +
           newRefNum +
@@ -731,6 +788,7 @@ var specialSites = {
 
       case "124300-0005": // REGULAR --> SHORTENED --> GREEN DIAL
       case "116508-0013":
+      case "126000-0005":
         return (
           "https://davidsw.com/?filter_dial-color=Green&s=" +
           newRefNum +
@@ -741,6 +799,7 @@ var specialSites = {
       case "16570 WHT IX OYS":
       case "226570-0001":
       case "116520-0016":
+      case "116400-0002":
       case "216570-0001":
         return (
           "https://davidsw.com/?filter_dial-color=white&s=" +
@@ -751,15 +810,20 @@ var specialSites = {
       case "116500LN-0002": // REGULAR --> SHORTENED --> BLACK DIAL
       case "16570 BLK IX OYS":
       case "216570-0002":
+      case "116400-0001":
       case "116400GV-0001":
       case "214270-0003":
       case "116200-0059":
       case "226659-0002":
       case "116520-0015":
+      case "126300-0012":
+      case "124300-0002":
+      case "116719BLRO-0001":
       case "126660-0001":
       case "226570-0002":
       case "16610LV":
       case "1675 BLK PEP OYS":
+      case "116300-0001":
         return (
           "https://davidsw.com/?filter_dial-color=black&s=" +
           newRefNum +
@@ -771,10 +835,12 @@ var specialSites = {
       case "116509-0071":
       case "116506-0001":
       case "16613 BLU IX OYS":
+      case "326934-0004":
       case "116660-0003":
       case "116400GV-0002":
       case "126300-0001":
       case "326934-0003":
+      case "116622-0001":
       case "126334-0002":
       case "116619LB-0001":
       case "124300-0003":
@@ -802,16 +868,21 @@ var specialSites = {
       case "116660-0001":
       case "116600-0003":
       case "126711CHNR-0002":
+      case "124273-0001":
       case "114270-0001":
+      case "116680-0001":
+      case "214270-0001":
       case "16622 PT IX OYS":
       case "124270-0001":
       case "116710BLNR-0002":
+      case "126613LN-0002":
       case "126710BLNR-0003":
       case "126710BLRO-0002":
       case "116613LN-0001":
       case "12660-0001":
       case "116610LN-0001":
       case "126613LB-0002":
+      case "126622-0002":
       case "126715CHNR-0001":
       case "16233 CHP IX JUB":
       case "126603-0001":
@@ -872,11 +943,14 @@ var specialSites = {
       case "226659-0002":
       case "116520-0015":
       case "126710BLNR-0003":
+      case "124273-0001":
       case "16233 CHP IX JUB":
       case "124300-0005":
       case "126603-0001":
       case "116619LB-0001":
+      case "126613LN-0002":
       case "16710 COKE OYS":
+      case "214270-0001":
       case "16600 BLK IX OYS":
       case "126715CHNR-0001":
       case "126660-0001":
@@ -887,6 +961,7 @@ var specialSites = {
       case "116680-0002":
       case "116660-0003":
       case "116506-0001":
+      case "116680-0001":
         return (
           "https://www2.europeanwatch.com/cgi-bin/search.pl?search=" + newRefNum
         );

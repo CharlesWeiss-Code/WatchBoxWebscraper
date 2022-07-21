@@ -7,5 +7,7 @@
      - luxury bazaar 116610LV-0002 (lowLink)
      - Handle min and max when lowest/highest = ""
 
-     - Warn about date justs
-          - modles with many sub modles and combinations can return bad data
+     - Warn
+          - (datejust EX) modles with many sub modles and combinations can return bad data
+          - Can't filter bracelet type
+          - Can't filter indices type
