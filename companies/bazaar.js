@@ -45,8 +45,8 @@ async function bazaar(lowP, highP, tPage, list) {
     highSku = "";
 
     var newURL = utilFunc.getLink("LuxuryBazaar", refNums[i])
-
-    console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
+    console.log("URL: " + newURL);
+    console.log((i+"/"+refNums.length*6),(i/(refNums.length*6))*100+"%")
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
     await tPage.waitForTimeout(500);
     if (

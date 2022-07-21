@@ -43,11 +43,13 @@ async function bobs(lowP, highP, tPage, list) {
     lowBox = "No";
     console.log("");
 
-    var newURL = utilFunc.getLink("Bobs", refNums[i])
-      
+    var newURL = utilFunc.getLink("Bobs", refNums[i]);
 
-    console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
-
+    console.log("URL: " + newURL);
+    console.log(
+      i + 4*refNums.length + "/" + refNums.length * 6,
+      ((i + 4*refNums.length) / (refNums.length * 6)) * 100 + "%"
+    );
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 0 });
 
     await tPage.waitForTimeout(500);
@@ -59,7 +61,7 @@ async function bobs(lowP, highP, tPage, list) {
     ) {
       continue;
     } else {
-      await prepare(lowP,highP,newURL)
+      await prepare(lowP, highP, newURL);
       await getData(lowP, highP); // gets data tables and price
       imageLow = await lowP.evaluate(() => {
         const image = document.querySelector("#mainImage");
@@ -115,7 +117,7 @@ async function bobs(lowP, highP, tPage, list) {
 }
 
 /**
- * 
+ *
  * @param {Puppeteer.Page} lowP that you want to assign data from
  * @param {Puppeteer.Page} highP that you want to assign data from
  * @returns {void}
@@ -131,15 +133,14 @@ async function getData(lowP, highP) {
     "2"
   );
 
-  await lowP.waitForTimeout(500)
+  await lowP.waitForTimeout(500);
 
   lowest = await utilFunc.getItem(
     lowP,
     "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding"
   );
 
-  await highP.waitForTimeout(500)
-
+  await highP.waitForTimeout(500);
 
   highest = await utilFunc.getItem(
     highP,
@@ -149,8 +150,6 @@ async function getData(lowP, highP) {
   lowSku = await lowP.$eval("meta[itemprop='sku']", (el) => el.content);
 
   highSku = await highP.$eval("meta[itemprop='sku']", (el) => el.content);
-
-
 
   await lowP.click(
     "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a",
@@ -168,14 +167,14 @@ async function getData(lowP, highP) {
   lowTable = await lowP.$$eval("tbody", (options) => options[1].textContent);
 
   highTable = await highP.$$eval("tbody", (options) => options[1].textContent);
-  console.log("'"+lowest+"'","'"+highest+"'")
+  console.log("'" + lowest + "'", "'" + highest + "'");
 
   if (lowest === "") {
-    console.log("llkjhasdfkljhasdf")
-    lowest = await utilFunc.getItem(lowP, "span[class='price']")
+    console.log("llkjhasdfkljhasdf");
+    lowest = await utilFunc.getItem(lowP, "span[class='price']");
   }
   if (highest === "") {
-    highest = await utilFunc.getItem(highP, "span[class='price']")
+    highest = await utilFunc.getItem(highP, "span[class='price']");
   }
 
   index1YearLow = -1;
@@ -249,7 +248,6 @@ async function getData(lowP, highP) {
     highURL = highP.url();
   }
 }
-
 
 /**
  * @param {Puppeteer.Page} lowP that you want to navagate to the right URL

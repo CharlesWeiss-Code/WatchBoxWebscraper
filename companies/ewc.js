@@ -9,13 +9,17 @@ async function EWC(lowP, highP, tPage, list) {
     highest = -1;
     brandLow = "";
     brandHigh = "";
+    lowSku = "";
+    highSku = "";
 
-    var newURL = utilFunc.getLink("EWC", refNums[i])
-
+    var newURL = utilFunc.getLink("EWC", refNums[i]);
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
 
-    console.log("REF: " + refNums[i] + "\n" + "URL: " + newURL);
-
+    console.log("URL: " + newURL);
+    console.log(
+      i + 2*refNums.length + "/" + refNums.length * 6,
+      ((i + 2*refNums.length) / (refNums.length * 6)) * 100 + "%"
+    );
     await tPage.waitForTimeout(1000);
 
     if (await utilFunc.noResults(tPage, "body > section > h3")) {
@@ -32,6 +36,21 @@ async function EWC(lowP, highP, tPage, list) {
       brandHigh = await utilFunc.getItem(
         highP,
         "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(1) > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3"
+      );
+
+      lowSku = await utilFunc.getItem(
+        lowP,
+        "body > section > section.flex.flex-wrap.watch-list.mx-auto > section > div > div.flex.flex-col.h-full.justify-start.mt-2 > p"
+      );
+      highSku = await utilFunc.getItem(
+        highP,
+        "body > section > section.flex.flex-wrap.watch-list.mx-auto > section > div > div.flex.flex-col.h-full.justify-start.mt-2 > p"
+      );
+
+      lowSku = lowSku.substring(lowSku.indexOf("(") + 1, lowSku.indexOf(")"));
+      highSku = highSku.substring(
+        highSku.indexOf("(") + 1,
+        highSku.indexOf(")")
       );
       brandLow = brandLow.substring(0, brandLow.indexOf(" "));
       brandHigh = brandHigh.substring(0, brandHigh.indexOf(" "));
@@ -57,8 +76,8 @@ async function EWC(lowP, highP, tPage, list) {
       "",
       brandLow,
       brandHigh,
-      "",
-      ""
+      lowSku,
+      highSku
     );
     //console.log(w);
     list.push(w);
@@ -68,7 +87,6 @@ async function EWC(lowP, highP, tPage, list) {
     //utilFunc.addToJson(w);
   }
 }
-
 
 /**
  * @param {Puppeteer.Page} page that you want to find the lowest and highest prices of

@@ -54,7 +54,11 @@ async function chrono24(lowP, highP, tPage, list) {
 
     var newURL = utilFunc.getLink("C24", refNums[i]);
 
-    console.log("REF: " + refNums[i] + "\n" + "GENERAL URL: " + newURL);
+    console.log("NEW URL: " + newURL);
+    console.log(
+      i + 5 * refNums.length + "/" + refNums.length * 6,
+      ((i + 5 * refNums.length) / (refNums.length * 6)) * 100 + "%"
+    );
     await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
     var noWatchInList = noWatchesInList(list, refNums[i]);
     var noResult = await utilFunc.noResults2(

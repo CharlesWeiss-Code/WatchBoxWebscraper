@@ -39,10 +39,10 @@ async function start() {
   await setupPage(testPage);
 
   var watches = [];
-  // await Bazaar.bazaar(lowPage, highPage, testPage, watches);
-  // await newPages(browser);
-  // await CandC.crownAndCaliber(lowPage, highPage, testPage, watches);
-  // await newPages(browser);
+  await Bazaar.bazaar(lowPage, highPage, testPage, watches);
+  await newPages(browser);
+  await CandC.crownAndCaliber(lowPage, highPage, testPage, watches);
+  await newPages(browser);
   await ewc.EWC(lowPage, highPage, testPage, watches);
   await newPages(browser);
   await david.davidsw(lowPage, highPage, testPage, watches);

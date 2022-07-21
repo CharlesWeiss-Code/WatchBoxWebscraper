@@ -1,14 +1,5 @@
-const puppeteer = require("puppeteer");
+lowSku = "(41871) Rolex Daytona 116506 Oyster Perpetual Daytona Platinum, platinum case on a platinum oyste"
 
-async function run() {
-  const browser = await puppeteer.launch({
-    headless: true,
-    defaultViewport: null,
-  });
-  testPage = await browser.newPage();
-  await testPage.goto(
-    "https://davidsw.com/?filter_complications=date&s=116610LN&post_type=product&type_aws=true&aws_id=1&aws_filter=1"
-  ).then((thing) => console.log(thing))
-}
 
-run()
+lowSku = lowSku.substring(lowSku.indexOf("(")+1, lowSku.indexOf(")"))
+console.log(lowSku)

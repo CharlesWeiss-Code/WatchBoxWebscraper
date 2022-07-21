@@ -37,11 +37,15 @@ async function crownAndCaliber(lowP, highP, tPage, list) {
     lowSku = "";
     highSku = "";
 
-    var url = utilFunc.getLink("C&C",refNums[i])
+    var url = utilFunc.getLink("C&C", refNums[i]);
 
     console.log("CandC URL: ***  " + url);
+    console.log(
+      i + refNums.length + "/" + refNums.length * 6,
+      ((i + refNums.length) / (refNums.length * 6)) * 100 + "%"
+    );
     await tPage.goto(url, { waitUntil: "networkidle0" });
-    await tPage.waitForTimeout(500)
+    await tPage.waitForTimeout(500);
     if (
       await utilFunc.noResults(
         tPage,
@@ -99,35 +103,35 @@ prepare = async (lowP, highP, link) => {
     waitUntil: "networkidle0",
   });
 
-  if (
-    await utilFunc.exists(lowP, "#searchspring-content > h3")
-  ) {
-
+  if (await utilFunc.exists(lowP, "#searchspring-content > h3")) {
     await lowP.goto(link + "#/sort:ss_price:asc");
   }
 
   await lowP.waitForTimeout(1000);
 
-  if (
-    await utilFunc.exists(highP, "#searchspring-content > h3")
-  ) {
-
-
+  if (await utilFunc.exists(highP, "#searchspring-content > h3")) {
     await highP.goto(link + "#/sort:ss_price:desc").catch(async (err) => {
-      await highP.goto(link + "#/sort:ss_price:desc")
-    })
+      await highP.goto(link + "#/sort:ss_price:desc");
+    });
   }
   await highP.waitForTimeout(1000);
 
-  lowest = String(await utilFunc.getItem(
-    lowP,
-    '#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > span.current-price.product-price__price > span'
-  ))
-  highest = String(await utilFunc.getItem(
-    highP,
-    '#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > span.current-price.product-price__price > span'
-  ))
-  utilFunc.log([lowest.replace(" ", "' '").replace("\n", "/n"),highest.replace(" ", "' '").replace("\n", "/n")])
+  lowest = String(
+    await utilFunc.getItem(
+      lowP,
+      "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > span.current-price.product-price__price > span"
+    )
+  );
+  highest = String(
+    await utilFunc.getItem(
+      highP,
+      "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > span.current-price.product-price__price > span"
+    )
+  );
+  utilFunc.log([
+    lowest.replace(" ", "' '").replace("\n", "/n"),
+    highest.replace(" ", "' '").replace("\n", "/n"),
+  ]);
 
   brandLow = await utilFunc.getItem(
     lowP,
@@ -138,21 +142,23 @@ prepare = async (lowP, highP, link) => {
     "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a > div.card-title.ng-binding"
   );
 
-  await lowP.reload()
-  await lowP.waitForTimeout(500)
-  await lowP.click(
-    "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
-    { delay: 20 }
-  ).catch(async (err) => {
-    await lowP.waitForTimeout(999999)
-    console.log("COULDNT CLICK THE THING")
-    await lowP.goto(lowP.url())
-    await lowP.waitForTimeout(500)
-    await lowP.click(
+  await lowP.reload();
+  await lowP.waitForTimeout(500);
+  await lowP
+    .click(
       "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
       { delay: 20 }
     )
-  })
+    .catch(async (err) => {
+      await lowP.waitForTimeout(999999);
+      console.log("COULDNT CLICK THE THING");
+      await lowP.goto(lowP.url());
+      await lowP.waitForTimeout(500);
+      await lowP.click(
+        "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
+        { delay: 20 }
+      );
+    });
 
   await highP.click(
     "#searchspring-content > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > a",
@@ -183,7 +189,6 @@ prepare = async (lowP, highP, link) => {
     });
 };
 
-
 /**
  * @returns {void} assigns all neccesary fields for a new watch object
  */
@@ -200,7 +205,6 @@ assignData = () => {
   var lowBoxIndex2 = lowTable.indexOf("Papers - ");
   var lowPaperIndex1 = lowBoxIndex2 + 9;
   var lowPaperIndex2 = lowTable.indexOf("Manual -");
-
 
   var highYearIndex1 = highTable.indexOf("Approximate Age - ") + 18;
   var highYearIndex2 = highTable.indexOf("Case Material - ");
@@ -230,13 +234,12 @@ assignData = () => {
   highYear = highTable
     .substring(highYearIndex1, highYearIndex2)
     .replace(/\s+/g, "");
- 
 
-    if (highYear.length > 5 && highYear.indexOf("-Present") === -1) {
-      highYear = highYear.slice(-4);
-    } else {
-      highYear = highYear.substring(0, 4) + "+";
-    }
+  if (highYear.length > 5 && highYear.indexOf("-Present") === -1) {
+    highYear = highYear.slice(-4);
+  } else {
+    highYear = highYear.substring(0, 4) + "+";
+  }
 
   highPaper = highTable
     .substring(highBoxIndex1, highBoxIndex2)
