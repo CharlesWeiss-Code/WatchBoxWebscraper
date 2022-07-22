@@ -12,4 +12,3 @@
           - Can't filter indices type
 
 
-     - start 5:07 PM 

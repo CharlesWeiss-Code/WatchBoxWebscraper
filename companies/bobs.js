@@ -22,7 +22,7 @@ var brandLow = "";
 var brandHigh = "";
 
 async function bobs(lowP, highP, tPage) {
-  for (var i = 63; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     lowest = "";
     highest = "";
     highTable = "";
@@ -47,16 +47,18 @@ async function bobs(lowP, highP, tPage) {
 
     console.log("URL: " + newURL);
     console.log(
-      i + 4*refNums.length + "/" + refNums.length * 6,
-      ((i + 4*refNums.length) / (refNums.length * 6)) * 100 + "%"
+      i + 4 * refNums.length + "/" + refNums.length * 6,
+      ((i + 4 * refNums.length) / (refNums.length * 6)) * 100 + "%"
     );
-    await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 0 });
+    await tPage.goto(newURL, { waitUntil: "networkidle0" }).catch(async (e) => {
+      await utilFunc.reTry(tPage);
+    });
 
     await tPage.waitForTimeout(500);
     if (
       await utilFunc.noResults(
         tPage,
-        "#searchspring-content > div > div > div > div > div > div.no-results"
+        "div[class='no-results']"
       )
     ) {
       continue;
@@ -106,7 +108,6 @@ async function bobs(lowP, highP, tPage) {
       lowSku,
       highSku
     );
-
 
     //console.log(w);
     fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
@@ -256,19 +257,27 @@ async function getData(lowP, highP) {
  */
 async function prepare(lowP, highP, url) {
   if (url.indexOf("#") === -1) {
-    await lowP.goto(url + "#/sort:price:asc", {
-      waitUntil: "networkidle0",
-    });
-    await highP.goto(url + "#/sort:price:desc", {
-      waitUntil: "networkidle0",
-    });
+    await lowP
+      .goto(url + "#/sort:price:asc", {
+        waitUntil: "networkidle0",
+      })
+      .catch(async (e) => {await utilFunc.reTry(lowP)});
+    await highP
+      .goto(url + "#/sort:price:desc", {
+        waitUntil: "networkidle0",
+      })
+      .catch(async (e) => {await utilFunc.reTry(highP)});
   } else {
-    await lowP.goto(url + "/sort:price:asc", {
-      waitUntil: "networkidle0",
-    });
-    await highP.goto(url + "/sort:price:desc", {
-      waitUntil: "networkidle0",
-    });
+    await lowP
+      .goto(url + "/sort:price:asc", {
+        waitUntil: "networkidle0",
+      })
+      .catch(async (e) => {await utilFunc.reTry(lowP)});
+    await highP
+      .goto(url + "/sort:price:desc", {
+        waitUntil: "networkidle0",
+      })
+      .catch(async (e) => {await utilFunc.reTry(highP)});
   }
 }
 module.exports = { bobs };

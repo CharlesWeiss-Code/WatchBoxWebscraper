@@ -44,10 +44,15 @@ async function bazaar(lowP, highP, tPage) {
     lowSku = "";
     highSku = "";
 
-    var newURL = utilFunc.getLink("LuxuryBazaar", refNums[i])
+    var newURL = utilFunc.getLink("LuxuryBazaar", refNums[i]);
     console.log("URL: " + newURL);
-    console.log((i+"/"+refNums.length*6),(i/(refNums.length*6))*100+"%")
-    await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
+    console.log(
+      i + "/" + refNums.length * 6,
+      (i / (refNums.length * 6)) * 100 + "%"
+    );
+    await tPage.goto(newURL, { waitUntil: "networkidle0" }).catch(async (e) => {
+      await utilFunc.reTry(tPage);
+    });
     await tPage.waitForTimeout(500);
     if (
       !(await utilFunc.noResults(
@@ -59,41 +64,37 @@ async function bazaar(lowP, highP, tPage) {
       continue;
     } else {
       if (newURL.indexOf("#") != -1) {
-        await lowP.goto(newURL + "/sort:ss_sort_price_asc:asc");
-        await highP.goto(newURL + "/sort:ss_sort_price_desc:desc");
+        await lowP
+          .goto(newURL + "/sort:ss_sort_price_asc:asc", {
+            waitUntil: "networkidle0",
+          })
+          .catch(async (e) => {await utilFunc.reTry(lowP)});
+        await highP
+          .goto(newURL + "/sort:ss_sort_price_desc:desc", {
+            waitUntil: "networkidle0",
+          })
+          .catch(async (e) => {await utilFunc.reTry(highP)});
       } else {
-        await lowP.goto(newURL + "#/sort:ss_sort_price_asc:asc");
-        await highP.goto(newURL + "#/sort:ss_sort_price_desc:desc");
+        await lowP
+          .goto(newURL + "#/sort:ss_sort_price_asc:asc", {
+            waitUntil: "networkidle0",
+          })
+          .catch(async (e) => {await utilFunc.reTry(lowP)});
+        await highP
+          .goto(newURL + "#/sort:ss_sort_price_desc:desc", {
+            waitUntil: "networkidle0",
+          })
+          .catch(async (e) => {await utilFunc.reTry(highP)});
       }
 
-      await lowP.waitForTimeout(500)
-      await highP.waitForTimeout(500)
+      await lowP.waitForTimeout(500);
+      await highP.waitForTimeout(500);
       lowest = await utilFunc.getItem(lowP, "span[class='price ng-binding']");
 
       highest = await utilFunc.getItem(highP, "span[class='price ng-binding']");
 
-
-      await lowP.click("a[class='product-image']")
-      await highP.click("a[class='product-image']")
-      // await lowP
-      //   .waitForSelector("a[class='product-image']")
-      //   .then(async (res) => {
-      //     await lowP
-      //       .evaluate((a) => a.href, res)
-      //       .then(async (res2) => {
-      //         await lowP.goto(res2);
-      //       });
-      //   });
-
-      // await highP
-      //   .waitForSelector("a[class='product-image']")
-      //   .then(async (res) => {
-      //     await highP
-      //       .evaluate((a) => a.href, res)
-      //       .then(async (res2) => {
-      //         await highP.goto(res2);
-      //       });
-      //   });
+      await lowP.click("a[class='product-image']");
+      await highP.click("a[class='product-image']");
 
       await lowP.waitForTimeout(1000);
       await highP.waitForTimeout(1000);
@@ -122,7 +123,7 @@ async function bazaar(lowP, highP, tPage) {
 
       lowSku = await utilFunc.getItem(lowP, "div[class='web-id']");
       highSku = await utilFunc.getItem(highP, "div[class='web-id']");
-        
+
       lowYearIndex1 = lowTable.indexOf("Year of Manufacture") + 19;
       lowYearIndex2 = lowYearIndex1 + 5;
 
@@ -192,11 +193,9 @@ async function bazaar(lowP, highP, tPage) {
       lowSku,
       highSku
     );
-
     fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
     console.log(JSON.stringify(w, null, "\t"));
   }
 }
-
 
 module.exports = { bazaar };

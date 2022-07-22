@@ -1047,6 +1047,15 @@ function getPricesForAverage() {
   return list;
 }
 
+async function reTry(page) {
+  console.log("Re-trying...");
+  await page.waitForTimeout(500);
+  await page.reload().catch(async (e) => {
+    await reTry(page);
+  }); //Becomes recursive function until the page loads.
+  await page.waitForTimeout(500);
+}
+
 module.exports = {
   noResults,
   noResults2,
@@ -1064,4 +1073,5 @@ module.exports = {
   log,
   sendMessage,
   getPricesForAverage,
+  reTry,
 };

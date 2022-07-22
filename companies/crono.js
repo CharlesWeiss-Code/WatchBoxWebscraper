@@ -59,7 +59,9 @@ async function chrono24(lowP, highP, tPage, list) {
       i + 5 * refNums.length + "/" + refNums.length * 6,
       ((i + 5 * refNums.length) / (refNums.length * 6)) * 100 + "%"
     );
-    await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
+    await tPage.goto(newURL, { waitUntil: "networkidle0" }).catch(async (e) => {
+      await utilFunc.reTry(tPage);
+    });
     await tPage.waitForTimeout(500);
     var noWatchInList = noWatchesInList(list, refNums[i]);
     var noResult = await utilFunc.noResults2(
@@ -116,7 +118,11 @@ async function chrono24(lowP, highP, tPage, list) {
  * @returns {void} assigns the values neccesary for creating a new watch object
  */
 prepareStuff = async (lowP, highP, url, list, rn) => {
-  await lowP.goto(url + "&sortorder=1");
+  await lowP
+    .goto(url + "&sortorder=1", { waitUntil: "networkidle0" })
+    .catch(async (e) => {
+      await utilFunc.reTry(lowP);
+    });
   await lowP.waitForTimeout(500);
   if (await utilFunc.exists(lowP, "#modal-content > div > button")) {
     await lowP.click("#modal-content > div > button"); // cookie tracker button
@@ -167,7 +173,9 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
     "#wt-watches > div:nth-child(" + childLow + ") > a",
     (res) => res.href
   );
-  await lowP.goto(lowLink, { waitUntil: "networkidle0", timeout: 60000 });
+  await lowP.goto(lowLink, { waitUntil: "networkidle0" }).catch(async (e) => {
+    await utilFunc.reTry(lowP);
+  });
   await lowP.reload();
   await lowP.waitForTimeout(500);
 
@@ -178,7 +186,11 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
     )
   );
 
-  await highP.goto(url + "&searchorder=11&sortorder=11");
+  await highP
+    .goto(url + "&searchorder=11&sortorder=11", { waitUntil: "networkidle0" })
+    .catch(async (e) => {
+      await utilFunc.reTry(highP);
+    });
   await highP.waitForTimeout(1000);
   //await highP.click("#modal-content > div > a", {delay: 20})
   childHigh = await validChild(highP, list, rn);
@@ -231,7 +243,9 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
     "#wt-watches > div:nth-child(" + childHigh + ") > a",
     (res) => res.href
   );
-  await highP.goto(highLink, { waitUntil: "networkidle0", timeout: 60000 });
+  await highP.goto(highLink, { waitUntil: "networkidle0" }).catch(async (e) => {
+    await utilFunc.reTry(highP);
+  });
 
   await highP.reload();
   await highP.waitForTimeout(500);
@@ -341,9 +355,15 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
   /***************** */
 
   // lowSku = lowTable.substring(lowSkuIndex1, lowSkuIndex2).trim();
-  lowSku = await utilFunc.getItem(lowP,"#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2)")
+  lowSku = await utilFunc.getItem(
+    lowP,
+    "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2)"
+  );
   // highSku = highTable.substring(highSkuIndex1, highSkuIndex2).trim();
-  highSku = await utilFunc.getItem(highP,"#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2)")
+  highSku = await utilFunc.getItem(
+    highP,
+    "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2)"
+  );
   brandLow = lowTable.substring(index1BrandLow, index2BrandLow).trim();
   if (brandLow.length > 50) {
     brandLow = "";
@@ -424,16 +444,31 @@ getBuffer = (list, percent, refNum) => {
 
   for (var i = 0; i < list.length; i++) {
     watch = list[i];
+    low = parseFloat(watch["lowPrice"].trim());
+    high = parseFloat(watch["highPrice"].trim());
     if (watch["refNum"].trim().indexOf(refNum.trim()) != -1) {
       if (percent === 0.9) {
-        price += parseFloat(watch["lowPrice"].trim());
+        if (low != NaN) {
+          price += low;
+          num++;
+        }
       } else {
-        price += parseFloat(watch["highPrice"].trim());
+        if (high != NaN) {
+          price += high;
+          num++;
+        }
       }
-      num++;
     }
   }
-  return (price / num) * percent;
+  if (num != 0) {
+    return (price / num) * percent;
+  } else {
+    if (percent === 0.9) {
+      return 0;
+    } else {
+      return Number.MAX_SAFE_INTEGER;
+    }
+  }
 };
 
 /**

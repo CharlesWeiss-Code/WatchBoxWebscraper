@@ -21,7 +21,7 @@ var lowPaper = "No";
 var highPaper = "No";
 
 async function EWC(lowP, highP, tPage) {
-  for (var i = 59; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = "";
     highest = "";
@@ -41,7 +41,10 @@ async function EWC(lowP, highP, tPage) {
     highPaper = "No";
 
     var newURL = utilFunc.getLink("EWC", refNums[i]);
-    await tPage.goto(newURL, { waitUntil: "networkidle0", timeout: 60000 });
+    await tPage.goto(newURL, { waitUntil: "networkidle0" }).catch(async (e) => {
+      console.log("bad");
+      await utilFunc.reTry(tPage);
+    });
 
     console.log("URL: " + newURL);
     console.log(
@@ -53,8 +56,12 @@ async function EWC(lowP, highP, tPage) {
     if (await utilFunc.noResults(tPage, "body > section > h3")) {
       continue;
     } else {
-      await lowP.goto(tPage.url());
-      await highP.goto(tPage.url());
+      await lowP.goto(tPage.url()).catch(async (e) => {
+        await utilFunc.reTry(lowP);
+      });
+      await highP.goto(tPage.url()).catch(async (e) => {
+        await utilFunc.reTry(highP);
+      });
       await lowP.waitForTimeout(500);
       await highP.waitForTimeout(500);
 
@@ -132,18 +139,14 @@ async function EWC(lowP, highP, tPage) {
       );
       console.log(highLink);
       await lowP
-        .goto(lowLink, { waitUntil: "networkidle0", timeout: 60000 })
-        .catch(async () => {
-          await lowP.waitForTimeout(500);
-          await lowP.reload();
-          await lowP.waitForTimeout(500);
+        .goto(lowLink, { waitUntil: "networkidle0" })
+        .catch(async (e) => {
+          await utilFunc.reTry(lowP);
         });
       await highP
-        .goto(highLink, { waitUntil: "networkidle0", timeout: 60000 })
-        .catch(async () => {
-          await lowP.waitForTimeout(500);
-          await highP.reload();
-          await highP.waitForTimeout(500);
+        .goto(highLink, { waitUntil: "networkidle0" })
+        .catch(async (e) => {
+          await utilFunc.reTry(highP);
         });
 
       await lowP.waitForTimeout(500);
@@ -240,7 +243,6 @@ async function BPandDateStuff(lowP, lowestChild, highP, highestChild) {
       "p[class='font-proxima mt-6 watch-bio-short-section']"
     )
   );
-
 
   lowSku = lowPara
     .substring(lowPara.indexOf("(") + 1, lowPara.indexOf(")"))

@@ -26,16 +26,12 @@ async function davidsw(lowP, highP, tPage) {
 
     console.log("URL: " + newURL);
     console.log(
-      i + 3*refNums.length + "/" + refNums.length * 6,
-      ((i + 3*refNums.length) / (refNums.length * 6)) * 100 + "%"
+      i + 3 * refNums.length + "/" + refNums.length * 6,
+      ((i + 3 * refNums.length) / (refNums.length * 6)) * 100 + "%"
     );
     await tPage
-      .goto(newURL, { waitUntil: "networkidle0", timeout: 0 })
-      .catch(async () => {
-        await tPage.waitForTimeout(500);
-        await tPage.reload();
-        await tPage.waitForTimeout(1000);
-      });
+      .goto(newURL, { waitUntil: "networkidle0" })
+      .catch(async (e) => {await utilFunc.reTry(tPage)});
     if (
       await utilFunc.exists(tPage, "#main > div > div.col.large-9 > div > p")
     ) {
@@ -45,21 +41,11 @@ async function davidsw(lowP, highP, tPage) {
       await lowP
         .goto(getUrl(newURL, "orderby=price&paged=1&"), {
           waitUntil: "networkidle0",
-        })
-        .catch(async () => {
-          await lowP.waitForTimeout(1000);
-          await lowP.reload();
-          await lowP.waitForTimeout(1000);
-        });
+        }).catch(async (e) => {await utilFunc.reTry(lowP)})
       await highP
         .goto(getUrl(newURL, "orderby=price-desc&"), {
           waitUntil: "networkidle0",
-        })
-        .catch(async () => {
-          await highP.waitForTimeout(1000);
-          await highP.reload();
-          await highP.waitForTimeout(1000);
-        });
+        }).catch(async (e) => {await utilFunc.reTry(highP)})
       if (
         await utilFunc.exists(
           tPage,
@@ -174,7 +160,7 @@ async function davidsw(lowP, highP, tPage) {
       highSku
     );
 
-    // fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
+    fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
     console.log(JSON.stringify(w, null, "\t"));
   }
 }
