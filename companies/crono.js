@@ -30,7 +30,7 @@ var highDealerStatus = "";
 
 async function chrono24(lowP, highP, tPage, list) {
   flag = true;
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 24; i < refNums.length; i++) {
     lowest = "";
     highest = "";
     childLow = 1;

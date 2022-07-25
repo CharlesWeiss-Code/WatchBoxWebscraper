@@ -69,19 +69,27 @@ async function getItem(page, selector) {
  * @param {HTML Selector (String)} selector that you want to check the existence of
  * @returns {boolean} selector's existence
  */
+// async function exists(page, selector) {
+//   if (
+//     selector ===
+//     "#searchspring-content > div.category-products.ng-scope > div > div:nth-child(1) > h3"
+//   ) {
+//     await page.reload();
+//   }
+//   var existsVar = false;
+//   if ((await page.$eval(selector)) != null) {
+//     existsVar = true;
+//   }
+//   console.log(existsVar);
+//   return existsVar;
+// }
+
 async function exists(page, selector) {
-  if (
-    selector ===
-    "#searchspring-content > div.category-products.ng-scope > div > div:nth-child(1) > h3"
-  ) {
-    await page.reload();
-  }
-  var existsVar = false;
+  var noResultsVar = false;
   if ((await page.$(selector)) != null) {
-    existsVar = true;
+    noResultsVar = true;
   }
-  console.log(existsVar);
-  return existsVar;
+  return noResultsVar;
 }
 
 /**

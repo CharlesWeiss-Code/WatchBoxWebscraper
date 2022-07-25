@@ -22,7 +22,7 @@ var brandLow = "";
 var brandHigh = "";
 
 async function bobs(lowP, highP, tPage) {
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 63; i < refNums.length; i++) {
     lowest = "";
     highest = "";
     highTable = "";

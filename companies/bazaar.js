@@ -23,7 +23,7 @@ var highSku = "";
 
 async function bazaar(lowP, highP, tPage) {
   result = [];
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 40; i < refNums.length; i++) {
     console.log("");
     lowest = "";
     lowYear = "";
@@ -166,9 +166,9 @@ async function bazaar(lowP, highP, tPage) {
       index1BrandHigh = highTable.indexOf("Signatures") + 10;
       index2BrandHigh = highTable.indexOf("Strap Color");
 
-      brandHigh = highTable.substring(index1BrandHigh, index2BrandHigh).trim();
+      brandHigh = highTable.substring(index1BrandHigh, index2BrandHigh).trim().replace("N/A", "")
 
-      brandLow = lowTable.substring(index1BrandLow, index2BrandLow).trim();
+      brandLow = lowTable.substring(index1BrandLow, index2BrandLow).trim().replace("N/A","")
     }
 
     w = new Watch(
