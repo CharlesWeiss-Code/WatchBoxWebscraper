@@ -1,9 +1,4 @@
      - add promise catches to all functions that use them?
-
-    - special watches are to be handled in "./utilityFunctions" in specialSites obj
-
-     - make the average come from the current scrape (in data.csv) *************************
-
      - Handle min and max when lowest/highest = ""
 
      - Warn
@@ -11,4 +6,9 @@
           - Can't filter bracelet type
           - Can't filter indices type
 
+
+     - min and max in chrono dont work every time. 
+          - 2022_7_26.csv --> C24 --> 126660-0002 (low)
+          - 2022_7_26.csv --> C24 --> 116508-0013 (low)
+          - 2022_7_26.csv --> C24 --> 124300-0001 (high)
 
