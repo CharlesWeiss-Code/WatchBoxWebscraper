@@ -3,7 +3,7 @@ const Watch = require("../Watch");
 const fs = require("fs");
 const { Puppeteer } = require("puppeteer");
 async function davidsw(lowP, highP, tPage) {
-  for (var i = 77; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowTables = "";
     highTables = "";

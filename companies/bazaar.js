@@ -23,7 +23,7 @@ var highSku = "";
 
 async function bazaar(lowP, highP, tPage) {
   result = [];
-  for (var i = 40; i < refNums.length; i++) {
+  for (var i = 0; i < refNums.length; i++) {
     console.log("");
     lowest = "";
     lowYear = "";
