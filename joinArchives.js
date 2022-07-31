@@ -1,41 +1,10 @@
 const fs = require("fs");
-const Watch = require("./Watch");
 
 (() => {
-  w = new Watch(
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    "",
-    ""
-  );
-  s = "";
-  for (var propt in w) {
-    s += propt + ",";
-  }
-  fs.writeFileSync("compilation.csv", s + "\n");
-  result = "";
-  fs.readdirSync("./archives/").forEach((file) => {
-    if (file != ".DS_Store") {
-      console.log(file);
-      let fileData = fs.readFileSync("./archives/" + file).toString();
-      result += fileData.substring(fileData.indexOf("\n") + 1);
-    }
-  });
-  fs.appendFileSync("compilation.csv", result);
+  files = fs.readdirSync("./archives/");
+  let fileData = fs.readFileSync("data.csv").toString();
+  fileData = fileData.substring(fileData.indexOf("\n") + 1);
+  fs.appendFileSync("compilation.csv", fileData);
+  console.log(files[1] + "\n" + files[files.length - 1]);
+  console.log("Compiled " + files.length + " scrapes");
 })();
