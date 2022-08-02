@@ -110,22 +110,22 @@ async function start() {
   await setupPage(highPage);
   await setupPage(testPage);
 
-  // await Bazaar.bazaar(lowPage, highPage, testPage);
-  // await newPages(browser);
-  // await utilFunc.sendMessage(
-  //   "Completed Bazaar: " + new Date().toLocaleString()
-  // );
-  // await CandC.crownAndCaliber(lowPage, highPage, testPage);
-  // await newPages(browser);
-  // utilFunc.sendMessage("Completed CandC: " + new Date().toLocaleString());
+  await Bazaar.bazaar(lowPage, highPage, testPage);
+  await newPages(browser);
+  await utilFunc.sendMessage(
+    "Completed Bazaar: " + new Date().toLocaleString()
+  );
+  await CandC.crownAndCaliber(lowPage, highPage, testPage);
+  await newPages(browser);
+  utilFunc.sendMessage("Completed CandC: " + new Date().toLocaleString());
 
-  // await ewc.EWC(lowPage, highPage, testPage);
-  // await newPages(browser);
-  // utilFunc.sendMessage("Completed EWC: " + new Date().toLocaleString());
+  await ewc.EWC(lowPage, highPage, testPage);
+  await newPages(browser);
+  utilFunc.sendMessage("Completed EWC: " + new Date().toLocaleString());
 
-  // await david.davidsw(lowPage, highPage, testPage);
-  // await newPages(browser);
-  // utilFunc.sendMessage("Completed DavidSW: " + new Date().toLocaleString());
+  await david.davidsw(lowPage, highPage, testPage);
+  await newPages(browser);
+  utilFunc.sendMessage("Completed DavidSW: " + new Date().toLocaleString());
 
   await Bobs.bobs(lowPage, highPage, testPage);
   await newPages(browser);
