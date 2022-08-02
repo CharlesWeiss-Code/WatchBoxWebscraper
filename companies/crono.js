@@ -76,7 +76,7 @@ async function chrono24(lowP, highP, tPage, list) {
     } else {
       // results
       await prepareStuff(lowP, highP, newURL, list, refNums[i]);
-      if (parseInt(lowest) > parseInt(highest)) {
+      if (parseFloat(lowest.trim()) > parseFloat(highest.trim())) {
         continue;
       } else {
         w = new Watch(
@@ -101,7 +101,6 @@ async function chrono24(lowP, highP, tPage, list) {
           lowSku,
           highSku
         );
-
         fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
         console.log(JSON.stringify(w, null, "\t"));
       }

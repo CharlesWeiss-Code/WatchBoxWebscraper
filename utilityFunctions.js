@@ -232,7 +232,6 @@ async function postAndDelete() {
   getName(async (res) => {
     await deleteObj(res);
     await uploadFileToS3();
-    createBlank();
   });
 }
 
@@ -1083,7 +1082,7 @@ function joinDataToArchivesAndCompilation() {
   let fileData = fs.readFileSync("data.csv").toString();
   fileData = fileData.substring(fileData.indexOf("\n") + 1);
   fs.appendFileSync("compilation.csv", fileData);
-  console.log(files[1] + "\n Current Scrape");
+  console.log(files[1] + "\n"+getKey());
   console.log("Compiled " + files.length + " scrapes");
   fs.renameSync("./data.csv", "./archives/" + getKey());
 }
