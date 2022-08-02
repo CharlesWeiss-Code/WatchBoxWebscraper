@@ -22,7 +22,7 @@ var brandLow = "";
 var brandHigh = "";
 
 async function bobs(lowP, highP, tPage) {
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 69; i < refNums.length; i++) {
     lowest = "";
     highest = "";
     highTable = "";
@@ -55,12 +55,7 @@ async function bobs(lowP, highP, tPage) {
     });
 
     await tPage.waitForTimeout(500);
-    if (
-      await utilFunc.noResults(
-        tPage,
-        "div[class='no-results']"
-      )
-    ) {
+    if (await utilFunc.noResults(tPage, "div[class='no-results']")) {
       continue;
     } else {
       await prepare(lowP, highP, newURL);
@@ -124,18 +119,8 @@ async function bobs(lowP, highP, tPage) {
  * @returns {void}
  */
 async function getData(lowP, highP) {
-  await lowP.click(
-    "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
-    "3"
-  );
-
-  await highP.click(
-    "#searchspring-content > div > div.ss-toolbar.ss-toolbar-top.search-sort-view.ss-targeted.ng-scope > form > div.search-sort-option.sort-by > select",
-    "2"
-  );
-
-  await lowP.waitForTimeout(500);
-
+  await lowP.waitForTimeout(1000)
+  await highP.waitForTimeout(1000)
   lowest = await utilFunc.getItem(
     lowP,
     "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding"
@@ -147,23 +132,21 @@ async function getData(lowP, highP) {
     highP,
     "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding"
   );
-
   lowSku = await lowP.$eval("meta[itemprop='sku']", (el) => el.content);
-
   highSku = await highP.$eval("meta[itemprop='sku']", (el) => el.content);
 
-  await lowP.click(
-    "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a",
-    { delay: 20 }
-  );
+  lowLink = await lowP.$eval("a[itemprop='url']", async (res) => res.href);
+  await lowP.goto(lowLink).catch(async (lowP) => {
+    await utilFunc.reTry(lowP);
+  });
 
-  await highP.click(
-    "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a",
-    { delay: 20 }
-  );
+  highLink = await highP.$eval("a[itemprop='url']", async (res) => res.href);
+  await highP.goto(highLink).catch(async (highP) => {
+    await utilFunc.reTry(highP);
+  });
 
-  await lowP.waitForSelector("tbody");
-  await highP.waitForSelector("tbody");
+  await lowP.waitForTimeout(1000);
+  await highP.waitForTimeout(1000);
 
   lowTable = await lowP.$$eval("tbody", (options) => options[1].textContent);
 
@@ -229,9 +212,11 @@ async function getData(lowP, highP) {
   brandHigh = "";
   brandLow = await (await utilFunc.getItem(lowP, "tbody > tr:nth-child(1)"))
     .replace("Brand:", "")
+    .replace("Manufacturer:", "")
     .trim();
   brandHigh = await (await utilFunc.getItem(highP, "tbody > tr:nth-child(1)"))
     .replace("Brand:", "")
+    .replace("Manufacturer:", "")
     .trim();
 
   highYear = "";
@@ -261,23 +246,31 @@ async function prepare(lowP, highP, url) {
       .goto(url + "#/sort:price:asc", {
         waitUntil: "networkidle0",
       })
-      .catch(async (e) => {await utilFunc.reTry(lowP)});
+      .catch(async (e) => {
+        await utilFunc.reTry(lowP);
+      });
     await highP
       .goto(url + "#/sort:price:desc", {
         waitUntil: "networkidle0",
       })
-      .catch(async (e) => {await utilFunc.reTry(highP)});
+      .catch(async (e) => {
+        await utilFunc.reTry(highP);
+      });
   } else {
     await lowP
       .goto(url + "/sort:price:asc", {
         waitUntil: "networkidle0",
       })
-      .catch(async (e) => {await utilFunc.reTry(lowP)});
+      .catch(async (e) => {
+        await utilFunc.reTry(lowP);
+      });
     await highP
       .goto(url + "/sort:price:desc", {
         waitUntil: "networkidle0",
       })
-      .catch(async (e) => {await utilFunc.reTry(highP)});
+      .catch(async (e) => {
+        await utilFunc.reTry(highP);
+      });
   }
 }
 module.exports = { bobs };

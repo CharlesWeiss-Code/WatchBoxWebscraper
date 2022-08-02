@@ -21,11 +21,13 @@ const trialNumber = credentials.getTrialNumber();
  * @returns {boolean} Boolean that represents if there were results or not
  */
 async function noResults(page, selector) {
-  var noResultsVar = false;
-  if ((await page.$(selector)) != null) {
-    noResultsVar = true;
+  if ((await page.$(selector).catch(async () => {
+      await page.waitForTimeout(1000)
+      return await page.$(selector)
+  })) != null) {
+    return true;
   }
-  return noResultsVar;
+  return false;
 }
 
 /**
@@ -97,7 +99,7 @@ async function exists(page, selector) {
  * @param {Date} d2
  * @returns {boolean} wether the dates are the same or not
  */
-sameDate = (d1, d2) => {
+function sameDate(d1, d2) {
   if (
     d1.getMonth() === d2.getMonth() &&
     d1.getDate() === d2.getDate() &&
@@ -106,13 +108,13 @@ sameDate = (d1, d2) => {
     return true;
   }
   return false;
-};
+}
 
 /**
  * @param {Watch} watch that you want to convert to csv
  * @returns {String} str that contains watch in csv format.
  */
-CSV = (watch) => {
+function CSV(watch) {
   str = "";
   for (var propt in watch) {
     if (typeof propt != "function") {
@@ -121,13 +123,24 @@ CSV = (watch) => {
   }
   return str;
   //console.log(s)
-};
+}
 
 /**
  * @returns {void}
  */
-uploadFileToS3 = async () => {
-  key = getKey();
+async function uploadFileToS3() {
+  var date = new Date();
+  key = date.getFullYear() + "_";
+  if (parseInt(date.getMonth()) + 1 < 10) {
+    key += "0" + parseInt(date.getMonth() + 1) + "_";
+  } else {
+    key += date.getMonth() + 1 + "_";
+  }
+  if (parseInt(date.getDate()) < 10) {
+    key += "0" + date.getDate();
+  } else {
+    key += date.getDate();
+  }
   const s3 = new AWS.S3({
     accessKeyId: awsInfo.getKeyID(),
     secretAccessKey: awsInfo.getSecret(),
@@ -135,7 +148,7 @@ uploadFileToS3 = async () => {
   const content = fs.readFileSync("./data.csv");
   const params = {
     Bucket: awsInfo.getBucketName(),
-    Key: key,
+    Key: key+".csv",
     Body: content,
     ContentType: "text/csv",
   };
@@ -146,28 +159,32 @@ uploadFileToS3 = async () => {
       console.log(data);
     }
   });
-};
+}
 
 /**
  * @returns {String} key that the new csv will be upload to the S3 bucket with
  */
-getKey = () => {
+function getKey() {
   var date = new Date();
-  var key =
-    date.getFullYear() +
-    "_" +
-    parseInt(date.getMonth() + 1) +
-    "_" +
-    date.getDate();
-  console.log(key + ".csv");
+  key = date.getFullYear() + "_";
+  if (parseInt(date.getMonth()) + 1 < 10) {
+    key += "0" + parseInt(date.getMonth() + 1) + "_";
+  } else {
+    key += date.getMonth() + 1 + "_";
+  }
+  if (parseInt(date.getDate()) < 10) {
+    key += "0" + date.getDate();
+  } else {
+    key += date.getDate();
+  }
   return key + ".csv";
-};
+}
 
 /**
  * @param {String} key to the csv that I want to delete in the s3 buckcet
  * @returns {void}
  */
-deleteObj = async (key) => {
+async function deleteObj(key) {
   date = new Date();
   const s3 = new AWS.S3({
     accessKeyId: awsInfo.getKeyID(),
@@ -182,13 +199,13 @@ deleteObj = async (key) => {
     if (err) console.log(err, err.stack); // an error occurred
     else console.log(data); // successful response
   });
-};
+}
 
 /**
  * @param {function} _callback that you want to invoke once the name of the current csv in the S3 is returned
  * @returns {String} key to the object in the S3
  */
-getName = async (_callback) => {
+async function getName(_callback) {
   result = null;
   const s3 = new AWS.S3({
     accessKeyId: awsInfo.getKeyID(),
@@ -206,25 +223,23 @@ getName = async (_callback) => {
       _callback(data.Contents[0].Key);
     }
   });
-};
+}
 
 /**
  * @returns {void} deletes the old object in the S3, uploads the current object to the S3, archives the old S3 (locally), creates a blank "data.csv" file
  */
-postAndDelete = async () => {
+async function postAndDelete() {
   getName(async (res) => {
     await deleteObj(res);
     await uploadFileToS3();
-    fs.renameSync("./data.csv", "./archives/" + getKey());
-
     createBlank();
   });
-};
+}
 
 /**
  * @returns {String} str that is the header of the new "data.csv" file
  */
-createBlank = () => {
+function createBlank() {
   w = new Watch(
     "",
     "",
@@ -252,12 +267,12 @@ createBlank = () => {
     str += propt + ",";
   }
   fs.writeFileSync("data.csv", str + "\n");
-};
+}
 
 /**
  * @returns {boolean} whether the filled "data.csv" file should be sent or not. Returns true once per day.
  */
-timeToSendTEST = () => {
+function timeToSendTEST() {
   var d = new Date();
   d.setSeconds(0);
   d.setMinutes(0);
@@ -288,25 +303,24 @@ timeToSendTEST = () => {
     }
     d.setMinutes(d.getMinutes() + 1);
   }
-};
+}
 
 /**
  * @returns {boolean} whether the filled "data.csv" file should be sent or not. Returns true once per day.
  */
-timeToSend = () => {
-  var d = new Date();
+function timeToSend(currentTime) {
   flag = false;
   firstToday = true;
 
   /**
    * If time = 12:00 AM firstToday = true
    */
-  if (d.getHours() === 10 && firstToday) {
+  if (currentTime.getHours() === 10 && firstToday) {
     flag = true;
     firstToday = false;
   }
 
-  if (d.getMinutes() === 0 && d.getHours() === 0) {
+  if (currentTime.getMinutes() === 0 && currentTime.getHours() === 0) {
     firstToday = true;
   }
 
@@ -316,9 +330,9 @@ timeToSend = () => {
     console.log(d.toLocaleTimeString());
     return true;
   } else {
-    //return false
+    return false;
   }
-};
+}
 
 var specialSites = {
   LuxuryBazaar: function (refNum, newRefNum) {
@@ -987,7 +1001,7 @@ var specialSites = {
  * @param {String} refNum that the special link belongs to
  * @returns {String} that corresponds the correct link for that website and refNum
  */
-getLink = (website, refNum) => {
+function getLink(website, refNum) {
   dashIndex = refNum.indexOf("-");
   spaceIndex = refNum.indexOf(" ");
   slashIndex = refNum.indexOf("/");
@@ -1004,7 +1018,7 @@ getLink = (website, refNum) => {
     newRefNum = refNum.substring(0, mainIndex);
     return specialSites[String(website)](String(refNum), newRefNum);
   }
-};
+}
 
 function log(str) {
   console.log("'" + str + "'");
@@ -1064,6 +1078,16 @@ async function reTry(page) {
   await page.waitForTimeout(500);
 }
 
+function joinDataToArchivesAndCompilation() {
+  files = fs.readdirSync("./archives/");
+  let fileData = fs.readFileSync("data.csv").toString();
+  fileData = fileData.substring(fileData.indexOf("\n") + 1);
+  fs.appendFileSync("compilation.csv", fileData);
+  console.log(files[1] + "\n Current Scrape");
+  console.log("Compiled " + files.length + " scrapes");
+  fs.renameSync("./data.csv", "./archives/" + getKey());
+}
+
 module.exports = {
   noResults,
   noResults2,
@@ -1076,10 +1100,13 @@ module.exports = {
   getName,
   postAndDelete,
   timeToSend,
+  timeToSendTEST,
   getLink,
   getKey,
   log,
   sendMessage,
   getPricesForAverage,
   reTry,
+  joinDataToArchivesAndCompilation,
+  createBlank,
 };

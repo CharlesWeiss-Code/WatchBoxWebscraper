@@ -1,6 +1,10 @@
-list = [1,2,3,4,45,6,7,]
-for (var i = 0; i < list.length; i++) {
-  if (i === 0 || i === list.length-1) {
-    console.log(i)
+let prom = new Promise(function (resolve, reject) {
+  for (var i = 2; i < 20; i++) {
+    if (i === 30) {
+      resolve(i)
+    }
   }
-}
+  reject("bad")
+});
+
+prom.then((res) => console.log(res)).catch((err) => console.log(err));
