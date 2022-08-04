@@ -21,10 +21,12 @@ const trialNumber = credentials.getTrialNumber();
  * @returns {boolean} Boolean that represents if there were results or not
  */
 async function noResults(page, selector) {
-  if ((await page.$(selector).catch(async () => {
-      await page.waitForTimeout(1000)
-      return await page.$(selector)
-  })) != null) {
+  if (
+    (await page.$(selector).catch(async () => {
+      await page.waitForTimeout(1000);
+      return await page.$(selector);
+    })) != null
+  ) {
     return true;
   }
   return false;
@@ -59,7 +61,7 @@ async function getItem(page, selector) {
   return String(
     await page
       .$eval(String(selector), (el) => el.textContent)
-      .catch((err) => {
+      .catch(() => {
         return "";
       })
   );
@@ -71,27 +73,8 @@ async function getItem(page, selector) {
  * @param {HTML Selector (String)} selector that you want to check the existence of
  * @returns {boolean} selector's existence
  */
-// async function exists(page, selector) {
-//   if (
-//     selector ===
-//     "#searchspring-content > div.category-products.ng-scope > div > div:nth-child(1) > h3"
-//   ) {
-//     await page.reload();
-//   }
-//   var existsVar = false;
-//   if ((await page.$eval(selector)) != null) {
-//     existsVar = true;
-//   }
-//   console.log(existsVar);
-//   return existsVar;
-// }
-
 async function exists(page, selector) {
-  var noResultsVar = false;
-  if ((await page.$(selector)) != null) {
-    noResultsVar = true;
-  }
-  return noResultsVar;
+  return await page.$eval(selector, () => true).catch(() => false);
 }
 
 /**
@@ -148,7 +131,7 @@ async function uploadFileToS3() {
   const content = fs.readFileSync("./data.csv");
   const params = {
     Bucket: awsInfo.getBucketName(),
-    Key: key+".csv",
+    Key: key + ".csv",
     Body: content,
     ContentType: "text/csv",
   };
@@ -776,6 +759,8 @@ var specialSites = {
       case "116610LN-0001":
         return "https://www.chrono24.com/search/index.htm?query=116610LN-0001&dialColor=702&dosearch=true&searchexplain=true&watchTypes=U&accessoryTypes=";
 
+      case "1675 BLK PEP OYS":
+        return "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=1675"
       default:
         return (
           "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=" +
@@ -1082,7 +1067,7 @@ function joinDataToArchivesAndCompilation() {
   let fileData = fs.readFileSync("data.csv").toString();
   fileData = fileData.substring(fileData.indexOf("\n") + 1);
   fs.appendFileSync("compilation.csv", fileData);
-  console.log(files[1] + "\n"+getKey());
+  console.log(files[1] + "\n" + getKey());
   console.log("Compiled " + files.length + " scrapes");
   fs.renameSync("./data.csv", "./archives/" + getKey());
 }

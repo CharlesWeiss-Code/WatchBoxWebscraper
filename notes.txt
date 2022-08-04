@@ -6,9 +6,7 @@
           - Can't filter bracelet type
           - Can't filter indices type
 
+     - Make all companies return promises?
+          - use recursion to re-call them with same indicies?
 
-     - min and max in chrono dont work every time. 
-          - 2022_7_26.csv --> C24 --> 126660-0002 (low)
-          - 2022_7_26.csv --> C24 --> 116508-0013 (low)
-          - 2022_7_26.csv --> C24 --> 124300-0001 (high)
-
+     - make chrono change pages

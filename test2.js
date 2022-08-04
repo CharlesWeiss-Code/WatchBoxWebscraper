@@ -1,13 +1,11 @@
 function f(a, b) {
   return new Promise(function (resolve, reject) {
-    if (a === b) {
-      resolve({
-        result: true,
-        var1: a,
-        var2: b,
-      });
-    } else {
-      reject(false);
+    for (var i = a; i < b; i++) {
+      if (i === 5 || i === 10) {
+        resolve("Done");
+      } else {
+        reject(i);
+      }
     }
   });
 }
@@ -16,11 +14,12 @@ function recurse(a, b) {
   f(a, b)
     .then((res) => {
       console.log(res);
+      recurse(a + 1, b);
     })
     .catch((err) => {
       console.log(err);
-      doThing(a, b + 1);
+      recurse(a + 1, b);
     });
 }
 
-doThing(10, 0);
+recurse(-1, 15);

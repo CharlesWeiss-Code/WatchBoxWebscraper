@@ -30,7 +30,7 @@ var highDealerStatus = "";
 
 async function chrono24(lowP, highP, tPage, list) {
   flag = true;
-  for (var i = 0; i < refNums.length; i++) {
+  for (var i = 59; i < refNums.length; i++) {
     lowest = "";
     highest = "";
     childLow = 1;
@@ -52,6 +52,7 @@ async function chrono24(lowP, highP, tPage, list) {
     lowSku = "";
     highSku = "";
 
+    console.log("\n\n");
     var newURL = utilFunc.getLink("C24", refNums[i]);
 
     console.log("NEW URL: " + newURL);
@@ -76,9 +77,20 @@ async function chrono24(lowP, highP, tPage, list) {
     } else {
       // results
       await prepareStuff(lowP, highP, newURL, list, refNums[i]);
-      if (parseFloat(lowest.trim()) > parseFloat(highest.trim())) {
+      if (
+        parseFloat(lowest.trim()) > parseFloat(highest.trim()) ||
+        (highest === "" && lowest === "")
+      ) {
         continue;
       } else {
+        var highLink = highP.url();
+        var lowLink = lowP.url();
+        if (childHigh === -1) {
+          highLink = "";
+        }
+        if (childLow === -1) {
+          lowLink = "";
+        }
         w = new Watch(
           refNums[i],
           yearLow,
@@ -91,8 +103,8 @@ async function chrono24(lowP, highP, tPage, list) {
           highest.trim(),
           lowDealerStatus,
           highDealerStatus,
-          lowP.url(),
-          highP.url(),
+          lowLink,
+          highLink,
           tPage.url(),
           lowImage,
           highImage,
@@ -129,269 +141,257 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
   }
 
   //await highP.click("#modal-content > div > a", {delay: 20})
-  childLow = await validChild(lowP, list, rn);
-  lowest = await utilFunc.getItem(
-    lowP,
-    "#wt-watches > div:nth-child(" +
-      childLow +
-      ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
-  );
-  if (lowest === "") {
+  childHigh = await validChild(highP, list, rn, 2, "High");
+  childLow = await validChild(lowP, list, rn, 2, "Low");
+  if (childLow != -1) {
+    await lowP.waitForTimeout(500);
     lowest = await utilFunc.getItem(
       lowP,
       "#wt-watches > div:nth-child(" +
-        childHigh +
-        ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price > div > strong"
+        childLow +
+        ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
     );
-  }
-  lowDealerStatus = await utilFunc.getItem(
-    lowP,
-    "#wt-watches > div:nth-child(" +
-      childLow +
-      ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
-  );
-
-  if (lowDealerStatus === "") {
+    if (lowest === "") {
+      lowest = await utilFunc.getItem(
+        lowP,
+        "#wt-watches > div:nth-child(" +
+          childHigh +
+          ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price > div > strong"
+      );
+    }
     lowDealerStatus = await utilFunc.getItem(
       lowP,
       "#wt-watches > div:nth-child(" +
         childLow +
-        ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-seller-container > div > div.media-flex-body.d-flex.flex-column > div.article-seller-name.text-sm"
+        ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
     );
-  }
 
-  if (lowDealerStatus.replace("\n", "").trim() === "Professional dealer") {
-    lowDealerStatus = "PD";
-  } else if (lowDealerStatus.replace("\n", "").trim() === "Private seller") {
-    lowDealerStatus = "PS";
-  } else {
-    lowDealerStatus = "";
-  }
+    if (lowDealerStatus === "") {
+      lowDealerStatus = await utilFunc.getItem(
+        lowP,
+        "#wt-watches > div:nth-child(" +
+          childLow +
+          ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-seller-container > div > div.media-flex-body.d-flex.flex-column > div.article-seller-name.text-sm"
+      );
+    }
 
-  const lowLink = await lowP.$eval(
-    "#wt-watches > div:nth-child(" + childLow + ") > a",
-    (res) => res.href
-  );
-  await lowP.goto(lowLink, { waitUntil: "networkidle0" }).catch(async (e) => {
-    await utilFunc.reTry(lowP);
-  });
-  await lowP.reload();
-  await lowP.waitForTimeout(500);
+    if (lowDealerStatus.replace("\n", "").trim() === "Professional dealer") {
+      lowDealerStatus = "PD";
+    } else if (lowDealerStatus.replace("\n", "").trim() === "Private seller") {
+      lowDealerStatus = "PS";
+    } else {
+      lowDealerStatus = "";
+    }
 
-  lowTable = String(
-    await utilFunc.getItem(
-      lowP,
-      "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1)"
-    )
-  );
-
-  await highP
-    .goto(url + "&searchorder=11&sortorder=11", { waitUntil: "networkidle0" })
-    .catch(async (e) => {
-      await utilFunc.reTry(highP);
+    const lowLink = await lowP.$eval(
+      "#wt-watches > div:nth-child(" + childLow + ") > a",
+      (res) => res.href
+    );
+    await lowP.goto(lowLink, { waitUntil: "networkidle0" }).catch(async (e) => {
+      await utilFunc.reTry(lowP);
     });
-  await highP.waitForTimeout(1000);
-  //await highP.click("#modal-content > div > a", {delay: 20})
-  childHigh = await validChild(highP, list, rn);
-  highest = await utilFunc.getItem(
-    highP,
-    "#wt-watches > div:nth-child(" +
-      childHigh +
-      ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
-  );
-  if (highest === "") {
+    await lowP.reload();
+    await lowP.waitForTimeout(500);
+
+    lowTable = String(
+      await utilFunc.getItem(
+        lowP,
+        "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1)"
+      )
+    );
+
+    lowImage = String(
+      await lowP
+        .$eval("img[class='img-responsive mh-100']", (el) => el.src)
+        .catch((err) => {
+          return "";
+        })
+    );
+
+    index1BrandLow = lowTable.indexOf("Brand") + 5;
+    index2BrandLow = lowTable.indexOf("Model");
+
+    if (
+      index1BrandLow != 4 &&
+      index1BrandLow != lowTable.indexOf("Brand new") + 5
+    ) {
+      if (index2BrandLow === -1) {
+        index2BrandLow = lowTable.indexOf("Reference number");
+      }
+    }
+
+    index1YearLow = lowTable.indexOf("Year of production") + 18;
+    index2YearLow = lowTable.indexOf("Condition");
+    if (index2YearLow === -1) {
+      index2YearLow = lowTable.indexOf("Scope of delivery");
+    }
+    index1BPLow = lowTable.indexOf("Scope of delivery") + 17;
+    index2BPLow = lowTable.indexOf("Gender");
+    if (index2BPLow === -1) {
+      index2BPLow = lowTable.indexOf("Location");
+    }
+
+    lowSku = await utilFunc.getItem(
+      lowP,
+      "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2)"
+    );
+
+    brandLow = lowTable.substring(index1BrandLow, index2BrandLow).trim();
+    if (brandLow.length > 50) {
+      brandLow = "";
+    }
+
+    yearLow = lowTable
+      .substring(index1YearLow, index2YearLow)
+      .replace(/\s+/g, "")
+      .replace("Unknown", "");
+
+    lowBP = lowTable.substring(index1BPLow, index2BPLow).trim().toLowerCase();
+    if (lowBP.indexOf("original box") != -1) {
+      lowBox = "Yes";
+    }
+    if (lowBP.indexOf("original papers") != -1) {
+      lowPaper = "Yes";
+    }
+  }
+  if (childHigh != -1) {
+    await highP
+      .goto(url + "&searchorder=11&sortorder=11", { waitUntil: "networkidle0" })
+      .catch(async (e) => {
+        await utilFunc.reTry(highP);
+      });
+    await highP.waitForTimeout(1000);
+    //await highP.click("#modal-content > div > a", {delay: 20})
+    await highP.waitForTimeout(500);
     highest = await utilFunc.getItem(
       highP,
       "#wt-watches > div:nth-child(" +
         childHigh +
-        ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price > div > strong"
+        ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
     );
-  }
-  highDealerStatus = await utilFunc.getItem(
-    highP,
-    "#wt-watches > div:nth-child(" +
-      childHigh +
-      ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
-  );
-
-  if (highDealerStatus === "") {
+    if (highest === "") {
+      highest = await utilFunc.getItem(
+        highP,
+        "#wt-watches > div:nth-child(" +
+          childHigh +
+          ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price > div > strong"
+      );
+    }
     highDealerStatus = await utilFunc.getItem(
       highP,
       "#wt-watches > div:nth-child(" +
         childHigh +
-        ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-seller-container > div > div.media-flex-body.d-flex.flex-column > div.article-seller-name.text-sm"
+        ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
     );
-  }
 
-  if (highDealerStatus.replace("\n", "").trim() === "Professional dealer") {
-    highDealerStatus = "PD";
-  } else if (highDealerStatus.replace("\n", "").trim() === "Private seller") {
-    highDealerStatus = "PS";
-  } else {
-    highDealerStatus = "";
-  }
+    if (highDealerStatus === "") {
+      highDealerStatus = await utilFunc.getItem(
+        highP,
+        "#wt-watches > div:nth-child(" +
+          childHigh +
+          ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-seller-container > div > div.media-flex-body.d-flex.flex-column > div.article-seller-name.text-sm"
+      );
+    }
 
-  if (await utilFunc.exists(highP, "#modal-content > div > button")) {
-    await highP.click("#modal-content > div > button");
-  }
+    if (highDealerStatus.replace("\n", "").trim() === "Professional dealer") {
+      highDealerStatus = "PD";
+    } else if (highDealerStatus.replace("\n", "").trim() === "Private seller") {
+      highDealerStatus = "PS";
+    } else {
+      highDealerStatus = "";
+    }
 
-  // await highP.click("#wt-watches > div:nth-child(" + childHigh + ") > a", {
-  //   delay: 20,
-  // });
-  const highLink = await highP.$eval(
-    "#wt-watches > div:nth-child(" + childHigh + ") > a",
-    (res) => res.href
-  );
-  await highP.goto(highLink, { waitUntil: "networkidle0" }).catch(async (e) => {
-    await utilFunc.reTry(highP);
-  });
+    if (await utilFunc.exists(highP, "#modal-content > div > button")) {
+      await highP.click("#modal-content > div > button");
+    }
 
-  await highP.reload();
-  await highP.waitForTimeout(500);
-
-  highTable = String(
-    await utilFunc.getItem(
-      highP,
-      "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1)"
-    )
-  );
-
-  lowImage = String(
-    await lowP
-      .$eval("img[class='img-responsive mh-100']", (el) => el.src)
-      .catch((err) => {
-        return "";
-      })
-  );
-  highImage = String(
+    // await highP.click("#wt-watches > div:nth-child(" + childHigh + ") > a", {
+    //   delay: 20,
+    // });
+    const highLink = await highP.$eval(
+      "#wt-watches > div:nth-child(" + childHigh + ") > a",
+      (res) => res.href
+    );
     await highP
-      .$eval("img[class='img-responsive mh-100']", (el) => el.src)
-      .catch((err) => {
-        return "";
-      })
-  );
+      .goto(highLink, { waitUntil: "networkidle0" })
+      .catch(async (e) => {
+        await utilFunc.reTry(highP);
+      });
 
-  /***************** */
-  // lowSkuIndex1 = lowTable.indexOf("Listing code") + 12;
-  //lowSkuIndex2 = lowTable.indexOf("Brand")
+    await highP.reload();
+    await highP.waitForTimeout(500);
 
-  // if (
-  //   lowSkuIndex2 > lowTable.indexOf("Dealer product code") &&
-  //   lowTable.indexOf("Dealer product code") != -1
-  // ) {
-  //   lowSkuIndex2 = lowTable.indexOf("Dealer product code");
-  // }
-  // if (lowSkuIndex2 > lowTable.indexOf("Reference number")) {
-  //   lowSkuIndex2 = lowTable.indexOf("Reference number");
-  // }
+    highTable = String(
+      await utilFunc.getItem(
+        highP,
+        "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1)"
+      )
+    );
 
-  /***************** */
+    highImage = String(
+      await highP
+        .$eval("img[class='img-responsive mh-100']", (el) => el.src)
+        .catch((err) => {
+          return "";
+        })
+    );
 
-  // highSkuIndex1 = highTable.indexOf("Listing code") + 12;
-  // highSkuIndex2 = highTable.indexOf("Brand");
-  // if (
-  //   highSkuIndex2 > highTable.indexOf("Dealer product code") &&
-  //   highTable.indexOf("Dealer product code") != -1
-  // ) {
-  //   highSkuIndex2 = highTable.indexOf("Dealer product code");
-  // }
-  // if (highSkuIndex2 > Table.indexOf("Reference number")) {
-  //   highSkuIndex2 = highTable.indexOf("Reference number");
-  // }
-  /***************** */
+    /***************** */
 
-  index1BrandLow = lowTable.indexOf("Brand") + 5;
-  index2BrandLow = lowTable.indexOf("Model");
+    index1BrandHigh = highTable.indexOf("Brand") + 5;
+    index2BrandHigh = highTable.indexOf("Model");
 
-  if (
-    index1BrandLow != 4 &&
-    index1BrandLow != lowTable.indexOf("Brand new") + 5
-  ) {
-    if (index2BrandLow === -1) {
-      index2BrandLow = lowTable.indexOf("Reference number");
+    if (
+      index1BrandHigh != 4 &&
+      index1BrandLow != lowTable.indexOf("Brand new") + 5
+    ) {
+      if (index2BrandHigh === -1) {
+        index2BrandHigh = highTable.indexOf("Reference number");
+      }
     }
-  }
-  /***************** */
+    /***************** */
 
-  index1BrandHigh = highTable.indexOf("Brand") + 5;
-  index2BrandHigh = highTable.indexOf("Model");
-
-  if (
-    index1BrandHigh != 4 &&
-    index1BrandLow != lowTable.indexOf("Brand new") + 5
-  ) {
-    if (index2BrandHigh === -1) {
-      index2BrandHigh = highTable.indexOf("Reference number");
+    /***************** */
+    index1YearHigh = highTable.indexOf("Year of production") + 18;
+    index2YearHigh = highTable.indexOf("Condition");
+    if (index2YearHigh === -1) {
+      index2YearHigh = highTable.indexOf("Scope of delivery");
     }
-  }
-  /***************** */
+    /***************** */
 
-  index1YearLow = lowTable.indexOf("Year of production") + 18;
-  index2YearLow = lowTable.indexOf("Condition");
-  if (index2YearLow === -1) {
-    index2YearLow = lowTable.indexOf("Scope of delivery");
-  }
-  /***************** */
-  index1YearHigh = highTable.indexOf("Year of production") + 18;
-  index2YearHigh = highTable.indexOf("Condition");
-  if (index2YearHigh === -1) {
-    index2YearHigh = highTable.indexOf("Scope of delivery");
-  }
-  /***************** */
+    /***************** */
 
-  index1BPLow = lowTable.indexOf("Scope of delivery") + 17;
-  index2BPLow = lowTable.indexOf("Gender");
-  if (index2BPLow === -1) {
-    index2BPLow = lowTable.indexOf("Location");
-  }
-  /***************** */
+    index1BPHigh = highTable.indexOf("Scope of delivery") + 17;
+    index2BPHigh = highTable.indexOf("Gender");
+    if (index2BPHigh === -1) {
+      index2BPHigh = highTable.indexOf("Location");
+    }
+    /***************** */
+    highSku = await utilFunc.getItem(
+      highP,
+      "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2)"
+    );
 
-  index1BPHigh = highTable.indexOf("Scope of delivery") + 17;
-  index2BPHigh = highTable.indexOf("Gender");
-  if (index2BPHigh === -1) {
-    index2BPHigh = highTable.indexOf("Location");
-  }
-  /***************** */
+    if (brandHigh.length > 50) {
+      brandHigh = "";
+    }
+    brandHigh = highTable.substring(index1BrandHigh, index2BrandHigh).trim();
 
-  // lowSku = lowTable.substring(lowSkuIndex1, lowSkuIndex2).trim();
-  lowSku = await utilFunc.getItem(
-    lowP,
-    "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2)"
-  );
-  // highSku = highTable.substring(highSkuIndex1, highSkuIndex2).trim();
-  highSku = await utilFunc.getItem(
-    highP,
-    "#jq-specifications > div > div.row.text-lg.m-b-6 > div.col-xs-24.col-md-12.m-b-6.m-b-md-0 > table > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(2)"
-  );
-  brandLow = lowTable.substring(index1BrandLow, index2BrandLow).trim();
-  if (brandLow.length > 50) {
-    brandLow = "";
-  }
-  if (brandHigh.length > 50) {
-    brandHigh = "";
-  }
-  brandHigh = highTable.substring(index1BrandHigh, index2BrandHigh).trim();
-  yearLow = lowTable
-    .substring(index1YearLow, index2YearLow)
-    .replace(/\s+/g, "")
-    .replace("Unknown", "");
-  yearHigh = highTable
-    .substring(index1YearHigh, index2YearHigh)
-    .replace(/\s+/g, "")
-    .replace("Unknown", "");
-  lowBP = lowTable.substring(index1BPLow, index2BPLow).trim().toLowerCase();
-  if (lowBP.indexOf("original box") != -1) {
-    lowBox = "Yes";
-  }
-  if (lowBP.indexOf("original papers") != -1) {
-    lowPaper = "Yes";
-  }
-  highBP = highTable.substring(index1BPHigh, index2BPHigh).trim().toLowerCase();
-  if (highBP.indexOf("original box") != -1) {
-    highBox = "Yes";
-  }
-  if (highBP.indexOf("original papers") != -1) {
-    highPaper = "Yes";
+    yearHigh = highTable
+      .substring(index1YearHigh, index2YearHigh)
+      .replace(/\s+/g, "")
+      .replace("Unknown", "");
+
+    highBP = highTable
+      .substring(index1BPHigh, index2BPHigh)
+      .trim()
+      .toLowerCase();
+    if (highBP.indexOf("original box") != -1) {
+      highBox = "Yes";
+    }
+    if (highBP.indexOf("original papers") != -1) {
+      highPaper = "Yes";
+    }
   }
 };
 
@@ -401,34 +401,61 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
  * @param {String} rn that is currently being scraped
  * @returns {int} nth-child(k) for k that isn't a "Top" choice by Chrono24.
  */
-validChild = async (page, arr, rn) => {
+validChild = async (page, arr, rn, pageNum, highOrLow) => {
+  console.log(page.url())
+  await page.waitForTimeout(1000);
   min = getBuffer(arr, 0.9, rn);
   max = getBuffer(arr, 1.1, rn);
   console.log("Min " + min + "\tMax " + max);
   top = await page
     .$eval("#wt-watches", (e) => e.children.length)
-    .catch((e) => {
+    .catch(() => {
       return 1;
     });
+  console.log(top + " possible watches on page " + (pageNum-1));
   for (var i = 1; i <= top; i++) {
     var watch = await typeOf(page, "#wt-watches > div:nth-child(" + i + ")");
     var isntTop = await noTop(page, "#wt-watches > div:nth-child(" + i + ")");
-    var price = (
-      await utilFunc.getItem(
-        page,
+    var price = await page
+      .$eval(
         "#wt-watches > div:nth-child(" +
           i +
-          ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
+          ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong",
+        (el) => el.innerText
       )
-    ).replace(",", "");
-    price = price.replace("$", "").trim();
-    price = parseFloat(price);
-
+      .catch(() => "-1");
+    price = parseFloat(price.replace("$", "").replace(",", "").trim());
+    if (watch && isntTop) {
+      console.log(price, i);
+    }
     if (watch && isntTop && price > min && price < max) {
+      console.log("Selected:",price, i);
       return i;
     }
   }
-  return 1;
+
+  if (page.url().indexOf("&showpage=") != -1) {
+    await page
+      .goto(page.url().substring(0, page.url().lastIndexOf("=") + 1) + pageNum)
+      .catch(async () => await utilFunc.reTry(page));
+    console.log("Going to page " + pageNum + "\n" + page.url());
+  } else {
+    await page
+      .goto(page.url() + "&showpage=" + pageNum, { waitUntil: "networkidle0" })
+      .catch(async () => {
+        await utilFunc.reTry(page);
+      });
+    console.log("Going to page " + pageNum + "\n" + page.url());
+  }
+
+  if (await utilFunc.exists(page, "div[id='wt-watches']")) {
+    await page.waitForTimeout(1000);
+    return await validChild(page, arr, rn, pageNum + 1);
+  } else {
+    page.goto("about:blank");
+    console.log("No listing fits the requirements: " + highOrLow);
+    return -1;
+  }
 };
 
 /**

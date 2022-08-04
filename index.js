@@ -90,13 +90,11 @@ var firstToday = true;
 //   await start();
 // }
 
-
 async function start() {
-
   refNums = REF.getRefNums();
 
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: false,
     defaultViewport: null,
     executablePath:
       "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
@@ -110,26 +108,27 @@ async function start() {
   await setupPage(highPage);
   await setupPage(testPage);
 
-  await Bazaar.bazaar(lowPage, highPage, testPage);
-  await newPages(browser);
-  await utilFunc.sendMessage(
-    "Completed Bazaar: " + new Date().toLocaleString()
-  );
-  await CandC.crownAndCaliber(lowPage, highPage, testPage);
-  await newPages(browser);
-  utilFunc.sendMessage("Completed CandC: " + new Date().toLocaleString());
+  // await Bazaar.bazaar(lowPage, highPage, testPage);
+  // await newPages(browser);
+  // await utilFunc.sendMessage(
+  //   "Completed Bazaar: " + new Date().toLocaleString()
+  // );
 
-  await ewc.EWC(lowPage, highPage, testPage);
-  await newPages(browser);
-  utilFunc.sendMessage("Completed EWC: " + new Date().toLocaleString());
+  // await CandC.crownAndCaliber(lowPage, highPage, testPage);
+  // await newPages(browser);
+  // utilFunc.sendMessage("Completed CandC: " + new Date().toLocaleString());
 
-  await david.davidsw(lowPage, highPage, testPage);
-  await newPages(browser);
-  utilFunc.sendMessage("Completed DavidSW: " + new Date().toLocaleString());
+  // await ewc.EWC(lowPage, highPage, testPage);
+  // await newPages(browser);
+  // utilFunc.sendMessage("Completed EWC: " + new Date().toLocaleString());
 
-  await Bobs.bobs(lowPage, highPage, testPage);
-  await newPages(browser);
-  utilFunc.sendMessage("Completed Bobs: " + new Date().toLocaleString());
+  // await david.davidsw(lowPage, highPage, testPage);
+  // await newPages(browser);
+  // utilFunc.sendMessage("Completed DavidSW: " + new Date().toLocaleString());
+
+  // await Bobs.bobs(lowPage, highPage, testPage);
+  // await newPages(browser);
+  // utilFunc.sendMessage("Completed Bobs: " + new Date().toLocaleString());
 
   await chrono.chrono24(
     lowPage,
@@ -137,13 +136,14 @@ async function start() {
     testPage,
     utilFunc.getPricesForAverage()
   );
+
   await browser.close();
   utilFunc.sendMessage("Completed C24: " + new Date().toLocaleString());
   utilFunc.sendMessage("**SCRAPE COMPLETED**\n" + new Date().toLocaleString());
-  await utilFunc.postAndDelete();
-  utilFunc.joinDataToArchivesAndCompilation();
-  utilFunc.createBlank();
-  firstToday = false;
+
+  // await utilFunc.postAndDelete();
+  // utilFunc.joinDataToArchivesAndCompilation();
+  // utilFunc.createBlank();
 }
 
 newPages = async (browser) => {

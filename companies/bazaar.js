@@ -55,7 +55,7 @@ async function bazaar(lowP, highP, tPage) {
     });
     await tPage.waitForTimeout(500);
     if (
-      !(await utilFunc.noResults(
+      !(await utilFunc.exists(
         tPage,
         'ul[class="products-grid infinite-load-items-wrapper ss-targeted ng-scope"]'
       ))
@@ -68,23 +68,23 @@ async function bazaar(lowP, highP, tPage) {
           .goto(newURL + "/sort:ss_sort_price_asc:asc", {
             waitUntil: "networkidle0",
           })
-          .catch(async (e) => {await utilFunc.reTry(lowP)});
+          .catch(async () => {await utilFunc.reTry(lowP)});
         await highP
           .goto(newURL + "/sort:ss_sort_price_desc:desc", {
             waitUntil: "networkidle0",
           })
-          .catch(async (e) => {await utilFunc.reTry(highP)});
+          .catch(async () => {await utilFunc.reTry(highP)});
       } else {
         await lowP
           .goto(newURL + "#/sort:ss_sort_price_asc:asc", {
             waitUntil: "networkidle0",
           })
-          .catch(async (e) => {await utilFunc.reTry(lowP)});
+          .catch(async () => {await utilFunc.reTry(lowP)});
         await highP
           .goto(newURL + "#/sort:ss_sort_price_desc:desc", {
             waitUntil: "networkidle0",
           })
-          .catch(async (e) => {await utilFunc.reTry(highP)});
+          .catch(async () => {await utilFunc.reTry(highP)});
       }
 
       await lowP.waitForTimeout(500);
