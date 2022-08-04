@@ -117,6 +117,10 @@ async function chrono24(lowP, highP, tPage, list, startIndex) {
             highSku
           );
           fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
+          await utilFunc.sendMessage(
+            "Restarting at " + i + "\n" + new Date().toLocaleString()
+          );
+
           console.log(JSON.stringify(w, null, "\t"));
         }
       }

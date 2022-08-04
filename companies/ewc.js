@@ -186,6 +186,10 @@ async function EWC(lowP, highP, tPage, startIndex) {
       //utilFunc.addToJson(w);
     } catch (error) {
       console.log("Restarting at " + i + " ...");
+      await utilFunc.sendMessage(
+        "Restarting at " + i + "\n" + new Date().toLocaleString()
+      );
+
       await bazaar(lowP, highBP, tPage, i);
     }
   }

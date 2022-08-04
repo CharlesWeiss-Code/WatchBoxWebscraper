@@ -86,6 +86,10 @@ async function crownAndCaliber(lowP, highP, tPage, startIndex) {
         );
 
         fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
+        await utilFunc.sendMessage(
+          "Restarting at " + i + "\n" + new Date().toLocaleString()
+        );
+
         console.log(JSON.stringify(w, null, "\t"));
       }
     } catch (error) {

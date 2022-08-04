@@ -94,7 +94,7 @@ async function start() {
   refNums = REF.getRefNums();
 
   const browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     defaultViewport: null,
     executablePath:
       "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",

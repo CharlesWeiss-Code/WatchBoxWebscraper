@@ -177,6 +177,10 @@ async function davidsw(lowP, highP, tPage, startIndex) {
       console.log(JSON.stringify(w, null, "\t"));
     } catch (error) {
       console.log("Restarting at " + i + " ...");
+      await utilFunc.sendMessage(
+        "Restarting at " + i + "\n" + new Date().toLocaleString()
+      );
+
       await bazaar(lowP, highBP, tPage, i);
     }
   }
