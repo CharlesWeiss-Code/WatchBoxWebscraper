@@ -21,94 +21,101 @@ highSku = "";
 var brandLow = "";
 var brandHigh = "";
 
-async function bobs(lowP, highP, tPage) {
-  for (var i = 0; i < refNums.length; i++) {
-    lowest = "";
-    highest = "";
-    highTable = "";
-    lowTable = "";
-    lowYear = "";
-    highYear = "";
-    PHigh = "No";
-    PLow = "No";
-    lowURL = "";
-    highURL = "";
-    imageLow = "";
-    imageHigh = "";
-    brandLow = "";
-    lowSku = "";
-    highSku = "";
-    brandHigh = "";
-    highBox = "No";
-    lowBox = "No";
-    console.log("");
-
-    var newURL = utilFunc.getLink("Bobs", refNums[i]);
-
-    console.log("URL: " + newURL);
-    console.log(
-      i + 4 * refNums.length + "/" + refNums.length * 6,
-      ((i + 4 * refNums.length) / (refNums.length * 6)) * 100 + "%"
-    );
-    await tPage.goto(newURL, { waitUntil: "networkidle0" }).catch(async (e) => {
-      await utilFunc.reTry(tPage);
-    });
-
-    await tPage.waitForTimeout(500);
-    if (await utilFunc.noResults(tPage, "div[class='no-results']")) {
-      continue;
-    } else {
-      await prepare(lowP, highP, newURL);
-      await getData(lowP, highP); // gets data tables and price
-      imageLow = await lowP.evaluate(() => {
-        const image = document.querySelector("#mainImage");
-        return image.src;
-      });
-
-      imageHigh = await lowP.evaluate(() => {
-        const image = document.querySelector("#mainImage");
-        return image.src;
-      });
-    }
-
-    if (lowBox.indexOf(brandLow) != -1) {
-      lowBox = "Yes";
-    } else {
-      lowBox = "No";
-    }
-    if (highBox.indexOf(brandHigh) != -1) {
-      highBox = "Yes";
-    } else {
+async function bobs(lowP, highP, tPage, startIndex) {
+  for (var i = startIndex; i < refNums.length; i++) {
+    try {
+      lowest = "";
+      highest = "";
+      highTable = "";
+      lowTable = "";
+      lowYear = "";
+      highYear = "";
+      PHigh = "No";
+      PLow = "No";
+      lowURL = "";
+      highURL = "";
+      imageLow = "";
+      imageHigh = "";
+      brandLow = "";
+      lowSku = "";
+      highSku = "";
+      brandHigh = "";
       highBox = "No";
-    }
-    w = new Watch(
-      refNums[i],
-      lowYear.trim(),
-      highYear.trim(),
-      lowBox,
-      PLow,
-      highBox,
-      PHigh,
-      lowest,
-      highest,
-      "",
-      "",
-      lowP.url(),
-      highP.url(),
-      tPage.url(),
-      imageLow,
-      imageHigh,
-      brandLow,
-      brandHigh,
-      lowSku,
-      highSku
-    );
+      lowBox = "No";
+      console.log("");
 
-    //console.log(w);
-    fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
-    //console.log(lowTable)
-    console.log(JSON.stringify(w, null, "\t"));
-    //utilFunc.addToJson(w);
+      var newURL = utilFunc.getLink("Bobs", refNums[i]);
+
+      console.log("URL: " + newURL);
+      console.log(
+        i + 4 * refNums.length + "/" + refNums.length * 6,
+        ((i + 4 * refNums.length) / (refNums.length * 6)) * 100 + "%"
+      );
+      await tPage
+        .goto(newURL, { waitUntil: "networkidle0" })
+        .catch(async (e) => {
+          await utilFunc.reTry(tPage);
+        });
+
+      await tPage.waitForTimeout(500);
+      if (await utilFunc.noResults(tPage, "div[class='no-results']")) {
+        continue;
+      } else {
+        await prepare(lowP, highP, newURL);
+        await getData(lowP, highP); // gets data tables and price
+        imageLow = await lowP.evaluate(() => {
+          const image = document.querySelector("#mainImage");
+          return image.src;
+        });
+
+        imageHigh = await lowP.evaluate(() => {
+          const image = document.querySelector("#mainImage");
+          return image.src;
+        });
+      }
+
+      if (lowBox.indexOf(brandLow) != -1) {
+        lowBox = "Yes";
+      } else {
+        lowBox = "No";
+      }
+      if (highBox.indexOf(brandHigh) != -1) {
+        highBox = "Yes";
+      } else {
+        highBox = "No";
+      }
+      w = new Watch(
+        refNums[i],
+        lowYear.trim(),
+        highYear.trim(),
+        lowBox,
+        PLow,
+        highBox,
+        PHigh,
+        lowest,
+        highest,
+        "",
+        "",
+        lowP.url(),
+        highP.url(),
+        tPage.url(),
+        imageLow,
+        imageHigh,
+        brandLow,
+        brandHigh,
+        lowSku,
+        highSku
+      );
+
+      //console.log(w);
+      fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
+      //console.log(lowTable)
+      console.log(JSON.stringify(w, null, "\t"));
+      //utilFunc.addToJson(w);
+    } catch (error) {
+      console.log("Restarting at " + i + " ...");
+      await bazaar(lowP, highBP, tPage, i);
+    }
   }
 }
 
@@ -119,8 +126,8 @@ async function bobs(lowP, highP, tPage) {
  * @returns {void}
  */
 async function getData(lowP, highP) {
-  await lowP.waitForTimeout(1000)
-  await highP.waitForTimeout(1000)
+  await lowP.waitForTimeout(1000);
+  await highP.waitForTimeout(1000);
   lowest = await utilFunc.getItem(
     lowP,
     "#searchspring-content > div > div.ss-results.ss-targeted.ng-scope > div > div:nth-child(1) > div > form > a > ul > li.buyprice.buyit.ng-scope > span.ng-binding"

@@ -20,167 +20,174 @@ var highBox = "No";
 var lowPaper = "No";
 var highPaper = "No";
 
-async function EWC(lowP, highP, tPage) {
-  for (var i = 0; i < refNums.length; i++) {
-    console.log("");
-    lowest = "";
-    highest = "";
-    brandLow = "";
-    brandHigh = "";
-    lowSku = "";
-    highSku = "";
-    lowestChild = 1;
-    highestChild = 1;
-    lowImage = "";
-    highImage = "";
-    lowLink = "";
-    highLink = "";
-    lowBox = "No";
-    highBox = "No";
-    lowPaper = "No";
-    highPaper = "No";
+async function EWC(lowP, highP, tPage, startIndex) {
+  for (var i = startIndex; i < refNums.length; i++) {
+    try {
+      console.log("");
+      lowest = "";
+      highest = "";
+      brandLow = "";
+      brandHigh = "";
+      lowSku = "";
+      highSku = "";
+      lowestChild = 1;
+      highestChild = 1;
+      lowImage = "";
+      highImage = "";
+      lowLink = "";
+      highLink = "";
+      lowBox = "No";
+      highBox = "No";
+      lowPaper = "No";
+      highPaper = "No";
 
-    var newURL = utilFunc.getLink("EWC", refNums[i]);
-    await tPage.goto(newURL, { waitUntil: "networkidle0" }).catch(async (e) => {
-      console.log("bad");
-      await utilFunc.reTry(tPage);
-    });
+      var newURL = utilFunc.getLink("EWC", refNums[i]);
+      await tPage
+        .goto(newURL, { waitUntil: "networkidle0" })
+        .catch(async (e) => {
+          console.log("bad");
+          await utilFunc.reTry(tPage);
+        });
 
-    console.log("URL: " + newURL);
-    console.log(
-      i + 2 * refNums.length + "/" + refNums.length * 6,
-      ((i + 2 * refNums.length) / (refNums.length * 6)) * 100 + "%"
-    );
-    await tPage.waitForTimeout(1000);
-
-    if (await utilFunc.noResults(tPage, "body > section > h3")) {
-      continue;
-    } else {
-      await lowP.goto(tPage.url()).catch(async (e) => {
-        await utilFunc.reTry(lowP);
-      });
-      await highP.goto(tPage.url()).catch(async (e) => {
-        await utilFunc.reTry(highP);
-      });
-      await lowP.waitForTimeout(500);
-      await highP.waitForTimeout(500);
-
-      lowestChild = await getChild("Low", lowP);
-      highestChild = await getChild("High", highP);
-
-      console.log("LowC", lowestChild, "HighC", highestChild);
-      //EWC Is weird and needs its own function.
-      lowest = await utilFunc.getItem(
-        lowP,
-        "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
-          lowestChild +
-          ") > div > div.flex.flex-col.h-full.justify-start.mt-2 > div > p"
+      console.log("URL: " + newURL);
+      console.log(
+        i + 2 * refNums.length + "/" + refNums.length * 6,
+        ((i + 2 * refNums.length) / (refNums.length * 6)) * 100 + "%"
       );
-      highest = await utilFunc.getItem(
-        highP,
-        "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
-          highestChild +
-          ") > div > div.flex.flex-col.h-full.justify-start.mt-2 > div > p"
-      );
+      await tPage.waitForTimeout(1000);
 
-      brandLow = await utilFunc.getItem(
-        lowP,
-        "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
-          lowestChild +
-          ") > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3"
-      );
-      brandHigh = await utilFunc.getItem(
-        highP,
-        "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
-          highestChild +
-          ") > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3"
-      );
+      if (await utilFunc.noResults(tPage, "body > section > h3")) {
+        continue;
+      } else {
+        await lowP.goto(tPage.url()).catch(async (e) => {
+          await utilFunc.reTry(lowP);
+        });
+        await highP.goto(tPage.url()).catch(async (e) => {
+          await utilFunc.reTry(highP);
+        });
+        await lowP.waitForTimeout(500);
+        await highP.waitForTimeout(500);
 
-      brandLow = brandLow.substring(0, brandLow.indexOf(" "));
-      brandHigh = brandHigh.substring(0, brandHigh.indexOf(" "));
+        lowestChild = await getChild("Low", lowP);
+        highestChild = await getChild("High", highP);
 
-      lowImage = String(
-        await lowP.$eval(
+        console.log("LowC", lowestChild, "HighC", highestChild);
+        //EWC Is weird and needs its own function.
+        lowest = await utilFunc.getItem(
+          lowP,
+          "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
+            lowestChild +
+            ") > div > div.flex.flex-col.h-full.justify-start.mt-2 > div > p"
+        );
+        highest = await utilFunc.getItem(
+          highP,
+          "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
+            highestChild +
+            ") > div > div.flex.flex-col.h-full.justify-start.mt-2 > div > p"
+        );
+
+        brandLow = await utilFunc.getItem(
+          lowP,
+          "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
+            lowestChild +
+            ") > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3"
+        );
+        brandHigh = await utilFunc.getItem(
+          highP,
+          "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
+            highestChild +
+            ") > div > div.flex.flex-col.h-full.justify-start.mt-2 > h3"
+        );
+
+        brandLow = brandLow.substring(0, brandLow.indexOf(" "));
+        brandHigh = brandHigh.substring(0, brandHigh.indexOf(" "));
+
+        lowImage = String(
+          await lowP.$eval(
+            "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
+              lowestChild +
+              ") > a",
+            (res) => res.outerHTML
+          )
+        );
+
+        highImage = String(
+          await highP.$eval(
+            "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
+              highestChild +
+              ") > a",
+            (res) => res.outerHTML
+          )
+        );
+        lowImageIndex1 = lowImage.indexOf("url('") + 5;
+        lowImageIndex2 = lowImage.indexOf("')");
+        lowImage = lowImage.substring(lowImageIndex1, lowImageIndex2);
+
+        highImageIndex1 = highImage.indexOf("url('") + 5;
+        highImageIndex2 = highImage.indexOf("')");
+        highImage = highImage.substring(highImageIndex1, highImageIndex2);
+
+        lowLink = await lowP.$eval(
           "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
             lowestChild +
             ") > a",
-          (res) => res.outerHTML
-        )
-      );
+          (res) => res.href
+        );
 
-      highImage = String(
-        await highP.$eval(
+        highLink = await lowP.$eval(
           "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
             highestChild +
             ") > a",
-          (res) => res.outerHTML
-        )
+          (res) => res.href
+        );
+        console.log(highLink);
+        await lowP
+          .goto(lowLink, { waitUntil: "networkidle0" })
+          .catch(async (e) => {
+            await utilFunc.reTry(lowP);
+          });
+        await highP
+          .goto(highLink, { waitUntil: "networkidle0" })
+          .catch(async (e) => {
+            await utilFunc.reTry(highP);
+          });
+
+        await lowP.waitForTimeout(500);
+        await highP.waitForTimeout(500);
+        await BPandDateStuff(lowP, lowestChild, highP, highestChild);
+      }
+
+      w = new Watch(
+        refNums[i],
+        lowYear,
+        highYear,
+        lowBox,
+        lowPaper,
+        highBox,
+        highPaper,
+        String(lowest),
+        String(highest),
+        "",
+        "",
+        lowLink,
+        highLink,
+        tPage.url(),
+        lowImage,
+        highImage,
+        brandLow,
+        brandHigh,
+        lowSku,
+        highSku
       );
-      lowImageIndex1 = lowImage.indexOf("url('") + 5;
-      lowImageIndex2 = lowImage.indexOf("')");
-      lowImage = lowImage.substring(lowImageIndex1, lowImageIndex2);
+      //console.log(w);
 
-      highImageIndex1 = highImage.indexOf("url('") + 5;
-      highImageIndex2 = highImage.indexOf("')");
-      highImage = highImage.substring(highImageIndex1, highImageIndex2);
-
-      lowLink = await lowP.$eval(
-        "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
-          lowestChild +
-          ") > a",
-        (res) => res.href
-      );
-
-      highLink = await lowP.$eval(
-        "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
-          highestChild +
-          ") > a",
-        (res) => res.href
-      );
-      console.log(highLink);
-      await lowP
-        .goto(lowLink, { waitUntil: "networkidle0" })
-        .catch(async (e) => {
-          await utilFunc.reTry(lowP);
-        });
-      await highP
-        .goto(highLink, { waitUntil: "networkidle0" })
-        .catch(async (e) => {
-          await utilFunc.reTry(highP);
-        });
-
-      await lowP.waitForTimeout(500);
-      await highP.waitForTimeout(500);
-      await BPandDateStuff(lowP, lowestChild, highP, highestChild);
+      fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
+      console.log(JSON.stringify(w, null, "\t"));
+      //utilFunc.addToJson(w);
+    } catch (error) {
+      console.log("Restarting at " + i + " ...");
+      await bazaar(lowP, highBP, tPage, i);
     }
-
-    w = new Watch(
-      refNums[i],
-      lowYear,
-      highYear,
-      lowBox,
-      lowPaper,
-      highBox,
-      highPaper,
-      String(lowest),
-      String(highest),
-      "",
-      "",
-      lowLink,
-      highLink,
-      tPage.url(),
-      lowImage,
-      highImage,
-      brandLow,
-      brandHigh,
-      lowSku,
-      highSku
-    );
-    //console.log(w);
-
-    fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
-    console.log(JSON.stringify(w, null, "\t"));
-    //utilFunc.addToJson(w);
   }
 }
 

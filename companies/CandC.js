@@ -20,72 +20,77 @@ var brandHigh = "";
 var lowSku = "";
 var highSku = "";
 
-async function crownAndCaliber(lowP, highP, tPage) {
-  for (var i = 18; i < refNums.length; i++) {
-    lowYear = "";
-    lowPaper = "No";
-    lowBox = "No";
-    highYear = "";
-    highPaper = "No";
-    highBox = "No";
-    lowTable = "";
-    highTable = "";
-    lowImage = "";
-    highImage = "";
-    brandLow = "";
-    brandHigh = "";
-    lowSku = "";
-    highSku = "";
+async function crownAndCaliber(lowP, highP, tPage, startIndex) {
+  for (var i = startIndex; i < refNums.length; i++) {
+    try {
+      lowYear = "";
+      lowPaper = "No";
+      lowBox = "No";
+      highYear = "";
+      highPaper = "No";
+      highBox = "No";
+      lowTable = "";
+      highTable = "";
+      lowImage = "";
+      highImage = "";
+      brandLow = "";
+      brandHigh = "";
+      lowSku = "";
+      highSku = "";
 
-    var url = utilFunc.getLink("C&C", refNums[i]);
+      var url = utilFunc.getLink("C&C", refNums[i]);
 
-    console.log("CandC URL: ***  " + url);
-    console.log(
-      i + refNums.length + "/" + refNums.length * 6,
-      ((i + refNums.length) / (refNums.length * 6)) * 100 + "%"
-    );
-    await tPage.goto(url, { waitUntil: "networkidle0" }).catch(async (e) => {
-      await utilFunc.reTry(tPage);
-    });
-    await tPage.waitForTimeout(500);
-    if (
-      await utilFunc.noResults(
-        tPage,
-        "h3[class='ss-title ss-results-title ss-no-results-title ng-binding ng-scope']"
-      )
-    ) {
-      //no results
-      continue;
-    } else {
-      //results
-      await prepare(lowP, highP, url);
-      assignData();
-
-      w = new Watch(
-        refNums[i],
-        lowYear,
-        highYear,
-        lowBox,
-        lowPaper,
-        highBox,
-        highPaper,
-        lowest.replace(/\s+/g, ""),
-        highest.replace(/\s+/g, ""),
-        "",
-        "",
-        lowP.url(),
-        highP.url(),
-        tPage.url(),
-        lowImage,
-        highImage,
-        brandLow,
-        brandHigh,
-        lowSku,
-        highSku
+      console.log("CandC URL: ***  " + url);
+      console.log(
+        i + refNums.length + "/" + refNums.length * 6,
+        ((i + refNums.length) / (refNums.length * 6)) * 100 + "%"
       );
+      await tPage.goto(url, { waitUntil: "networkidle0" }).catch(async (e) => {
+        await utilFunc.reTry(tPage);
+      });
+      await tPage.waitForTimeout(500);
+      if (
+        await utilFunc.noResults(
+          tPage,
+          "h3[class='ss-title ss-results-title ss-no-results-title ng-binding ng-scope']"
+        )
+      ) {
+        //no results
+        continue;
+      } else {
+        //results
+        await prepare(lowP, highP, url);
+        assignData();
 
-      fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
-      console.log(JSON.stringify(w, null, "\t"));
+        w = new Watch(
+          refNums[i],
+          lowYear,
+          highYear,
+          lowBox,
+          lowPaper,
+          highBox,
+          highPaper,
+          lowest.replace(/\s+/g, ""),
+          highest.replace(/\s+/g, ""),
+          "",
+          "",
+          lowP.url(),
+          highP.url(),
+          tPage.url(),
+          lowImage,
+          highImage,
+          brandLow,
+          brandHigh,
+          lowSku,
+          highSku
+        );
+
+        fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
+        console.log(JSON.stringify(w, null, "\t"));
+      }
+    } catch (error) {
+      console.log("Restarting at " + i + " ...");
+      await bazaar(lowP, highBP, tPage, i);
     }
   }
 }

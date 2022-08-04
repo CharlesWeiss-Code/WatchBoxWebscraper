@@ -21,14 +21,12 @@ const f = async (url) =>
 async function recurse(url) {
   await f(url)
     .catch(async (err) => {
-      // console.log(err);
-      await recurse("https://www.thewatchbox.com/");
+      console.log(err);
+      await recurse("https://www.google.com");
     })
     .then((res) => {
-      // console.log(res);
-      resolve(res);
+      console.log(res);
     });
 }
 
-
-recurse("alskjdhfanwuienfuiawenf")
+recurse("alskjdhfanwuienfuiawenf");

@@ -28,94 +28,101 @@ var highSku = "";
 var lowDealerStatus = "";
 var highDealerStatus = "";
 
-async function chrono24(lowP, highP, tPage, list) {
+async function chrono24(lowP, highP, tPage, list, startIndex) {
   flag = true;
-  for (var i = 59; i < refNums.length; i++) {
-    lowest = "";
-    highest = "";
-    childLow = 1;
-    childHigh = 1;
-    brandLow = "";
-    brandHigh = "";
-    highTable = "";
-    lowTable = "";
-    yearLow = "";
-    yearHigh = "";
-    lowBP = "";
-    lowBox = "No";
-    lowPaper = "No";
-    highBox = "No";
-    highPaper = "No";
-    lowImage = "";
-    highImage = "";
-    highBP = "";
-    lowSku = "";
-    highSku = "";
+  for (var i = startIndex; i < refNums.length; i++) {
+    try {
+      lowest = "";
+      highest = "";
+      childLow = 1;
+      childHigh = 1;
+      brandLow = "";
+      brandHigh = "";
+      highTable = "";
+      lowTable = "";
+      yearLow = "";
+      yearHigh = "";
+      lowBP = "";
+      lowBox = "No";
+      lowPaper = "No";
+      highBox = "No";
+      highPaper = "No";
+      lowImage = "";
+      highImage = "";
+      highBP = "";
+      lowSku = "";
+      highSku = "";
 
-    console.log("\n\n");
-    var newURL = utilFunc.getLink("C24", refNums[i]);
+      console.log("\n\n");
+      var newURL = utilFunc.getLink("C24", refNums[i]);
 
-    console.log("NEW URL: " + newURL);
-    console.log(
-      i + 5 * refNums.length + "/" + refNums.length * 6,
-      ((i + 5 * refNums.length) / (refNums.length * 6)) * 100 + "%"
-    );
-    await tPage.goto(newURL, { waitUntil: "networkidle0" }).catch(async (e) => {
-      await utilFunc.reTry(tPage);
-    });
-    await tPage.waitForTimeout(500);
-    var noWatchInList = noWatchesInList(list, refNums[i]);
-    var noResult = await utilFunc.noResults2(
-      tPage,
-      "div[class='h1 m-b-0 text-center']",
-      "We've found no results"
-    );
-    if (noWatchInList || noResult) {
-      //no results or the watch doesnt have any entries
-      console.log("No watch in list", noWatchInList, "No result", noResult);
-      continue;
-    } else {
-      // results
-      await prepareStuff(lowP, highP, newURL, list, refNums[i]);
-      if (
-        parseFloat(lowest.trim()) > parseFloat(highest.trim()) ||
-        (highest === "" && lowest === "")
-      ) {
+      console.log("NEW URL: " + newURL);
+      console.log(
+        i + 5 * refNums.length + "/" + refNums.length * 6,
+        ((i + 5 * refNums.length) / (refNums.length * 6)) * 100 + "%"
+      );
+      await tPage
+        .goto(newURL, { waitUntil: "networkidle0" })
+        .catch(async (e) => {
+          await utilFunc.reTry(tPage);
+        });
+      await tPage.waitForTimeout(500);
+      var noWatchInList = noWatchesInList(list, refNums[i]);
+      var noResult = await utilFunc.noResults2(
+        tPage,
+        "div[class='h1 m-b-0 text-center']",
+        "We've found no results"
+      );
+      if (noWatchInList || noResult) {
+        //no results or the watch doesnt have any entries
+        console.log("No watch in list", noWatchInList, "No result", noResult);
         continue;
       } else {
-        var highLink = highP.url();
-        var lowLink = lowP.url();
-        if (childHigh === -1) {
-          highLink = "";
+        // results
+        await prepareStuff(lowP, highP, newURL, list, refNums[i]);
+        if (
+          parseFloat(lowest.trim()) > parseFloat(highest.trim()) ||
+          (highest === "" && lowest === "")
+        ) {
+          continue;
+        } else {
+          var highLink = highP.url();
+          var lowLink = lowP.url();
+          if (childHigh === -1) {
+            highLink = "";
+          }
+          if (childLow === -1) {
+            lowLink = "";
+          }
+          w = new Watch(
+            refNums[i],
+            yearLow,
+            yearHigh,
+            lowBox,
+            lowPaper,
+            highBox,
+            highPaper,
+            lowest.trim(),
+            highest.trim(),
+            lowDealerStatus,
+            highDealerStatus,
+            lowLink,
+            highLink,
+            tPage.url(),
+            lowImage,
+            highImage,
+            brandLow,
+            brandHigh,
+            lowSku,
+            highSku
+          );
+          fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
+          console.log(JSON.stringify(w, null, "\t"));
         }
-        if (childLow === -1) {
-          lowLink = "";
-        }
-        w = new Watch(
-          refNums[i],
-          yearLow,
-          yearHigh,
-          lowBox,
-          lowPaper,
-          highBox,
-          highPaper,
-          lowest.trim(),
-          highest.trim(),
-          lowDealerStatus,
-          highDealerStatus,
-          lowLink,
-          highLink,
-          tPage.url(),
-          lowImage,
-          highImage,
-          brandLow,
-          brandHigh,
-          lowSku,
-          highSku
-        );
-        fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
-        console.log(JSON.stringify(w, null, "\t"));
       }
+    } catch (error) {
+      console.log("Restarting at " + i + " ...");
+      await bazaar(lowP, highBP, tPage, i);
     }
   }
 }
@@ -402,7 +409,7 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
  * @returns {int} nth-child(k) for k that isn't a "Top" choice by Chrono24.
  */
 validChild = async (page, arr, rn, pageNum, highOrLow) => {
-  console.log(page.url())
+  console.log(page.url());
   await page.waitForTimeout(1000);
   min = getBuffer(arr, 0.9, rn);
   max = getBuffer(arr, 1.1, rn);
@@ -412,7 +419,7 @@ validChild = async (page, arr, rn, pageNum, highOrLow) => {
     .catch(() => {
       return 1;
     });
-  console.log(top + " possible watches on page " + (pageNum-1));
+  console.log(top + " possible watches on page " + (pageNum - 1));
   for (var i = 1; i <= top; i++) {
     var watch = await typeOf(page, "#wt-watches > div:nth-child(" + i + ")");
     var isntTop = await noTop(page, "#wt-watches > div:nth-child(" + i + ")");
@@ -429,7 +436,7 @@ validChild = async (page, arr, rn, pageNum, highOrLow) => {
       console.log(price, i);
     }
     if (watch && isntTop && price > min && price < max) {
-      console.log("Selected:",price, i);
+      console.log("Selected:", price, i);
       return i;
     }
   }
