@@ -2,8 +2,8 @@
  * Holds every reference number I want to look up
  */
 
-refNums = [
-  /** subtract 6 from the line num */ "311.30.42.30.01.005",
+refNums = [ /** subtract 6 from the line num */
+  "311.30.42.30.01.005",
   "116500LN-0001",
   "116500LN-0002",
   "116610LN-0001",

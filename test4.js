@@ -25,7 +25,7 @@ async function start() {
   page = await browser.newPage();
   await setupPage(page);
   await page.goto(
-    "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=116508-0013"
+    "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=116500LN&searchexplain=false&sortorder=1&watchTypes="
   );
   const top = await page.$eval("#wt-watches", (res) => res.children.length);
   for (var i = 1; i <= top; i++) {

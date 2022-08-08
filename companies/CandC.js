@@ -42,8 +42,8 @@ async function crownAndCaliber(lowP, highP, tPage, startIndex) {
 
       console.log("CandC URL: ***  " + url);
       console.log(
-        i + refNums.length + "/" + refNums.length * 6,
-        ((i + refNums.length) / (refNums.length * 6)) * 100 + "%"
+        i + refNums.length + "/" + refNums.length * 7,
+        ((i + refNums.length) / (refNums.length * 7)) * 100 + "%"
       );
       await tPage.goto(url, { waitUntil: "networkidle0" }).catch(async (e) => {
         await utilFunc.reTry(tPage);
@@ -86,15 +86,12 @@ async function crownAndCaliber(lowP, highP, tPage, startIndex) {
         );
 
         fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
-        await utilFunc.sendMessage(
-          "Restarting at " + i + "\n" + new Date().toLocaleString()
-        );
 
         console.log(JSON.stringify(w, null, "\t"));
       }
     } catch (error) {
       console.log("Restarting at " + i + " ...");
-      await bazaar(lowP, highBP, tPage, i);
+      await crownAndCaliber(lowP, highP, tPage, i);
     }
   }
 }

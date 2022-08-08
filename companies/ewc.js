@@ -51,8 +51,8 @@ async function EWC(lowP, highP, tPage, startIndex) {
 
       console.log("URL: " + newURL);
       console.log(
-        i + 2 * refNums.length + "/" + refNums.length * 6,
-        ((i + 2 * refNums.length) / (refNums.length * 6)) * 100 + "%"
+        i + 2 * refNums.length + "/" + refNums.length * 7,
+        ((i + 2 * refNums.length) / (refNums.length * 7)) * 100 + "%"
       );
       await tPage.waitForTimeout(1000);
 
@@ -189,8 +189,7 @@ async function EWC(lowP, highP, tPage, startIndex) {
       await utilFunc.sendMessage(
         "Restarting at " + i + "\n" + new Date().toLocaleString()
       );
-
-      await bazaar(lowP, highBP, tPage, i);
+      await EWC(lowP, highP, tPage, i);
     }
   }
 }

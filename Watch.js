@@ -45,17 +45,17 @@ class Watch {
      * possibly delete dateOfScrape field because the name of the json object in S3
      * will be the date
      */
-    var date = new Date()
-    this.dateOfScrape = date.getFullYear()+"_"
-    if (parseInt(date.getMonth())+1 < 10) {
-      this.dateOfScrape+="0"+parseInt(date.getMonth()+1)+"_"
+    var date = new Date();
+    this.dateOfScrape = date.getFullYear() + "_";
+    if (parseInt(date.getMonth()) + 1 < 10) {
+      this.dateOfScrape += "0" + parseInt(date.getMonth() + 1) + "_";
     } else {
-      this.dateOfScrape+=date.getMonth()+1+"_"
+      this.dateOfScrape += date.getMonth() + 1 + "_";
     }
     if (parseInt(date.getDate()) < 10) {
-      this.dateOfScrape+="0"+date.getDate()
+      this.dateOfScrape += "0" + date.getDate();
     } else {
-      this.dateOfScrape+=date.getDate()
+      this.dateOfScrape += date.getDate();
     }
 
     this.imageLow = imageLow;
@@ -80,38 +80,40 @@ class Watch {
         this.generalLink.indexOf(".com")
       );
     }
-    switch(this.website) {
+    console.log("'" + this.website + "'");
+    switch (this.website) {
       case "europeanwatch":
-        this.website = "EWC"
+        this.website = "EWC";
         break;
-      
+
       case "davidsw":
-        this.website = "DavidSW"
-        break
+        this.website = "DavidSW";
+        break;
 
       case "luxurybazaar":
-        this.website = "LuxuryBazaar"
+        this.website = "LuxuryBazaar";
         break;
 
       case "crownandcaliber":
-        this.website = "C&C"
-        break
-      
-      case "bobswatches":
-        this.website = "Bobs"
-        break
-
-      case "chrono24":
-        this.website = "C24"
+        this.website = "C&C";
         break;
 
+      case "bobswatches":
+        this.website = "Bobs";
+        break;
+      case "chrono24":
+        this.website = "C24";
+        break;
+      case "watchfinder":
+        this.website = "WatchFinder";
+        break;
       default:
-        this.website = ""
-        break
+        this.website = "";
+        break;
     }
-    
-    this.lowSku = lowSku
-    this.highSku = highSku
+
+    this.lowSku = lowSku;
+    this.highSku = highSku;
   }
 
   setDate(m, d, y) {

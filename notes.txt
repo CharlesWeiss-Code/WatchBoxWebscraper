@@ -6,7 +6,12 @@
           - Can't filter bracelet type
           - Can't filter indices type
 
-     - Make all companies return promises?
-          - use recursion to re-call them with same indicies?
+     - Chrono validChild not working
+          - Not getting correct prices for some reason. 
+     
+     - Chrono not working
 
-     - make chrono change pages
+     - Re starting doesnt work?
+          - moves onto the next reference number?
+
+     - Add check to make sure lowest and highest isnt "" before creating a new watch

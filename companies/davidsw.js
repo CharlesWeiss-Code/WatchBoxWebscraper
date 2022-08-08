@@ -28,8 +28,8 @@ async function davidsw(lowP, highP, tPage, startIndex) {
 
       console.log("URL: " + newURL);
       console.log(
-        i + 3 * refNums.length + "/" + refNums.length * 6,
-        ((i + 3 * refNums.length) / (refNums.length * 6)) * 100 + "%"
+        i + 3 * refNums.length + "/" + refNums.length * 7,
+        ((i + 3 * refNums.length) / (refNums.length * 7)) * 100 + "%"
       );
       await tPage
         .goto(newURL, { waitUntil: "networkidle0" })
@@ -181,7 +181,7 @@ async function davidsw(lowP, highP, tPage, startIndex) {
         "Restarting at " + i + "\n" + new Date().toLocaleString()
       );
 
-      await bazaar(lowP, highBP, tPage, i);
+      await davidsw(lowP, highP, tPage, i);
     }
   }
 }

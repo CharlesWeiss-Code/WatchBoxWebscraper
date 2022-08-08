@@ -3,7 +3,6 @@
  */
 
 const fs = require("fs");
-const request = require("request");
 const Watch = require("./Watch");
 const AWS = require("aws-sdk");
 const awsInfo = require("./aws/aws-info");
@@ -760,7 +759,7 @@ var specialSites = {
         return "https://www.chrono24.com/search/index.htm?query=116610LN-0001&dialColor=702&dosearch=true&searchexplain=true&watchTypes=U&accessoryTypes=";
 
       case "1675 BLK PEP OYS":
-        return "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=1675"
+        return "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=1675";
       default:
         return (
           "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=" +
@@ -978,6 +977,128 @@ var specialSites = {
         );
     }
   },
+  WatchFinder: function (refNum, newRefNum) {
+    switch (refNum) {
+      case "116500LN-0002": // REGULAR --> SHORTENED --> BLACK DIAL
+      case "16610 BLK OYS":
+      case "116400GV-0001":
+      case "16570 BLK IX OYS":
+      case "116300-0001":
+      case "226570-0002":
+      case "124300-0002":
+      case "116520-0015":
+      case "1675 BLK PEP OYS":
+      case "126300-0012":
+      case "126660-0001":
+      case "116200-0059":
+      case "116660-0001":
+      case "116400-0001":
+      case "226659-0002":
+      case "216570-0002":
+        return (
+          "https://www.watchfinder.com/search?q=" +
+          newRefNum +
+          "&filterDial=Black"
+        );
+
+      case "116500LN-0001": // REGULAR --> SHORTENED --> WHITE DIAL
+      case "16570 WHT IX OYS":
+      case "216570-0001":
+      case "116520-0016":
+      case "116400-0002":
+      case "226570-0001":
+        return (
+          "https://www.watchfinder.com/search?q=" +
+          newRefNum +
+          "&filterDial=White"
+        );
+
+      case "116400GV-0002": // REGULAR --> SHORTENED --> BLUE DIAL
+      case "5711/1A-010":
+      case "116400GV-0002":
+      case "16613 BLU IX OYS":
+      case "116509-0071":
+      case "126300-0001":
+      case "116506-0001":
+      case "116622-0001":
+      case "126622-0002":
+      case "326934-0003":
+      case "126334-0002":
+      case "124300-0003":
+      case "116660-0003":
+      case "326934-0004":
+      case "126660-0002":
+        return (
+          "https://www.watchfinder.com/search?q=" +
+          newRefNum +
+          "&filterDial=Blue"
+        );
+
+      case "16233 CHP IX JUB": // REGULAR --> SHORTENED --> CHAMPAGNE DIAL
+      case "326933-0001":
+        return (
+          "https://www.watchfinder.com/search?q=" +
+          newRefNum +
+          "&filterDial=Champagne"
+        );
+
+      case "124300-0005": // REGULAR --> SHORTNENED --> GREEN DIAL
+      case "116508-0013":
+      case "126000-0005":
+        return (
+          "https://www.watchfinder.com/search?q=" +
+          newRefNum +
+          "&filterDial=Green"
+        );
+      
+      case "116519LN-0024": // REGULAR --> SHORTENED --> SILVER DIAL
+      case "116200-0056":
+      return (
+        "https://www.watchfinder.com/search?q=" +
+        newRefNum +
+        "&filterDial=Silver"
+      );
+
+      case "116610LN-0001": // REGULAR --> SHORTENED
+      case "126610LV-0002":
+      case "126610LN-0001":
+      case "116610LV-0002":
+      case "114060-0002":
+      case "116900-0001":
+      case "116681-0001":
+      case "79830RB-0001":
+      case "126715CHNR-0001":
+      case "114270-0001":
+      case "116680-0001":
+      case "116719BLRO-0001":
+      case "126710BLNR-0002":
+      case "214270-0001":
+      case "124273-0001":
+      case "214270-0003":
+      case "16710 COKE OYS":
+      case "116613LN-0001":
+      case "126711CHNR-0002":
+      case "116619LB-0001":
+      case "116710BLNR-0002":
+      case "126603-0001":
+      case "124270-0001":
+      case "79250BM-0001":
+      case "116680-0002":
+      case "16600 BLK IX OYS":
+      case '16610LV':
+      case "124060-0001":
+      case "126613LB-0002":
+      case "126710BLNR-0003":
+      case "79030B-0001":
+      case "126600-0001":
+      case "126710BLRO-0001":
+      case "126710BLRO-0002":
+      case "116710LN-0001":
+        return "https://www.watchfinder.com/search?q=" + newRefNum;
+      default:
+        return "https://www.watchfinder.com/search?q=" + refNum;
+    }
+  },
 };
 
 /**
@@ -1058,7 +1179,7 @@ async function reTry(page) {
   await page.waitForTimeout(500);
   await page.reload().catch(async (e) => {
     await reTry(page);
-  }); //Becomes recursive function until the page loads.
+  }); // Becomes recursive function until the page loads.
   await page.waitForTimeout(500);
 }
 

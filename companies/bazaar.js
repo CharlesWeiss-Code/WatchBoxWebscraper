@@ -48,8 +48,8 @@ async function bazaar(lowP, highP, tPage, startIndex) {
       var newURL = utilFunc.getLink("LuxuryBazaar", refNums[i]);
       console.log("URL: " + newURL);
       console.log(
-        i + "/" + refNums.length * 6,
-        (i / (refNums.length * 6)) * 100 + "%"
+        i + "/" + refNums.length * 7,
+        (i / (refNums.length * 7)) * 100 + "%"
       );
       await tPage
         .goto(newURL, { waitUntil: "networkidle0" })
@@ -229,7 +229,7 @@ async function bazaar(lowP, highP, tPage, startIndex) {
     } catch (error) {
       console.log("Restarting at " + i + " ...");
       await utilFunc.sendMessage("Restarting at " + i + "\n"+new Date().toLocaleString());
-      await bazaar(lowP, highBP, tPage, i)
+      await bazaar(lowP, highP, tPage, i)
     }
   }
 }

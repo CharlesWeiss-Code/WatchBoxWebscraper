@@ -58,8 +58,8 @@ async function chrono24(lowP, highP, tPage, list, startIndex) {
 
       console.log("NEW URL: " + newURL);
       console.log(
-        i + 5 * refNums.length + "/" + refNums.length * 6,
-        ((i + 5 * refNums.length) / (refNums.length * 6)) * 100 + "%"
+        i + 6 * refNums.length + "/" + refNums.length * 7,
+        ((i + 6 * refNums.length) / (refNums.length * 7)) * 100 + "%"
       );
       await tPage
         .goto(newURL, { waitUntil: "networkidle0" })
@@ -117,16 +117,15 @@ async function chrono24(lowP, highP, tPage, list, startIndex) {
             highSku
           );
           fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
-          await utilFunc.sendMessage(
-            "Restarting at " + i + "\n" + new Date().toLocaleString()
-          );
-
           console.log(JSON.stringify(w, null, "\t"));
         }
       }
     } catch (error) {
       console.log("Restarting at " + i + " ...");
-      await bazaar(lowP, highBP, tPage, i);
+      await chrono24(lowP, highP, tPage, i);
+      await utilFunc.sendMessage(
+        "Restarting at " + i + "\n" + new Date().toLocaleString()
+      );
     }
   }
 }

@@ -48,8 +48,8 @@ async function bobs(lowP, highP, tPage, startIndex) {
 
       console.log("URL: " + newURL);
       console.log(
-        i + 4 * refNums.length + "/" + refNums.length * 6,
-        ((i + 4 * refNums.length) / (refNums.length * 6)) * 100 + "%"
+        i + 4 * refNums.length + "/" + refNums.length * 7,
+        ((i + 4 * refNums.length) / (refNums.length * 7)) * 100 + "%"
       );
       await tPage
         .goto(newURL, { waitUntil: "networkidle0" })
@@ -117,7 +117,7 @@ async function bobs(lowP, highP, tPage, startIndex) {
       await utilFunc.sendMessage(
         "Restarting at " + i + "\n" + new Date().toLocaleString()
       );
-      await bazaar(lowP, highBP, tPage, i);
+      await bobs(lowP, highP, tPage, i);
     }
   }
 }
@@ -233,8 +233,10 @@ async function getData(lowP, highP) {
   if (highTable.indexOf("/Year") !== -1) {
     highYear = highTable.substring(index1YearHigh, index2YearHigh);
     index = highYear.indexOf("- ") + 2;
-    highYear = highYear.substring(index);
-    highYear = highYear.replace(" or newer", "+");
+    highYear = highYear
+      .substring(index)
+      .replace(" or newer", "+")
+      .replace(" or Newer", "");
   }
 
   if (String(lowP.url()) != "about:blank") {
