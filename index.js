@@ -51,24 +51,24 @@ var firstToday = true;
 //     await setupPage(highPage);
 //     await setupPage(testPage);
 
-//     await Bazaar.bazaar(lowPage, highPage, testPage);
+//     await Bazaar.bazaar(lowPage, highPage, testPage, 0);
 //     await newPages(browser);
 //     await utilFunc.sendMessage(
 //       "Completed Bazaar: " + new Date().toLocaleString()
 //     );
-//     await CandC.crownAndCaliber(lowPage, highPage, testPage);
+//     await CandC.crownAndCaliber(lowPage, highPage, testPage, 0);
 //     await newPages(browser);
 //     utilFunc.sendMessage("Completed CandC: " + new Date().toLocaleString());
 
-//     await ewc.EWC(lowPage, highPage, testPage);
+//     await ewc.EWC(lowPage, highPage, testPage, 0);
 //     await newPages(browser);
 //     utilFunc.sendMessage("Completed EWC: " + new Date().toLocaleString());
 
-//     await david.davidsw(lowPage, highPage, testPage);
+//     await david.davidsw(lowPage, highPage, testPage, 0);
 //     await newPages(browser);
 //     utilFunc.sendMessage("Completed DavidSW: " + new Date().toLocaleString());
 
-//     await Bobs.bobs(lowPage, highPage, testPage);
+//     await Bobs.bobs(lowPage, highPage, testPage, 0);
 //     await newPages(browser);
 //     utilFunc.sendMessage("Completed Bobs: " + new Date().toLocaleString());
 
@@ -82,7 +82,8 @@ var firstToday = true;
 //       lowPage,
 //       highPage,
 //       testPage,
-//       utilFunc.getPricesForAverage()
+//       utilFunc.getPricesForAverage(),
+//       0
 //     );
 //     await browser.close();
 //     utilFunc.sendMessage("Completed C24: " + new Date().toLocaleString());
@@ -96,6 +97,10 @@ var firstToday = true;
 //   }
 //   await start();
 // }
+
+
+
+
 
 async function start() {
   refNums = REF.getRefNums();
@@ -121,7 +126,7 @@ async function start() {
   //   "Completed Bazaar: " + new Date().toLocaleString()
   // );
 
-  // await CandC.crownAndCaliber(lowPage, highPage, testPage, 44);
+  // await CandC.crownAndCaliber(lowPage, highPage, testPage, 0);
   // await newPages(browser);
   // utilFunc.sendMessage("Completed CandC: " + new Date().toLocaleString());
 
@@ -139,20 +144,20 @@ async function start() {
 
   // await watchFinder.watchFinder(lowPage, highPage, testPage, 0);
   // await newPages(browser);
+  // await browser.newPage()
   // utilFunc.sendMessage(
   //   "Completeted WatchFinder: " + new Date().toLocaleString()
   // );
+
 
   await await chrono.chrono24(
     lowPage,
     highPage,
     testPage,
     utilFunc.getPricesForAverage(),
-    0,
-    browser.newPage()
-  );  
+    0
+  );
   utilFunc.sendMessage("Completed C24: " + new Date().toLocaleString());
-
 
   await browser.close();
   utilFunc.sendMessage("**SCRAPE COMPLETED**\n" + new Date().toLocaleString());

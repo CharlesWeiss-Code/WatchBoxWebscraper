@@ -54,7 +54,7 @@ async function chrono24(lowP, highP, tPage, list, startIndex) {
       highSku = "";
 
       console.log("\n\n");
-      var newURL = utilFunc.getLink("C24", refNums[i]);
+      var newURL = utilFunc.getLink("C24", refNums[i]) + "&pageSize=120";
 
       console.log("NEW URL: " + newURL);
       console.log(
@@ -80,6 +80,7 @@ async function chrono24(lowP, highP, tPage, list, startIndex) {
       } else {
         // results
         await prepareStuff(lowP, highP, newURL, list, refNums[i]);
+
         if (
           parseFloat(lowest.trim()) > parseFloat(highest.trim()) ||
           (highest === "" && lowest === "")
@@ -94,6 +95,7 @@ async function chrono24(lowP, highP, tPage, list, startIndex) {
           if (childLow === -1) {
             lowLink = "";
           }
+
           w = new Watch(
             refNums[i],
             yearLow,
@@ -121,11 +123,33 @@ async function chrono24(lowP, highP, tPage, list, startIndex) {
         }
       }
     } catch (error) {
+      console.error(error);
+      console.log("CRASHED...");
       console.log("Restarting at " + i + " ...");
-      await chrono24(lowP, highP, tPage, i);
-      await utilFunc.sendMessage(
-        "Restarting at " + i + "\n" + new Date().toLocaleString()
-      );
+      // await utilFunc.sendMessage(
+      //   "Restarting at " + i + "\n" + new Date().toLocaleString()
+      // );
+      await chrono24(lowP, highP, tPage, list, i);
+      break; // this break is neccesary because it stops the prevouse call to the fucntion (example below)
+
+      /**
+       *  n
+       *  n
+       *  n
+       *  n --->
+       *  .    n
+       *  *    n
+       *  .    n
+       *       n
+       *       n
+       *       n --->
+       *       .    n
+       *       *    n
+       *       .    n
+       *            n
+       *            n
+       *            n
+       */
     }
   }
 }
@@ -138,21 +162,29 @@ async function chrono24(lowP, highP, tPage, list, startIndex) {
  * @param {String} rn that is currently being scraped
  * @returns {void} assigns the values neccesary for creating a new watch object
  */
-prepareStuff = async (lowP, highP, url, list, rn) => {
+async function prepareStuff(lowP, highP, url, list, rn) {
   await lowP
-    .goto(url + "&sortorder=1", { waitUntil: "networkidle0" })
-    .catch(async (e) => {
+    .goto(url + "&sortorder=1", { waitUntil: "domcontentloaded" })
+    .catch(async () => {
       await utilFunc.reTry(lowP);
     });
-  await lowP.waitForTimeout(500);
+  await lowP.waitForTimeout(1000);
+
+  await highP
+    .goto(url + "&sortorder=11", { waitUntil: "domcontentloaded" })
+    .catch(async () => {
+      await utilFunc.reTry(highP);
+    });
+  await highP.waitForTimeout(1000);
+
   if (await utilFunc.exists(lowP, "#modal-content > div > button")) {
     await lowP.click("#modal-content > div > button"); // cookie tracker button
     await lowP.waitForTimeout(500);
   }
 
-  //await highP.click("#modal-content > div > a", {delay: 20})
-  childHigh = await validChild(highP, list, rn, 2, "High");
   childLow = await validChild(lowP, list, rn, 2, "Low");
+  childHigh = await validChild(highP, list, rn, 2, "High");
+  console.log("child low", childLow, "child high", childHigh);
   if (childLow != -1) {
     await lowP.waitForTimeout(500);
     lowest = await utilFunc.getItem(
@@ -161,29 +193,14 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
         childLow +
         ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
     );
-    if (lowest === "") {
-      lowest = await utilFunc.getItem(
-        lowP,
-        "#wt-watches > div:nth-child(" +
-          childHigh +
-          ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price > div > strong"
-      );
-    }
+
     lowDealerStatus = await utilFunc.getItem(
       lowP,
       "#wt-watches > div:nth-child(" +
         childLow +
         ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
     );
-
-    if (lowDealerStatus === "") {
-      lowDealerStatus = await utilFunc.getItem(
-        lowP,
-        "#wt-watches > div:nth-child(" +
-          childLow +
-          ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-seller-container > div > div.media-flex-body.d-flex.flex-column > div.article-seller-name.text-sm"
-      );
-    }
+    console.log(lowest, lowDealerStatus);
 
     if (lowDealerStatus.replace("\n", "").trim() === "Professional dealer") {
       lowDealerStatus = "PD";
@@ -197,10 +214,11 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
       "#wt-watches > div:nth-child(" + childLow + ") > a",
       (res) => res.href
     );
-    await lowP.goto(lowLink, { waitUntil: "networkidle0" }).catch(async (e) => {
-      await utilFunc.reTry(lowP);
-    });
-    await lowP.reload();
+    await lowP
+      .goto(lowLink, { waitUntil: "domcontentloaded" })
+      .catch(async () => {
+        await utilFunc.reTry(lowP);
+      });
     await lowP.waitForTimeout(500);
 
     lowTable = String(
@@ -213,9 +231,7 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
     lowImage = String(
       await lowP
         .$eval("img[class='img-responsive mh-100']", (el) => el.src)
-        .catch((err) => {
-          return "";
-        })
+        .catch(() => "")
     );
 
     index1BrandLow = lowTable.indexOf("Brand") + 5;
@@ -266,12 +282,12 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
   }
   if (childHigh != -1) {
     await highP
-      .goto(url + "&searchorder=11&sortorder=11", { waitUntil: "networkidle0" })
-      .catch(async (e) => {
+      .goto(url + "&searchorder=11&sortorder=11", {
+        waitUntil: "domcontentloaded",
+      })
+      .catch(async () => {
         await utilFunc.reTry(highP);
       });
-    await highP.waitForTimeout(1000);
-    //await highP.click("#modal-content > div > a", {delay: 20})
     await highP.waitForTimeout(500);
     highest = await utilFunc.getItem(
       highP,
@@ -279,29 +295,12 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
         childHigh +
         ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong"
     );
-    if (highest === "") {
-      highest = await utilFunc.getItem(
-        highP,
-        "#wt-watches > div:nth-child(" +
-          childHigh +
-          ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-price-container > div.article-price > div > strong"
-      );
-    }
     highDealerStatus = await utilFunc.getItem(
       highP,
       "#wt-watches > div:nth-child(" +
         childHigh +
         ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
     );
-
-    if (highDealerStatus === "") {
-      highDealerStatus = await utilFunc.getItem(
-        highP,
-        "#wt-watches > div:nth-child(" +
-          childHigh +
-          ") > a > div > div.media-flex-body.p-y-2.p-r-2 > div.article-seller-container > div > div.media-flex-body.d-flex.flex-column > div.article-seller-name.text-sm"
-      );
-    }
 
     if (highDealerStatus.replace("\n", "").trim() === "Professional dealer") {
       highDealerStatus = "PD";
@@ -315,20 +314,16 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
       await highP.click("#modal-content > div > button");
     }
 
-    // await highP.click("#wt-watches > div:nth-child(" + childHigh + ") > a", {
-    //   delay: 20,
-    // });
     const highLink = await highP.$eval(
       "#wt-watches > div:nth-child(" + childHigh + ") > a",
       (res) => res.href
     );
     await highP
-      .goto(highLink, { waitUntil: "networkidle0" })
-      .catch(async (e) => {
+      .goto(highLink, { waitUntil: "domcontentloaded" })
+      .catch(async () => {
         await utilFunc.reTry(highP);
       });
 
-    await highP.reload();
     await highP.waitForTimeout(500);
 
     highTable = String(
@@ -403,7 +398,7 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
       highPaper = "Yes";
     }
   }
-};
+}
 
 /**
  * @param {Puppeteer.Page} page that you want to find the lowest nth-child(k) for k that isn't a "Top" choice by Chrono24.
@@ -411,9 +406,9 @@ prepareStuff = async (lowP, highP, url, list, rn) => {
  * @param {String} rn that is currently being scraped
  * @returns {int} nth-child(k) for k that isn't a "Top" choice by Chrono24.
  */
-validChild = async (page, arr, rn, pageNum, highOrLow) => {
-  console.log(page.url());
-  await page.waitForTimeout(1000);
+
+async function validChild(page, arr, rn, nextPageNum, highOrLow) {
+  await page.waitForTimeout(1500);
   min = getBuffer(arr, 0.9, rn);
   max = getBuffer(arr, 1.1, rn);
   console.log("Min " + min + "\tMax " + max);
@@ -422,51 +417,66 @@ validChild = async (page, arr, rn, pageNum, highOrLow) => {
     .catch(() => {
       return 1;
     });
-  console.log(top + " possible watches on page " + (pageNum - 1));
+
   for (var i = 1; i <= top; i++) {
     var watch = await typeOf(page, "#wt-watches > div:nth-child(" + i + ")");
     var isntTop = await noTop(page, "#wt-watches > div:nth-child(" + i + ")");
-    var price = await page
-      .$eval(
+    if (watch && isntTop) {
+      // var priceHandle = await page.$(
+      //   "#wt-watches > div:nth-child(" +
+      //     i +
+      //     ") > a > div > div.media-flex-body.p-r-2.p-b-2 > div.d-flex.justify-content-between > div > div.article-price > div"
+      // );
+      // price = String(await page.evaluate((el) => el.innerText, priceHandle))
+      //   .replace("$", "")
+      //   .replace(",", "")
+      //   .trim();
+
+      price = await utilFunc.getItem(
+        page,
         "#wt-watches > div:nth-child(" +
           i +
-          ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-price-container > div.article-price > div > strong",
-        (el) => el.innerText
-      )
-      .catch(() => "-1");
-    price = parseFloat(price.replace("$", "").replace(",", "").trim());
-    if (watch && isntTop) {
-      console.log(price, i);
+          ") > a > div > div.media-flex-body.p-r-2.p-b-2 > div.d-flex.justify-content-between > div > div.article-price > div"
+      );
+      if (watch && isntTop) {
+        console.log("Price " + price + "\tnth-child(" + i + ")");
+      }
+      if (price > min && price < max) {
+        console.log("Selected:", price, i);
+        return i;
+      }
     }
-    if (watch && isntTop && price > min && price < max) {
-      console.log("Selected:", price, i);
-      return i;
-    }
+    await page.waitForTimeout(50);
   }
 
+  // go to next page and search there
   if (page.url().indexOf("&showpage=") != -1) {
     await page
-      .goto(page.url().substring(0, page.url().lastIndexOf("=") + 1) + pageNum)
+      .goto(
+        page.url().substring(0, page.url().lastIndexOf("=") + 1) + nextPageNum,
+        { waitUntil: "domcontentloaded" }
+      )
       .catch(async () => await utilFunc.reTry(page));
-    console.log("Going to page " + pageNum + "\n" + page.url());
   } else {
     await page
-      .goto(page.url() + "&showpage=" + pageNum, { waitUntil: "networkidle0" })
+      .goto(page.url() + "&showpage=" + nextPageNum, {
+        waitUntil: "domcontentloaded",
+      })
       .catch(async () => {
         await utilFunc.reTry(page);
       });
-    console.log("Going to page " + pageNum + "\n" + page.url());
   }
 
   if (await utilFunc.exists(page, "div[id='wt-watches']")) {
     await page.waitForTimeout(1000);
-    return await validChild(page, arr, rn, pageNum + 1);
+    console.log("Going to page " + nextPageNum);
+    return await validChild(page, arr, rn, nextPageNum + 1);
   } else {
     page.goto("about:blank");
     console.log("No listing fits the requirements: " + highOrLow);
     return -1;
   }
-};
+}
 
 /**
  * @param {[Watch]} list of watches from the beginning of the current scrape to now
@@ -512,7 +522,7 @@ getBuffer = (list, percent, refNum) => {
  * @param {String} sel that you want to check the type of
  * @returns {boolean} is the type a watch or not
  */
-typeOf = async (page, sel) => {
+async function typeOf(page, sel) {
   let element = await page.$(sel);
   if (element === null) {
     return false;
@@ -524,14 +534,15 @@ typeOf = async (page, sel) => {
       return false;
     }
   }
-};
+}
 
 /**
  * @param {Puppeteer.Page} page
  * @param {String} sel in question that may represent a "Top" choice from Chrono24
  * @returns {boolean} is the selector a "Top" choice or not.
  */
-noTop = async (page, sel) => {
+
+async function noTop(page, sel) {
   let element = await page.$(sel);
   if (element === null) {
     return false;
@@ -539,7 +550,7 @@ noTop = async (page, sel) => {
     let value = await page.evaluate((el) => el.textContent, element);
     return value.indexOf("Top") === -1;
   }
-};
+}
 
 /**
  * @param {[Watch]} list of watches from the beginning of the current scrape to now

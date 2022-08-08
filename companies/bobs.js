@@ -84,40 +84,43 @@ async function bobs(lowP, highP, tPage, startIndex) {
       } else {
         highBox = "No";
       }
-      w = new Watch(
-        refNums[i],
-        lowYear.trim(),
-        highYear.trim(),
-        lowBox,
-        PLow,
-        highBox,
-        PHigh,
-        lowest,
-        highest,
-        "",
-        "",
-        lowP.url(),
-        highP.url(),
-        tPage.url(),
-        imageLow,
-        imageHigh,
-        brandLow,
-        brandHigh,
-        lowSku,
-        highSku
-      );
+      if (lowest != "" || highest != "") {
+        w = new Watch(
+          refNums[i],
+          lowYear.trim(),
+          highYear.trim(),
+          lowBox,
+          PLow,
+          highBox,
+          PHigh,
+          lowest,
+          highest,
+          "",
+          "",
+          lowP.url(),
+          highP.url(),
+          tPage.url(),
+          imageLow,
+          imageHigh,
+          brandLow,
+          brandHigh,
+          lowSku,
+          highSku
+        );
 
-      //console.log(w);
-      fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
-      //console.log(lowTable)
-      console.log(JSON.stringify(w, null, "\t"));
-      //utilFunc.addToJson(w);
+        //console.log(w);
+        fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
+        //console.log(lowTable)
+        console.log(JSON.stringify(w, null, "\t"));
+        //utilFunc.addToJson(w);
+      }
     } catch (error) {
       console.log("Restarting at " + i + " ...");
       await utilFunc.sendMessage(
         "Restarting at " + i + "\n" + new Date().toLocaleString()
       );
       await bobs(lowP, highP, tPage, i);
+      break;
     }
   }
 }

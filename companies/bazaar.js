@@ -198,38 +198,39 @@ async function bazaar(lowP, highP, tPage, startIndex) {
           .trim()
           .replace("N/A", "");
       }
-
-      w = new Watch(
-        refNums[i],
-        lowYear.trim(),
-        highYear.trim(),
-        lowBox,
-        lowPaper,
-        highBox,
-        highPaper,
-        lowest,
-        highest,
-        "",
-        "",
-        lowP.url(),
-        highP.url(),
-        tPage.url(),
-        imageLow,
-        imageHigh,
-        brandLow,
-        brandHigh,
-        lowSku,
-        highSku
-      );
-      fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
-      console.log(JSON.stringify(w, null, "\t"));
-
-
-
+      if (highest != "" || lowest != "") {
+        w = new Watch(
+          refNums[i],
+          lowYear.trim(),
+          highYear.trim(),
+          lowBox,
+          lowPaper,
+          highBox,
+          highPaper,
+          lowest,
+          highest,
+          "",
+          "",
+          lowP.url(),
+          highP.url(),
+          tPage.url(),
+          imageLow,
+          imageHigh,
+          brandLow,
+          brandHigh,
+          lowSku,
+          highSku
+        );
+        fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
+        console.log(JSON.stringify(w, null, "\t"));
+      }
     } catch (error) {
       console.log("Restarting at " + i + " ...");
-      await utilFunc.sendMessage("Restarting at " + i + "\n"+new Date().toLocaleString());
-      await bazaar(lowP, highP, tPage, i)
+      await utilFunc.sendMessage(
+        "Restarting at " + i + "\n" + new Date().toLocaleString()
+      );
+      await bazaar(lowP, highP, tPage, i);
+      break;
     }
   }
 }

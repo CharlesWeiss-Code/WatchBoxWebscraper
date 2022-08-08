@@ -45,7 +45,6 @@ async function EWC(lowP, highP, tPage, startIndex) {
       await tPage
         .goto(newURL, { waitUntil: "networkidle0" })
         .catch(async (e) => {
-          console.log("bad");
           await utilFunc.reTry(tPage);
         });
 
@@ -156,40 +155,39 @@ async function EWC(lowP, highP, tPage, startIndex) {
         await highP.waitForTimeout(500);
         await BPandDateStuff(lowP, lowestChild, highP, highestChild);
       }
-
-      w = new Watch(
-        refNums[i],
-        lowYear,
-        highYear,
-        lowBox,
-        lowPaper,
-        highBox,
-        highPaper,
-        String(lowest),
-        String(highest),
-        "",
-        "",
-        lowLink,
-        highLink,
-        tPage.url(),
-        lowImage,
-        highImage,
-        brandLow,
-        brandHigh,
-        lowSku,
-        highSku
-      );
-      //console.log(w);
-
-      fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
-      console.log(JSON.stringify(w, null, "\t"));
-      //utilFunc.addToJson(w);
+      if (lowest != "" || highest != "") {
+        w = new Watch(
+          refNums[i],
+          lowYear,
+          highYear,
+          lowBox,
+          lowPaper,
+          highBox,
+          highPaper,
+          String(lowest),
+          String(highest),
+          "",
+          "",
+          lowLink,
+          highLink,
+          tPage.url(),
+          lowImage,
+          highImage,
+          brandLow,
+          brandHigh,
+          lowSku,
+          highSku
+        );
+        fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
+        console.log(JSON.stringify(w, null, "\t"));
+      }
     } catch (error) {
       console.log("Restarting at " + i + " ...");
       await utilFunc.sendMessage(
         "Restarting at " + i + "\n" + new Date().toLocaleString()
       );
       await EWC(lowP, highP, tPage, i);
+      break;
     }
   }
 }

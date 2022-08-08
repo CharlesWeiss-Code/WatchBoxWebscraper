@@ -1,17 +1,19 @@
-     - add promise catches to all functions that use them?
-     - Handle min and max when lowest/highest = ""
-
      - Warn
           - (datejust EX) modles with many sub modles and combinations can return bad data
           - Can't filter bracelet type
           - Can't filter indices type
 
+     
+
+     NEED ATTENTION: 
      - Chrono validChild not working
           - Not getting correct prices for some reason. 
-     
-     - Chrono not working
+
+     - Possibly banned from chrono?
 
      - Re starting doesnt work?
           - moves onto the next reference number?
+          - FIXED? added break statements to the end of the catch block. By doing this, the company function will restart-
+          and finish and then not continue the previous scrape (because it reaches the break statement).
 
      - Add check to make sure lowest and highest isnt "" before creating a new watch

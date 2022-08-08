@@ -749,17 +749,28 @@ var specialSites = {
   C24: function (refNum, newRefNum) {
     console.log("'" + refNum + "'\t'" + newRefNum + "'");
     switch (refNum) {
-      case "16570 BLK IX OYS":
-        return "https://www.chrono24.com/search/index.htm?currencyId=USD&dialColor=702&dosearch=true&maxAgeInDays=0&pageSize=60&query=16570&redirectToSearchIndex=true&resultview=list";
+      case "16570 BLK IX OYS": // REGULAR --> SHORTENED --> BLACK DIAL
+        return (
+          "https://www.chrono24.com/search/index.htm?currencyId=USD&dialColor=702&dosearch=true&maxAgeInDays=0&pageSize=60&query=" +
+          newRefNum +
+          "&redirectToSearchIndex=true&resultview=grid"
+        );
 
-      case "16570 WHT IX OYS":
-        return "https://www.chrono24.com/search/index.htm?currencyId=USD&dialColor=701&dosearch=true&maxAgeInDays=0&pageSize=60&query=16570&redirectToSearchIndex=true&resultview=list";
+      case "16570 WHT IX OYS": // REGULAR --> SHORTENED --> WHITE DIAL
+        return (
+          "https://www.chrono24.com/search/index.htm?currencyId=USD&dialColor=701&dosearch=true&maxAgeInDays=0&pageSize=60&query=" +
+          newRefNum +
+          "&redirectToSearchIndex=true&resultview=grid"
+        );
 
       case "116610LN-0001":
         return "https://www.chrono24.com/search/index.htm?query=116610LN-0001&dialColor=702&dosearch=true&searchexplain=true&watchTypes=U&accessoryTypes=";
 
-      case "1675 BLK PEP OYS":
-        return "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=1675";
+      case "1675 BLK PEP OYS": // REGULAR --> SHORTENED
+        return (
+          "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=" +
+          newRefNum
+        );
       default:
         return (
           "https://www.chrono24.com/search/index.htm?accessoryTypes=&dosearch=true&query=" +
@@ -1050,14 +1061,14 @@ var specialSites = {
           newRefNum +
           "&filterDial=Green"
         );
-      
+
       case "116519LN-0024": // REGULAR --> SHORTENED --> SILVER DIAL
       case "116200-0056":
-      return (
-        "https://www.watchfinder.com/search?q=" +
-        newRefNum +
-        "&filterDial=Silver"
-      );
+        return (
+          "https://www.watchfinder.com/search?q=" +
+          newRefNum +
+          "&filterDial=Silver"
+        );
 
       case "116610LN-0001": // REGULAR --> SHORTENED
       case "126610LV-0002":
@@ -1085,7 +1096,7 @@ var specialSites = {
       case "79250BM-0001":
       case "116680-0002":
       case "16600 BLK IX OYS":
-      case '16610LV':
+      case "16610LV":
       case "124060-0001":
       case "126613LB-0002":
       case "126710BLNR-0003":

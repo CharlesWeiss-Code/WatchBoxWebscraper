@@ -149,32 +149,33 @@ async function davidsw(lowP, highP, tPage, startIndex) {
       if (indexHigh != -1) {
         highYear = highTableGeneral.substring(indexHigh + 4);
       }
+      if (lowest != "" || highest != "") {
+        w = new Watch(
+          refNums[i],
+          lowYear.trim(),
+          highYear.trim(),
+          lowBox.replace(/\s+/g, ""),
+          lowPaper.replace(/\s+/g, ""),
+          highBox.replace(/\s+/g, ""),
+          highPaper.replace(/\s+/g, ""),
+          lowest,
+          highest,
+          "",
+          "",
+          lowP.url(),
+          highP.url(),
+          tPage.url(),
+          imageLow,
+          imageHigh,
+          brandLow,
+          brandHigh,
+          lowSku,
+          highSku
+        );
 
-      w = new Watch(
-        refNums[i],
-        lowYear.trim(),
-        highYear.trim(),
-        lowBox.replace(/\s+/g, ""),
-        lowPaper.replace(/\s+/g, ""),
-        highBox.replace(/\s+/g, ""),
-        highPaper.replace(/\s+/g, ""),
-        lowest,
-        highest,
-        "",
-        "",
-        lowP.url(),
-        highP.url(),
-        tPage.url(),
-        imageLow,
-        imageHigh,
-        brandLow,
-        brandHigh,
-        lowSku,
-        highSku
-      );
-
-      fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
-      console.log(JSON.stringify(w, null, "\t"));
+        fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
+        console.log(JSON.stringify(w, null, "\t"));
+      }
     } catch (error) {
       console.log("Restarting at " + i + " ...");
       await utilFunc.sendMessage(
@@ -182,6 +183,7 @@ async function davidsw(lowP, highP, tPage, startIndex) {
       );
 
       await davidsw(lowP, highP, tPage, i);
+      break;
     }
   }
 }

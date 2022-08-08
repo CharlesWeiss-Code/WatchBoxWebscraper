@@ -111,13 +111,25 @@ async function watchFinder(lowP, highP, tPage, startIndex) {
           "span[data-testid='watchPapersValue']"
         );
 
-        yearLow = await lowP
-          .$eval("span[data-testid='watchYearValue']", (res) => res.innerText)
-          .catch(() => "");
+        yearLow = String(
+          await lowP
+            .$eval("span[data-testid='watchYearValue']", (res) => res.innerText)
+            .catch(() => "")
+        ).trim();
 
-        yearHigh = await highP
-          .$eval("span[data-testid='watchYearValue']", (res) => res.innerText)
-          .catch(() => "");
+        yearHigh = String(
+          await highP
+            .$eval("span[data-testid='watchYearValue']", (res) => res.innerText)
+            .catch(() => "")
+        ).trim();
+
+        if (yearLow.indexOf("Approx.") != -1) {
+          yearLow = yearLow.replace("Approx.","")+"+".trim()
+        }
+
+        if (yearHigh.indexOf("Approx.") != -1) {
+          yearHigh = yearHigh.replace("Approx.","")+"+".trim()
+        }
 
         lowSku = String(
           await highP
@@ -136,10 +148,16 @@ async function watchFinder(lowP, highP, tPage, startIndex) {
         highSku = highSku.substring(lastHighSkuIndex);
 
         lowImage = await lowP
-          .$eval("div[class='relative msm:h-60']", (res) => res.src)
+          .$eval(
+            "div[class='relative msm:h-60']",
+            (res) => res.children[0].children[0].src
+          )
           .catch(() => "");
         highImage = await highP
-          .$eval("div[class='relative msm:h-60']", (res) => res.src)
+          .$eval(
+            "div[class='relative msm:h-60']",
+            (res) => res.children[0].children[0].src
+          )
           .catch(() => "");
 
         brandLow = await utilFunc.getItem(
@@ -152,7 +170,7 @@ async function watchFinder(lowP, highP, tPage, startIndex) {
         );
         lowLink = lowP.url();
         highLink = highP.url();
-        if (highest != "" && lowest != "") {
+        if (highest != "" || lowest != "") {
           w = new Watch(
             refNums[i],
             yearLow,
@@ -167,7 +185,7 @@ async function watchFinder(lowP, highP, tPage, startIndex) {
             highDealerStatus,
             lowLink,
             highLink,
-            tPage.url(),
+            utilFunc.getLink("WatchFinder",refNums[i]),
             lowImage,
             highImage,
             brandLow,
@@ -183,6 +201,7 @@ async function watchFinder(lowP, highP, tPage, startIndex) {
       console.log(error);
       console.log("Restarting at " + i + " ...");
       await watchFinder(lowP, highP, tPage, i);
+      break;
     }
   }
 }

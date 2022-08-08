@@ -62,36 +62,39 @@ async function crownAndCaliber(lowP, highP, tPage, startIndex) {
         await prepare(lowP, highP, url);
         assignData();
 
-        w = new Watch(
-          refNums[i],
-          lowYear,
-          highYear,
-          lowBox,
-          lowPaper,
-          highBox,
-          highPaper,
-          lowest.replace(/\s+/g, ""),
-          highest.replace(/\s+/g, ""),
-          "",
-          "",
-          lowP.url(),
-          highP.url(),
-          tPage.url(),
-          lowImage,
-          highImage,
-          brandLow,
-          brandHigh,
-          lowSku,
-          highSku
-        );
+        if (lowest != "" || highest != "") {
+          w = new Watch(
+            refNums[i],
+            lowYear,
+            highYear,
+            lowBox,
+            lowPaper,
+            highBox,
+            highPaper,
+            lowest.replace(/\s+/g, ""),
+            highest.replace(/\s+/g, ""),
+            "",
+            "",
+            lowP.url(),
+            highP.url(),
+            tPage.url(),
+            lowImage,
+            highImage,
+            brandLow,
+            brandHigh,
+            lowSku,
+            highSku
+          );
 
-        fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
+          fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
 
-        console.log(JSON.stringify(w, null, "\t"));
+          console.log(JSON.stringify(w, null, "\t"));
+        }
       }
     } catch (error) {
       console.log("Restarting at " + i + " ...");
       await crownAndCaliber(lowP, highP, tPage, i);
+      break;
     }
   }
 }
