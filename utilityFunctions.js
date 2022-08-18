@@ -1185,13 +1185,15 @@ function getPricesForAverage() {
   return list;
 }
 
-async function reTry(page) {
-  console.log("Re-trying...");
-  await page.waitForTimeout(500);
-  await page.reload().catch(async (e) => {
-    await reTry(page);
-  }); // Becomes recursive function until the page loads.
-  await page.waitForTimeout(500);
+async function reTry(page, iter) {
+  if (iter < 3) {
+    console.log("Re-trying...");
+    await page.waitForTimeout(Math.random() * 3);
+    await page.goto(page.url()).catch(async () => {
+      await reTry(page, iter + 1);
+    }); // Becomes recursive function until the page loads.
+    await page.waitForTimeout(500);
+  }
 }
 
 function joinDataToArchivesAndCompilation() {

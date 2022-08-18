@@ -30,10 +30,10 @@ class Watch {
     this.lowPaper = lowPaper;
     this.highBox = highBox;
     this.highPaper = highPaper;
-    this.lowPrice = lowPrice.replace("$", "");
-    this.lowPrice = this.lowPrice.replace(",", "");
-    this.highPrice = highPrice.replace("$", "");
-    this.highPrice = this.highPrice.replace(",", "");
+    this.lowPrice = lowPrice.replaceAll("$", "");
+    this.lowPrice = this.lowPrice.replaceAll(",", "");
+    this.highPrice = highPrice.replaceAll("$", "");
+    this.highPrice = this.highPrice.replaceAll(",", "");
     this.highLink = highLink;
     this.lowLink = lowLink;
     this.lowAge = lowAge;

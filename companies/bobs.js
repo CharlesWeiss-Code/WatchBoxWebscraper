@@ -48,13 +48,13 @@ async function bobs(lowP, highP, tPage, startIndex) {
 
       console.log("URL: " + newURL);
       console.log(
-        i + 4 * refNums.length + "/" + refNums.length * 7,
-        ((i + 4 * refNums.length) / (refNums.length * 7)) * 100 + "%"
+        i + 4 * refNums.length + "/" + refNums.length * 6,
+        ((i + 4 * refNums.length) / (refNums.length * 6)) * 100 + "%"
       );
       await tPage
         .goto(newURL, { waitUntil: "networkidle0" })
         .catch(async (e) => {
-          await utilFunc.reTry(tPage);
+          await utilFunc.reTry(tPage,0);
         });
 
       await tPage.waitForTimeout(500);
@@ -115,12 +115,6 @@ async function bobs(lowP, highP, tPage, startIndex) {
         //utilFunc.addToJson(w);
       }
     } catch (error) {
-      console.log("Restarting at " + i + " ...");
-      await utilFunc.sendMessage(
-        "Restarting at " + i + "\n" + new Date().toLocaleString()
-      );
-      await bobs(lowP, highP, tPage, i);
-      break;
     }
   }
 }
@@ -150,12 +144,12 @@ async function getData(lowP, highP) {
 
   lowLink = await lowP.$eval("a[itemprop='url']", async (res) => res.href);
   await lowP.goto(lowLink).catch(async (lowP) => {
-    await utilFunc.reTry(lowP);
+    await utilFunc.reTry(lowP,0);
   });
 
   highLink = await highP.$eval("a[itemprop='url']", async (res) => res.href);
   await highP.goto(highLink).catch(async (highP) => {
-    await utilFunc.reTry(highP);
+    await utilFunc.reTry(highP,0);
   });
 
   await lowP.waitForTimeout(1000);
@@ -218,18 +212,18 @@ async function getData(lowP, highP) {
     lowYear = lowTable.substring(index1YearLow, index2YearLow);
     index = lowYear.indexOf("- ") + 2;
     lowYear = lowYear.substring(index);
-    lowYear = lowYear.replace(" or newer", "+");
+    lowYear = lowYear.replaceAll(" or newer", "+");
   }
 
   brandLow = "";
   brandHigh = "";
   brandLow = await (await utilFunc.getItem(lowP, "tbody > tr:nth-child(1)"))
-    .replace("Brand:", "")
-    .replace("Manufacturer:", "")
+    .replaceAll("Brand:", "")
+    .replaceAll("Manufacturer:", "")
     .trim();
   brandHigh = await (await utilFunc.getItem(highP, "tbody > tr:nth-child(1)"))
-    .replace("Brand:", "")
-    .replace("Manufacturer:", "")
+    .replaceAll("Brand:", "")
+    .replaceAll("Manufacturer:", "")
     .trim();
 
   highYear = "";
@@ -238,8 +232,8 @@ async function getData(lowP, highP) {
     index = highYear.indexOf("- ") + 2;
     highYear = highYear
       .substring(index)
-      .replace(" or newer", "+")
-      .replace(" or Newer", "");
+      .replaceAll(" or newer", "+")
+      .replaceAll(" or Newer", "");
   }
 
   if (String(lowP.url()) != "about:blank") {
@@ -262,14 +256,14 @@ async function prepare(lowP, highP, url) {
         waitUntil: "networkidle0",
       })
       .catch(async (e) => {
-        await utilFunc.reTry(lowP);
+        await utilFunc.reTry(lowP,0);
       });
     await highP
       .goto(url + "#/sort:price:desc", {
         waitUntil: "networkidle0",
       })
       .catch(async (e) => {
-        await utilFunc.reTry(highP);
+        await utilFunc.reTry(highP,0);
       });
   } else {
     await lowP
@@ -277,14 +271,14 @@ async function prepare(lowP, highP, url) {
         waitUntil: "networkidle0",
       })
       .catch(async (e) => {
-        await utilFunc.reTry(lowP);
+        await utilFunc.reTry(lowP,0);
       });
     await highP
       .goto(url + "/sort:price:desc", {
         waitUntil: "networkidle0",
       })
       .catch(async (e) => {
-        await utilFunc.reTry(highP);
+        await utilFunc.reTry(highP,0);
       });
   }
 }

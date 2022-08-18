@@ -48,13 +48,13 @@ async function bazaar(lowP, highP, tPage, startIndex) {
       var newURL = utilFunc.getLink("LuxuryBazaar", refNums[i]);
       console.log("URL: " + newURL);
       console.log(
-        i + "/" + refNums.length * 7,
-        (i / (refNums.length * 7)) * 100 + "%"
+        i + "/" + refNums.length * 6,
+        (i / (refNums.length * 6)) * 100 + "%"
       );
       await tPage
         .goto(newURL, { waitUntil: "networkidle0" })
         .catch(async (e) => {
-          await utilFunc.reTry(tPage);
+          await utilFunc.reTry(tPage,0);
         });
       await tPage.waitForTimeout(500);
       if (
@@ -72,14 +72,14 @@ async function bazaar(lowP, highP, tPage, startIndex) {
               waitUntil: "networkidle0",
             })
             .catch(async () => {
-              await utilFunc.reTry(lowP);
+              await utilFunc.reTry(lowP,0);
             });
           await highP
             .goto(newURL + "/sort:ss_sort_price_desc:desc", {
               waitUntil: "networkidle0",
             })
             .catch(async () => {
-              await utilFunc.reTry(highP);
+              await utilFunc.reTry(highP,0);
             });
         } else {
           await lowP
@@ -87,14 +87,14 @@ async function bazaar(lowP, highP, tPage, startIndex) {
               waitUntil: "networkidle0",
             })
             .catch(async () => {
-              await utilFunc.reTry(lowP);
+              await utilFunc.reTry(lowP,0);
             });
           await highP
             .goto(newURL + "#/sort:ss_sort_price_desc:desc", {
               waitUntil: "networkidle0",
             })
             .catch(async () => {
-              await utilFunc.reTry(highP);
+              await utilFunc.reTry(highP,0);
             });
         }
 
@@ -156,12 +156,12 @@ async function bazaar(lowP, highP, tPage, startIndex) {
         highBPIndex2 = highTable.indexOf("Lug Material");
         lowYear = lowTable
           .substring(lowYearIndex1, lowYearIndex2)
-          .replace("\n", "")
-          .replace("N/A", "")
-          .replace("Unknown", "");
-        lowBP = lowTable.substring(lowBPIndex1, lowBPIndex2).replace("\n", "");
+          .replaceAll("\n", "")
+          .replaceAll("N/A", "")
+          .replaceAll("Unknown", "");
+        lowBP = lowTable.substring(lowBPIndex1, lowBPIndex2).replaceAll("\n", "");
         if (
-          lowBP.replace(/[^a-zA-Z ]/g, "") === "Manufacturers Box and Papers"
+          lowBP.replaceAll(/[^a-zA-Z ]/g, "") === "Manufacturers Box and Papers"
         ) {
           lowPaper = "Yes";
           lowBox = "Yes";
@@ -169,14 +169,14 @@ async function bazaar(lowP, highP, tPage, startIndex) {
 
         highYear = highTable
           .substring(highYearIndex1, highYearIndex2)
-          .replace("\n", "")
-          .replace("N/A", "")
-          .replace("Unknown", "");
+          .replaceAll("\n", "")
+          .replaceAll("N/A", "")
+          .replaceAll("Unknown", "");
         highBP = highTable
           .substring(highBPIndex1, highBPIndex2)
-          .replace("\n", "");
+          .replaceAll("\n", "");
         if (
-          highBP.replace(/[^a-zA-Z ]/g, "") === "Manufacturers Box and Papers"
+          highBP.replaceAll(/[^a-zA-Z ]/g, "") === "Manufacturers Box and Papers"
         ) {
           highPaper = "Yes";
           highBox = "Yes";
@@ -191,12 +191,12 @@ async function bazaar(lowP, highP, tPage, startIndex) {
         brandHigh = highTable
           .substring(index1BrandHigh, index2BrandHigh)
           .trim()
-          .replace("N/A", "");
+          .replaceAll("N/A", "");
 
         brandLow = lowTable
           .substring(index1BrandLow, index2BrandLow)
           .trim()
-          .replace("N/A", "");
+          .replaceAll("N/A", "");
       }
       if (highest != "" || lowest != "") {
         w = new Watch(

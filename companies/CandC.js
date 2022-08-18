@@ -42,11 +42,11 @@ async function crownAndCaliber(lowP, highP, tPage, startIndex) {
 
       console.log("CandC URL: ***  " + url);
       console.log(
-        i + refNums.length + "/" + refNums.length * 7,
-        ((i + refNums.length) / (refNums.length * 7)) * 100 + "%"
+        i + refNums.length + "/" + refNums.length * 6,
+        ((i + refNums.length) / (refNums.length * 6)) * 100 + "%"
       );
       await tPage.goto(url, { waitUntil: "networkidle0" }).catch(async (e) => {
-        await utilFunc.reTry(tPage);
+        await utilFunc.reTry(tPage,0);
       });
       await tPage.waitForTimeout(500);
       if (
@@ -71,8 +71,8 @@ async function crownAndCaliber(lowP, highP, tPage, startIndex) {
             lowPaper,
             highBox,
             highPaper,
-            lowest.replace(/\s+/g, ""),
-            highest.replace(/\s+/g, ""),
+            lowest.replaceAll(/\s+/g, ""),
+            highest.replaceAll(/\s+/g, ""),
             "",
             "",
             lowP.url(),
@@ -111,19 +111,19 @@ prepare = async (lowP, highP, link) => {
   await lowP
     .goto(link + endAsc, { waitUntil: "networkidle0" })
     .catch(async (e) => {
-      await utilFunc.reTry(lowP);
+      await utilFunc.reTry(lowP,0);
     });
   await highP
     .goto(link + endDesc, {
       waitUntil: "networkidle0",
     })
     .catch(async (e) => {
-      await utilFunc.reTry(highP);
+      await utilFunc.reTry(highP,0);
     });
 
   if (await utilFunc.exists(lowP, "#searchspring-content > h3")) {
     await lowP.goto(link + "#/sort:ss_price:asc").catch(async (e) => {
-      await utilFunc.reTry(lowP);
+      await utilFunc.reTry(lowP,0);
     });
   }
 
@@ -131,7 +131,7 @@ prepare = async (lowP, highP, link) => {
 
   if (await utilFunc.exists(highP, "#searchspring-content > h3")) {
     await highP.goto(link + "#/sort:ss_price:desc").catch(async (e) => {
-      await utilFunc.reTry(highP);
+      await utilFunc.reTry(highP,0);
     });
   }
   await highP.waitForTimeout(1000);
@@ -169,7 +169,7 @@ prepare = async (lowP, highP, link) => {
       await lowP.waitForTimeout(999999);
       console.log("COULDNT CLICK THE THING");
       await lowP.goto(lowP.url()).catch(async (e) => {
-        await utilFunc.reTry(lowP);
+        await utilFunc.reTry(lowP,0);
       });
       await lowP.waitForTimeout(500);
       await lowP.click(
@@ -194,10 +194,10 @@ prepare = async (lowP, highP, link) => {
 
   lowSku = await (
     await utilFunc.getItem(lowP, "p[class='itemNo']")
-  ).replace("Item No. ", "");
+  ).replaceAll("Item No. ", "");
   highSku = await (
     await utilFunc.getItem(highP, "p[class='itemNo']")
-  ).replace("Item No. ", "");
+  ).replaceAll("Item No. ", "");
 
   lowImage = await lowP
     .$eval("img[class='zoomImg']", (el) => el.src)
@@ -241,21 +241,21 @@ assignData = () => {
   var highPaperIndex1 = highBoxIndex2 + 8;
   var highPaperIndex2 = highTable.indexOf("Manual -");
 
-  lowYear = lowYear.replace(/\s+/g, "");
+  lowYear = lowYear.replaceAll(/\s+/g, "");
   if (lowYear.length > 5 && lowYear.indexOf("-Present") === -1) {
     lowYear = lowYear.slice(-4);
   } else {
     lowYear = lowYear.substring(0, 4) + "+";
   }
 
-  lowPaper = lowTable.substring(lowBoxIndex1, lowBoxIndex2).replace(/\s+/g, "");
+  lowPaper = lowTable.substring(lowBoxIndex1, lowBoxIndex2).replaceAll(/\s+/g, "");
   lowBox = lowTable
     .substring(lowPaperIndex1, lowPaperIndex2)
-    .replace(/\s+/g, "");
+    .replaceAll(/\s+/g, "");
 
   highYear = highTable
     .substring(highYearIndex1, highYearIndex2)
-    .replace(/\s+/g, "");
+    .replaceAll(/\s+/g, "");
 
   if (highYear.length > 5 && highYear.indexOf("-Present") === -1) {
     highYear = highYear.slice(-4);
@@ -265,10 +265,10 @@ assignData = () => {
 
   highPaper = highTable
     .substring(highBoxIndex1, highBoxIndex2)
-    .replace(/\s+/g, "");
+    .replaceAll(/\s+/g, "");
   highBox = highTable
     .substring(highPaperIndex1, highPaperIndex2)
-    .replace(/\s+/g, "");
+    .replaceAll(/\s+/g, "");
 };
 
 module.exports = { crownAndCaliber };

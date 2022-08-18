@@ -28,13 +28,13 @@ async function davidsw(lowP, highP, tPage, startIndex) {
 
       console.log("URL: " + newURL);
       console.log(
-        i + 3 * refNums.length + "/" + refNums.length * 7,
-        ((i + 3 * refNums.length) / (refNums.length * 7)) * 100 + "%"
+        i + 3 * refNums.length + "/" + refNums.length * 6,
+        ((i + 3 * refNums.length) / (refNums.length * 6)) * 100 + "%"
       );
       await tPage
         .goto(newURL, { waitUntil: "networkidle0" })
         .catch(async (e) => {
-          await utilFunc.reTry(tPage);
+          await utilFunc.reTry(tPage,0);
         });
       if (
         await utilFunc.exists(tPage, "#main > div > div.col.large-9 > div > p")
@@ -47,14 +47,14 @@ async function davidsw(lowP, highP, tPage, startIndex) {
             waitUntil: "networkidle0",
           })
           .catch(async (e) => {
-            await utilFunc.reTry(lowP);
+            await utilFunc.reTry(lowP,0);
           });
         await highP
           .goto(getUrl(newURL, "orderby=price-desc&"), {
             waitUntil: "networkidle0",
           })
           .catch(async (e) => {
-            await utilFunc.reTry(highP);
+            await utilFunc.reTry(highP,0);
           });
         if (
           await utilFunc.exists(
@@ -117,7 +117,7 @@ async function davidsw(lowP, highP, tPage, startIndex) {
         }
       }
       console.log(
-        lowTableBoxAndPaper.replace("\n", "'/n'").replace(" ", "' '")
+        lowTableBoxAndPaper.replaceAll("\n", "'/n'").replaceAll(" ", "' '")
       );
       highBoxIndex1 = highTableBoxAndPaper.indexOf("Box") + 3;
       highBoxIndex2 = highTableBoxAndPaper.indexOf("Hangtag");
@@ -154,10 +154,10 @@ async function davidsw(lowP, highP, tPage, startIndex) {
           refNums[i],
           lowYear.trim(),
           highYear.trim(),
-          lowBox.replace(/\s+/g, ""),
-          lowPaper.replace(/\s+/g, ""),
-          highBox.replace(/\s+/g, ""),
-          highPaper.replace(/\s+/g, ""),
+          lowBox.replaceAll(/\s+/g, ""),
+          lowPaper.replaceAll(/\s+/g, ""),
+          highBox.replaceAll(/\s+/g, ""),
+          highPaper.replaceAll(/\s+/g, ""),
           lowest,
           highest,
           "",
@@ -177,13 +177,6 @@ async function davidsw(lowP, highP, tPage, startIndex) {
         console.log(JSON.stringify(w, null, "\t"));
       }
     } catch (error) {
-      console.log("Restarting at " + i + " ...");
-      await utilFunc.sendMessage(
-        "Restarting at " + i + "\n" + new Date().toLocaleString()
-      );
-
-      await davidsw(lowP, highP, tPage, i);
-      break;
     }
   }
 }

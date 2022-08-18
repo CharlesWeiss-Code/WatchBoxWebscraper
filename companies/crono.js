@@ -64,7 +64,7 @@ async function chrono24(lowP, highP, tPage, list, startIndex) {
       await tPage
         .goto(newURL, { waitUntil: "networkidle0" })
         .catch(async (e) => {
-          await utilFunc.reTry(tPage);
+          await utilFunc.reTry(tPage,0);
         });
       await tPage.waitForTimeout(500);
       var noWatchInList = noWatchesInList(list, refNums[i]);
@@ -129,8 +129,7 @@ async function chrono24(lowP, highP, tPage, list, startIndex) {
       // await utilFunc.sendMessage(
       //   "Restarting at " + i + "\n" + new Date().toLocaleString()
       // );
-      await chrono24(lowP, highP, tPage, list, i);
-      break; // this break is neccesary because it stops the prevouse call to the fucntion (example below)
+      
 
       /**
        *  n
@@ -166,14 +165,14 @@ async function prepareStuff(lowP, highP, url, list, rn) {
   await lowP
     .goto(url + "&sortorder=1", { waitUntil: "domcontentloaded" })
     .catch(async () => {
-      await utilFunc.reTry(lowP);
+      await utilFunc.reTry(lowP,0);
     });
   await lowP.waitForTimeout(1000);
 
   await highP
     .goto(url + "&sortorder=11", { waitUntil: "domcontentloaded" })
     .catch(async () => {
-      await utilFunc.reTry(highP);
+      await utilFunc.reTry(highP,0);
     });
   await highP.waitForTimeout(1000);
 
@@ -202,9 +201,9 @@ async function prepareStuff(lowP, highP, url, list, rn) {
     );
     console.log(lowest, lowDealerStatus);
 
-    if (lowDealerStatus.replace("\n", "").trim() === "Professional dealer") {
+    if (lowDealerStatus.replaceAll("\n", "").trim() === "Professional dealer") {
       lowDealerStatus = "PD";
-    } else if (lowDealerStatus.replace("\n", "").trim() === "Private seller") {
+    } else if (lowDealerStatus.replaceAll("\n", "").trim() === "Private seller") {
       lowDealerStatus = "PS";
     } else {
       lowDealerStatus = "";
@@ -217,7 +216,7 @@ async function prepareStuff(lowP, highP, url, list, rn) {
     await lowP
       .goto(lowLink, { waitUntil: "domcontentloaded" })
       .catch(async () => {
-        await utilFunc.reTry(lowP);
+        await utilFunc.reTry(lowP,0);
       });
     await lowP.waitForTimeout(500);
 
@@ -269,8 +268,8 @@ async function prepareStuff(lowP, highP, url, list, rn) {
 
     yearLow = lowTable
       .substring(index1YearLow, index2YearLow)
-      .replace(/\s+/g, "")
-      .replace("Unknown", "");
+      .replaceAll(/\s+/g, "")
+      .replaceAll("Unknown", "");
 
     lowBP = lowTable.substring(index1BPLow, index2BPLow).trim().toLowerCase();
     if (lowBP.indexOf("original box") != -1) {
@@ -286,7 +285,7 @@ async function prepareStuff(lowP, highP, url, list, rn) {
         waitUntil: "domcontentloaded",
       })
       .catch(async () => {
-        await utilFunc.reTry(highP);
+        await utilFunc.reTry(highP,0);
       });
     await highP.waitForTimeout(500);
     highest = await utilFunc.getItem(
@@ -302,9 +301,9 @@ async function prepareStuff(lowP, highP, url, list, rn) {
         ") > a > div.p-x-2.p-b-2.m-t-auto > div.article-seller-container.media-flex.align-items-end.flex-grow > div.media-flex-body > div.article-seller-name.text-sm"
     );
 
-    if (highDealerStatus.replace("\n", "").trim() === "Professional dealer") {
+    if (highDealerStatus.replaceAll("\n", "").trim() === "Professional dealer") {
       highDealerStatus = "PD";
-    } else if (highDealerStatus.replace("\n", "").trim() === "Private seller") {
+    } else if (highDealerStatus.replaceAll("\n", "").trim() === "Private seller") {
       highDealerStatus = "PS";
     } else {
       highDealerStatus = "";
@@ -321,7 +320,7 @@ async function prepareStuff(lowP, highP, url, list, rn) {
     await highP
       .goto(highLink, { waitUntil: "domcontentloaded" })
       .catch(async () => {
-        await utilFunc.reTry(highP);
+        await utilFunc.reTry(highP,0);
       });
 
     await highP.waitForTimeout(500);
@@ -384,8 +383,8 @@ async function prepareStuff(lowP, highP, url, list, rn) {
 
     yearHigh = highTable
       .substring(index1YearHigh, index2YearHigh)
-      .replace(/\s+/g, "")
-      .replace("Unknown", "");
+      .replaceAll(/\s+/g, "")
+      .replaceAll("Unknown", "");
 
     highBP = highTable
       .substring(index1BPHigh, index2BPHigh)
@@ -408,6 +407,7 @@ async function prepareStuff(lowP, highP, url, list, rn) {
  */
 
 async function validChild(page, arr, rn, nextPageNum, highOrLow) {
+  await page.reload();
   await page.waitForTimeout(1500);
   min = getBuffer(arr, 0.9, rn);
   max = getBuffer(arr, 1.1, rn);
@@ -418,26 +418,28 @@ async function validChild(page, arr, rn, nextPageNum, highOrLow) {
       return 1;
     });
 
+  await page.waitForTimeout(500);
   for (var i = 1; i <= top; i++) {
     var watch = await typeOf(page, "#wt-watches > div:nth-child(" + i + ")");
     var isntTop = await noTop(page, "#wt-watches > div:nth-child(" + i + ")");
     if (watch && isntTop) {
-      // var priceHandle = await page.$(
-      //   "#wt-watches > div:nth-child(" +
-      //     i +
-      //     ") > a > div > div.media-flex-body.p-r-2.p-b-2 > div.d-flex.justify-content-between > div > div.article-price > div"
-      // );
-      // price = String(await page.evaluate((el) => el.innerText, priceHandle))
-      //   .replace("$", "")
-      //   .replace(",", "")
-      //   .trim();
 
-      price = await utilFunc.getItem(
-        page,
-        "#wt-watches > div:nth-child(" +
-          i +
-          ") > a > div > div.media-flex-body.p-r-2.p-b-2 > div.d-flex.justify-content-between > div > div.article-price > div"
+      price = parseFloat(
+        String(
+          await page
+            .$eval(
+              "#wt-watches > div:nth-child(" +
+                i +
+                ") > a > div > div.media-flex-body.p-r-2.p-b-2 > div.d-flex.justify-content-between > div > div.article-price > div",
+              (res) => res.innerText
+            )
+            .catch(() => "-1")
+        )
+          .replaceAll(",", "")
+          .replaceAll("$", "")
+          .trim()
       );
+
       if (watch && isntTop) {
         console.log("Price " + price + "\tnth-child(" + i + ")");
       }
@@ -446,7 +448,6 @@ async function validChild(page, arr, rn, nextPageNum, highOrLow) {
         return i;
       }
     }
-    await page.waitForTimeout(50);
   }
 
   // go to next page and search there

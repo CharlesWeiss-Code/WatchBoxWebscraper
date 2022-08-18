@@ -52,14 +52,14 @@ async function watchFinder(lowP, highP, tPage, startIndex) {
 
       console.log("\n\n");
       var URL = utilFunc.getLink("WatchFinder", refNums[i]);
-
+      console.log("URL: "+URL)
       console.log(
-        i + 5 * refNums.length + "/" + refNums.length * 7,
-        ((i + 5 * refNums.length) / (refNums.length * 7)) * 100 + "%"
+        i + 5 * refNums.length + "/" + refNums.length * 6,
+        ((i + 5 * refNums.length) / (refNums.length * 6)) * 100 + "%"
       );
 
       await tPage.goto(URL, { waitUntil: "networkidle0" }).catch(async () => {
-        await utilFunc.reTry(tPage);
+        await utilFunc.reTry(tPage,0);
       });
 
       await tPage.waitForTimeout(500);
@@ -74,14 +74,14 @@ async function watchFinder(lowP, highP, tPage, startIndex) {
             waitUntil: "networkidle0",
           })
           .catch(async () => {
-            await utilFunc.reTry(lowP);
+            await utilFunc.reTry(lowP,0);
           });
         await highP
           .goto(tPage.url() + "&orderby=PriceHighToLow", {
             waitUntil: "networkidle0",
           })
           .catch(async () => {
-            await utilFunc.reTry(highP);
+            await utilFunc.reTry(highP,0);
           });
 
         await lowP.waitForTimeout(1000);
@@ -124,11 +124,11 @@ async function watchFinder(lowP, highP, tPage, startIndex) {
         ).trim();
 
         if (yearLow.indexOf("Approx.") != -1) {
-          yearLow = yearLow.replace("Approx.","")+"+".trim()
+          yearLow = yearLow.replaceAll("Approx.","")+"+".trim()
         }
 
         if (yearHigh.indexOf("Approx.") != -1) {
-          yearHigh = yearHigh.replace("Approx.","")+"+".trim()
+          yearHigh = yearHigh.replaceAll("Approx.","")+"+".trim()
         }
 
         lowSku = String(
@@ -173,8 +173,8 @@ async function watchFinder(lowP, highP, tPage, startIndex) {
         if (highest != "" || lowest != "") {
           w = new Watch(
             refNums[i],
-            yearLow,
-            yearHigh,
+            yearLow.trim(),
+            yearHigh.trim(),
             lowBox,
             lowPaper,
             highBox,
@@ -200,7 +200,7 @@ async function watchFinder(lowP, highP, tPage, startIndex) {
     } catch (error) {
       console.log(error);
       console.log("Restarting at " + i + " ...");
-      await watchFinder(lowP, highP, tPage, i);
+      await watchFinder(lowP, highP, tPage, i-1);
       break;
     }
   }

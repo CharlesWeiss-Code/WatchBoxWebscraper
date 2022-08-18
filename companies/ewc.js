@@ -1,7 +1,8 @@
 const utilFunc = require("../utilityFunctions.js");
 const Watch = require("../Watch");
 const fs = require("fs");
-const { Puppeteer } = require("puppeteer");
+const { Puppeteer, ConsoleMessage } = require("puppeteer");
+const { text } = require("express");
 
 var lowest = "";
 var highest = "";
@@ -42,27 +43,28 @@ async function EWC(lowP, highP, tPage, startIndex) {
       highPaper = "No";
 
       var newURL = utilFunc.getLink("EWC", refNums[i]);
-      await tPage
-        .goto(newURL, { waitUntil: "networkidle0" })
-        .catch(async (e) => {
-          await utilFunc.reTry(tPage);
-        });
 
       console.log("URL: " + newURL);
       console.log(
-        i + 2 * refNums.length + "/" + refNums.length * 7,
-        ((i + 2 * refNums.length) / (refNums.length * 7)) * 100 + "%"
+        i + 2 * refNums.length + "/" + refNums.length * 6,
+        ((i + 2 * refNums.length) / (refNums.length * 6)) * 100 + "%"
       );
+      await tPage
+        .goto(newURL, { waitUntil: "networkidle0" })
+        .catch(async (e) => {
+          await utilFunc.reTry(tPage, 0);
+        });
+
       await tPage.waitForTimeout(1000);
 
       if (await utilFunc.noResults(tPage, "body > section > h3")) {
         continue;
       } else {
         await lowP.goto(tPage.url()).catch(async (e) => {
-          await utilFunc.reTry(lowP);
+          await utilFunc.reTry(lowP, 0);
         });
         await highP.goto(tPage.url()).catch(async (e) => {
-          await utilFunc.reTry(highP);
+          await utilFunc.reTry(highP, 0);
         });
         await lowP.waitForTimeout(500);
         await highP.waitForTimeout(500);
@@ -84,7 +86,7 @@ async function EWC(lowP, highP, tPage, startIndex) {
             highestChild +
             ") > div > div.flex.flex-col.h-full.justify-start.mt-2 > div > p"
         );
-
+        console.log(lowest, highest);
         brandLow = await utilFunc.getItem(
           lowP,
           "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
@@ -139,23 +141,181 @@ async function EWC(lowP, highP, tPage, startIndex) {
             ") > a",
           (res) => res.href
         );
-        console.log(highLink);
-        await lowP
-          .goto(lowLink, { waitUntil: "networkidle0" })
-          .catch(async (e) => {
-            await utilFunc.reTry(lowP);
-          });
-        await highP
-          .goto(highLink, { waitUntil: "networkidle0" })
-          .catch(async (e) => {
-            await utilFunc.reTry(highP);
-          });
-
         await lowP.waitForTimeout(500);
         await highP.waitForTimeout(500);
-        await BPandDateStuff(lowP, lowestChild, highP, highestChild);
-      }
-      if (lowest != "" || highest != "") {
+
+        // await lowP
+        //   .click(
+        //     "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
+        //       lowestChild +
+        //       ") > a",
+        //     { delay: 20 }
+        //   )
+        //   .catch(async () => {
+        //     await lowP.reload();
+        //     await lowP.waitForTimeout(1000);
+        //     await lowP.click(
+        //       "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
+        //         lowestChild +
+        //         ") > a",
+        //       { delay: 20 }
+        //     );
+        //   })
+
+        lowURL = await lowP.$eval(
+          "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
+            lowestChild +
+            ") > a",
+          async (res) => res.href
+        );
+
+        // await highP
+        //   .click(
+        //     "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
+        //       highestChild +
+        //       ") > a",
+        //     { delay: 20 }
+        //   )
+        //   .catch(async () => {
+        //     await highP.reload();
+        //     await highP.waitForTimeout(1000);
+        //     await highP.click(
+        //       "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
+        //         lowestChild +
+        //         ") > a",
+        //       { delay: 20 }
+        //     );
+        //   })
+        highURL = await highP.$eval(
+          "body > section > section.flex.flex-wrap.watch-list.mx-auto > section:nth-child(" +
+            highestChild +
+            ") > a",
+          async (res) => res.href
+        );
+        console.log("'" + lowURL + "'" + highURL + "'");
+
+        await lowP
+          .goto(lowURL, { waitUntil: "networkidle0" })
+          .catch(async () => await utilFunc.reTry(lowP));
+
+        await highP
+          .goto(lowURL, { waitUntil: "networkidle0" })
+          .catch(async () => await utilFunc.reTry(highP));
+        await lowP.waitForTimeout(500);
+        await highP.waitForTimeout(500);
+        await lowP.reload();
+        await highP.reload();
+
+        await lowP.waitForTimeout(1000);
+        console.log(lowP.url());
+        lowPara = await lowP.$eval(
+          "p[class='font-proxima mt-6 watch-bio-short-section']",
+          (res) => {
+            return res.innerText; //body > section > section:nth-child(5) > section.w-full.lg\:w-1\/2.lg\:pl-8 > div > p.font-proxima.mt-6.watch-bio-short-section
+          }
+        );
+        await highP.waitForTimeout(1000);
+        highPara = await highP.$eval(
+          "p[class='font-proxima mt-6 watch-bio-short-section']",
+          (res) => {
+            return res.innerText;
+          }
+        );
+        lowSku = lowPara
+          .substring(lowPara.indexOf("(") + 1, lowPara.indexOf(")"))
+          .trim();
+        highSku = highPara
+          .substring(highPara.indexOf("(") + 1, highPara.indexOf(")"))
+          .trim();
+
+        lowYear = await lowP.$eval(
+          "span[id='watch-model']",
+          (res) => res.innerText
+        );
+        lowYear = lowYear.substring(lowYear.length - 4);
+
+        var numbLow = lowYear.match(/\d/g);
+        if (numbLow != null) {
+          lowYear = numbLow.join("");
+        }
+
+        highYear = await highP.$eval(
+          "span[id='watch-model']",
+          (res) => res.innerText
+        );
+        highYear = highYear.substring(highYear.length - 4);
+        var numbHigh = highYear.match(/\d/g);
+        if (numbHigh != null) {
+          highYear = numbHigh.join("");
+        }
+        console.log("'" + lowYear + "'" + highYear + "'");
+
+        if (validAge(lowYear)) {
+          lastPeriodIndexLow = lowPara.lastIndexOf(".");
+          lowYear = lowPara.substring(
+            lastPeriodIndexLow - 4,
+            lastPeriodIndexLow
+          );
+          if (!validAge(lowYear)) {
+            lowYear = "";
+          }
+        }
+        if (validAge(lowYear)) {
+          lastPeriodIndexHigh = lowPara.lastIndexOf(".");
+          highYear = highPara.substring(
+            lastPeriodIndexHigh - 4,
+            lastPeriodIndexHigh
+          );
+          if (!validAge(highYear)) {
+            highYear = "";
+          }
+        }
+        console.log("'" + lowYear + "'" + highYear + "'");
+
+        if (
+          lowPara
+            .toLowerCase()
+            .indexOf(brandLow.toLowerCase() + " box and papers")
+        ) {
+          lowBox = "Yes";
+          lowPaper = "Yes";
+        } else if (
+          lowPara.toLowerCase().indexOf("original box and papers") != -1
+        ) {
+          lowBox = "Yes";
+          lowPaper = "Yes";
+        } else if (
+          lowPara.toLowerCase().indexOf("original certificate") != -1
+        ) {
+          lowPaper = "Yes";
+        } else if (
+          lowPara.toLowerCase().indexOf(brandLow.toLowerCase() + " box") != -1
+        ) {
+          lowBox = "Yes";
+        }
+
+        if (
+          highPara
+            .toLowerCase()
+            .indexOf(brandHigh.toLowerCase() + " box and papers")
+        ) {
+          highBox = "Yes";
+          highPaper = "Yes";
+        } else if (
+          highPara.toLowerCase().indexOf("original box and papers") != -1
+        ) {
+          highBox = "Yes";
+          highPaper = "Yes";
+        } else if (
+          highPara.toLowerCase().indexOf("original certificate") != -1
+        ) {
+          highPaper = "Yes";
+        } else if (
+          highPara.toLowerCase().indexOf(brandHigh.toLowerCase() + " box") != -1
+        ) {
+          highBox = "Yes";
+        }
+
         w = new Watch(
           refNums[i],
           lowYear,
@@ -178,16 +338,14 @@ async function EWC(lowP, highP, tPage, startIndex) {
           lowSku,
           highSku
         );
+        console.log(w);
         fs.appendFileSync("./data.csv", utilFunc.CSV(w) + "\n");
-        console.log(JSON.stringify(w, null, "\t"));
       }
+      // if (lowest != "" || highest != "") {
+
+      // }
     } catch (error) {
-      console.log("Restarting at " + i + " ...");
-      await utilFunc.sendMessage(
-        "Restarting at " + i + "\n" + new Date().toLocaleString()
-      );
-      await EWC(lowP, highP, tPage, i);
-      break;
+      console.log(error);
     }
   }
 }
@@ -207,7 +365,7 @@ async function getChildrenToPrice(page) {
     );
     result.push({
       child: i,
-      price: price.replace("$", "").replace(",", ""),
+      price: parseFloat(price.replaceAll("$", "").replaceAll(",", "")),
     });
   }
   return result;
@@ -238,102 +396,11 @@ async function getChild(str, page) {
   }
 }
 
-async function BPandDateStuff(lowP, lowestChild, highP, highestChild) {
-  lowPara = String(
-    await utilFunc.getItem(
-      lowP,
-      "p[class='font-proxima mt-6 watch-bio-short-section']"
-    )
-  );
-  highPara = String(
-    await utilFunc.getItem(
-      highP,
-      "p[class='font-proxima mt-6 watch-bio-short-section']"
-    )
-  );
-
-  lowSku = lowPara
-    .substring(lowPara.indexOf("(") + 1, lowPara.indexOf(")"))
-    .trim();
-  highSku = highPara
-    .substring(highPara.indexOf("(") + 1, highPara.indexOf(")"))
-    .trim();
-
-  console.log("'" + lowSku + "'" + highSku + "'");
-
-  if (lowPara.indexOf("undated") === -1) {
-    lowYearIndex1 = lowPara.indexOf("dated") + 5;
-    if (lowYearIndex1 === 4) {
-      lowYearIndex1 = lowPara.indexOf("from") + 4;
-    }
-    if (lowYearIndex1 != 3) {
-      lowYear = lowPara.substring(lowYearIndex1).trim().match(/\d{4}/).join("");
-    }
+function validAge(str) {
+  if (String(parseInt(str)) === "NaN" || parseInt(str[0]) > 2) {
+    return true;
   }
-
-  if (highPara.indexOf("undated") === -1) {
-    highYearIndex1 = highPara.indexOf("dated") + 5;
-    if (highYearIndex1 === 4) {
-      highYearIndex1 = highPara.indexOf("from") + 4;
-    }
-    if (highYearIndex1 != 3) {
-      highYear = highPara
-        .substring(highYearIndex1)
-        .trim()
-        .match(/\d{4}/)
-        .join("");
-    }
-  }
-
-  console.log("'" + lowYear + "'" + highYear + "'");
-  if (
-    lowPara.toLowerCase().indexOf(brandLow.toLowerCase() + " box and papers")
-  ) {
-    lowBox = "Yes";
-    lowPaper = "Yes";
-  } else if (lowPara.toLowerCase().indexOf("original box and papers") != -1) {
-    lowBox = "Yes";
-    lowPaper = "Yes";
-  } else if (lowPara.toLowerCase().indexOf("original certificate") != -1) {
-    lowPaper = "Yes";
-  } else if (
-    lowPara.toLowerCase().indexOf(brandLow.toLowerCase() + " box") != -1
-  ) {
-    lowBox = "Yes";
-  }
-
-  if (
-    highPara.toLowerCase().indexOf(brandHigh.toLowerCase() + " box and papers")
-  ) {
-    highBox = "Yes";
-    highPaper = "Yes";
-  } else if (highPara.toLowerCase().indexOf("original box and papers") != -1) {
-    highBox = "Yes";
-    highPaper = "Yes";
-  } else if (highPara.toLowerCase().indexOf("original certificate") != -1) {
-    highPaper = "Yes";
-  } else if (
-    highPara.toLowerCase().indexOf(brandHigh.toLowerCase() + " box") != -1
-  ) {
-    highBox = "Yes";
-  }
-}
-
-function getPeriodIndex(str, datedIndex) {
-  periods = [];
-  for (var i = 0; i < str.length; i++) {
-    if (str[i] === ".") {
-      periods.push(i);
-    }
-  }
-  for (var i = 0, j = i + 1; i < periods.length - 1; i++) {
-    if (datedIndex > periods[i] && datedIndex < periods[j]) {
-      return periods[j];
-    } else if (j === periods.length - 1 && datedIndex > periods[j]) {
-      console.log("aiwefiuahwefiluhaweliufhawhefiluauwiehfiuawhefihuaw");
-      return str.indexOf("(");
-    }
-  }
+  return false;
 }
 
 module.exports = { EWC };

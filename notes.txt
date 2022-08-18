@@ -16,4 +16,6 @@
           - FIXED? added break statements to the end of the catch block. By doing this, the company function will restart-
           and finish and then not continue the previous scrape (because it reaches the break statement).
 
-     - Add check to make sure lowest and highest isnt "" before creating a new watch
+     - add timeout: 30000 
+     - add limit to re-trying. 1 reference number gets 3 tries
+     - take out recursion in catch and break
