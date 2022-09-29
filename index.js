@@ -119,13 +119,13 @@ async function start() {
   await setupPage(highPage);
   await setupPage(testPage);
 
-  await Bazaar.bazaar(lowPage, highPage, testPage, 0);
-  await newPages(browser);
-  await utilFunc.sendMessage(
-    "Completed Bazaar: " + new Date().toLocaleString()
-  );
+  // await Bazaar.bazaar(lowPage, highPage, testPage, 0);
+  // await newPages(browser);
+  // await utilFunc.sendMessage(
+  //   "Completed Bazaar: " + new Date().toLocaleString()
+  // );
 
-  await CandC.crownAndCaliber(lowPage, highPage, testPage, 0);
+  await CandC.crownAndCaliber(lowPage, highPage, testPage, 18);
   await newPages(browser);
   utilFunc.sendMessage("Completed CandC: " + new Date().toLocaleString());
 
